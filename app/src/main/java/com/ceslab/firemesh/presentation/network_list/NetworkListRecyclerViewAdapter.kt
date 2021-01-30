@@ -3,15 +3,12 @@ package com.ceslab.firemesh.presentation.scan
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import timber.log.Timber
 
-class NetworkRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<String, NetworkRecyclerViewAdapter.ViewHolder>(context) {
+class NetworkListRecyclerViewAdapter(context: Context) :
+    BaseRecyclerViewAdapter<String, NetworkListRecyclerViewAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,8 +22,14 @@ class NetworkRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        init {
+            view.setOnClickListener(this)
+        }
 
+        override fun onClick(p0: View?) {
+            itemClickListener.onClick(adapterPosition, "test")
+        }
 
         fun renderUI(connectableDeviceDescription: String) {
 

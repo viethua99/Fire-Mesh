@@ -2,5 +2,11 @@
     <string name="app_name">Fire Mesh</string>
 
     <string name="nav_item_scan">Scan</string>
-    <string name="nav_item_network">Network</string>
+    <string name="nav_item_networks">Networks</string>
+    <string name="nav_item_groups">Groups</string>
+    <string name="nav_item_nodes">Nodes</string>
+
+    <string name="main_activity_enable_button">Enable</string>
+    <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
+    <string name="main_activity_location_adapter_disabled">Location adapter is disabled</string>
 </resources>
