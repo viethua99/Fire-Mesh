@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -33,15 +35,31 @@ android {
 }
 
 dependencies {
-
+    //Standard Libs
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    //BLE Mesh Libs
     implementation project(path: ':ble_mesh-android_api-v2_high-release')
     implementation project(path: ':ble_mesh-android_api-v2_low-release')
     implementation 'com.google.code.gson:gson:2.8.6'
+    //Dagger 2
+    implementation 'com.google.dagger:dagger:2.27'
+    implementation 'com.google.dagger:dagger-android:2.27'
+    implementation 'com.google.dagger:dagger-android-support:2.27'
+    // if you use the support libraries
+    kapt 'com.google.dagger:dagger-compiler:2.27'
+    kapt 'com.google.dagger:dagger-android-processor:2.27'
+    //Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.github.ajalt:timberkt:1.5.1'
+    //Live data
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+
+    //Test Libs
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

@@ -1,7 +1,8 @@
-package com.ceslab.firemesh
+package com.ceslab.firemesh.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.ceslab.firemesh.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
