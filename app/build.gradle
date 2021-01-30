@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
+
+
     //BLE Mesh Libs
     implementation project(path: ':ble_mesh-android_api-v2_high-release')
     implementation project(path: ':ble_mesh-android_api-v2_low-release')

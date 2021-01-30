@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_item_network"
+        android:icon="@drawable/icon_mesh"
+        android:title="@string/nav_item_network" />
+    <item
+        android:id="@+id/nav_item_scan"
+        android:icon="@drawable/icon_scan"
+        android:title="@string/nav_item_scan" />
+</menu>
