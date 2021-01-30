@@ -17,14 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_bluetooth"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:src="@drawable/icon_alarm" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,10 +25,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_device_name"
+                    android:id="@+id/tv_node_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unknown Device"
+                    android:text="Demo Node"
                     android:textColor="@color/primary_red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -49,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:text="00:00:00:00:00"
                     android:textSize="16sp" />
+
                 <LinearLayout
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
@@ -59,11 +52,33 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/icon_signal" />
+                        android:src="@drawable/icon_status" />
 
                     <TextView
                         android:textColor="@android:color/black"
-                        android:id="@+id/tv_device_rssi"
+                        android:id="@+id/tv_node_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:text="Connected"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icon_battery" />
+
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:id="@+id/tv_node_battery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -74,17 +89,22 @@
             </LinearLayout>
 
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_provision"
-                    android:text="Provision"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+               <ImageView
+                   android:background="@drawable/icon_flame"
+                   android:layout_width="50dp"
+                   android:layout_height="50dp"/>
+                <ImageView
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/icon_group_2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

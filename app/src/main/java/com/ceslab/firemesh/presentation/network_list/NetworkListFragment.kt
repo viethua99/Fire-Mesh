@@ -9,6 +9,7 @@ import com.ceslab.firemesh.presentation.main.MainActivity
 import com.ceslab.firemesh.presentation.main.MainFragment
 import com.ceslab.firemesh.presentation.network.NetworkFragment
 import com.ceslab.firemesh.presentation.scan.NetworkListRecyclerViewAdapter
+import kotlinx.android.synthetic.main.fragment_network_list.*
 import kotlinx.android.synthetic.main.fragment_scan.*
 import timber.log.Timber
 
@@ -38,9 +39,9 @@ class NetworkListFragment : BaseFragment(){
                 mainActivity.replaceFragment(NetworkFragment(),NetworkFragment.TAG,R.id.container_main)
             }
         }
-        rv_scan.layoutManager = linearLayoutManager
-        rv_scan.setHasFixedSize(true)
-        rv_scan.adapter = networkListRecyclerViewAdapter
+        rv_network_list.layoutManager = linearLayoutManager
+        rv_network_list.setHasFixedSize(true)
+        rv_network_list.adapter = networkListRecyclerViewAdapter
         networkListRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D","E","F","G"))
     }
 }

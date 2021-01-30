@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_item_groups"
-        android:icon="@drawable/icon_mesh"
+        android:icon="@drawable/icon_group"
         android:title="@string/nav_item_groups" />
     <item
         android:id="@+id/nav_item_nodes"
-        android:icon="@drawable/icon_scan"
+        android:icon="@drawable/icon_node"
         android:title="@string/nav_item_nodes" />
 </menu>

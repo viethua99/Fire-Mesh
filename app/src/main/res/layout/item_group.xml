@@ -23,7 +23,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/icon_network" />
+                android:src="@drawable/icon_group_2" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -33,10 +33,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_network_name"
+                    android:id="@+id/tv_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Demo Network"
+                    android:text="Demo Group"
                     android:textColor="@color/primary_red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -55,14 +55,6 @@
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/tv_network_groups_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="1 Group"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <TextView
@@ -70,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="Net Key"
+                    android:text="Group Key"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
