@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:theme="@style/Theme.FireMesh"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:padding="10dp">
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:theme="@style/Theme.FireMesh">
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_email"
+        android:id="@+id/til_node_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:hint="Node name">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_email"
+            android:id="@+id/edt_node_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -44,19 +44,21 @@
             android:layout_height="wrap_content"
             android:text="Network"
             android:textColor="@color/primary_color"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
         <Spinner
-            android:id="@+id/spinner_subnet"
+            android:layout_marginTop="5dp"
+            android:id="@+id/spinner_network"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp" />
     </LinearLayout>
 
     <Button
-        android:layout_marginTop="10dp"
+        android:id="@+id/btn_provision"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:padding="10dp"
         android:text="Provision" />
 </LinearLayout>

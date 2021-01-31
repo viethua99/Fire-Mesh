@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.presentation.main.MainActivity
+import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.dialog_provision_bottom_sheet.*
 import kotlinx.android.synthetic.main.dialog_provision_bottom_sheet.view.*
 
 class ProvisionBottomDialog : BottomSheetDialogFragment(){
@@ -27,7 +28,24 @@ class ProvisionBottomDialog : BottomSheetDialogFragment(){
         val list = listOf("ABC","BDE","EEE")
         val adapter = ArrayAdapter(context!!,android.R.layout.simple_spinner_item,list)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        view.spinner_subnet.adapter  = adapter
+        view.spinner_network.adapter  = adapter
+        view.btn_provision.setOnClickListener {
+            dialog?.hide()
+            val mainActivity = activity as MainActivity
+            mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+        }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dialog?.setOnShowListener {
+            val dialog = it as BottomSheetDialog
+            val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
+            bottomSheet?.let { sheet ->
+                dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                sheet.parent.parent.requestLayout()
+            }
+        }
     }
 }

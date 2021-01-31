@@ -9,4 +9,28 @@
     <string name="main_activity_enable_button">Enable</string>
     <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
     <string name="main_activity_location_adapter_disabled">Location adapter is disabled</string>
+
+    <string name="fragment_node_config_lpn">Low power energy</string>
+    <string name="fragment_node_config_lpn_supported">Supported</string>
+    <string name="fragment_node_config_lpn_no_supported">No Supported</string>
+    <string name="fragment_node_config_proxy">Proxy Feature</string>
+    <string name="fragment_node_config_relay">Relay Feature</string>
+    <string name="fragment_node_config_friend">Friend Feature</string>
+    <string name="fragment_node_config_retransmission">Retransmission</string>
+    <string name="fragment_node_config_group">Group</string>
+    <string name="fragment_node_config_functionality">Functionality</string>
+
+    <string name="fragment_node_info_node_name">Node name: </string>
+    <string name="fragment_node_info_unicast_address">Unicast address: </string>
+    <string name="fragment_node_info_uuid">UUID: </string>
+    <string name="fragment_node_info_network_name">Network name: </string>
+    <string name="fragment_node_info_net_key">Netkey: </string>
+    <string name="fragment_node_info_app_key">Appkey: </string>
+    <string name="fragment_node_info_dev_key">Devkey: </string>
+    <string name="fragment_node_info_cell_element">Element</string>
+    <string name="fragment_node_info_cell_vendor">Vendor</string>
+    <string name="fragment_node_info_cell_id">ID</string>
+    <string name="fragment_node_info_cell_description">Model Description</string>
+
+
 </resources>
