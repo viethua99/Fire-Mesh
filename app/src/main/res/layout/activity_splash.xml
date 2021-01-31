@@ -12,9 +12,9 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="140dp"
             android:layout_height="140dp"
-            android:src="@drawable/icon_flame" />
+            android:src="@drawable/icon_app" />
         <TextView
-            android:textColor="#fe646f"
+            android:textColor="#0288D1"
             android:textStyle="bold"
             android:textSize="24sp"
             android:layout_marginTop="10dp"
