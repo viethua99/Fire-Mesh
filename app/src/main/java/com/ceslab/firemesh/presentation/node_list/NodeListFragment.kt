@@ -32,6 +32,6 @@ class NodeListFragment : BaseFragment(){
         rv_node_list.layoutManager = linearLayoutManager
         rv_node_list.setHasFixedSize(true)
         rv_node_list.adapter = nodeListRecyclerViewAdapter
-        nodeListRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D","E","F","G"))
+        nodeListRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D"))
     }
 }

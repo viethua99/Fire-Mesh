@@ -22,15 +22,7 @@ class GroupListRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        init {
-            view.setOnClickListener(this)
-        }
-
-        override fun onClick(p0: View?) {
-            itemClickListener.onClick(adapterPosition, "test")
-        }
-
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun renderUI(connectableDeviceDescription: String) {
 
         }

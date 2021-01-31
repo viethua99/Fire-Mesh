@@ -35,6 +35,6 @@ class GroupListFragment : BaseFragment(){
         rv_group_list.layoutManager = linearLayoutManager
         rv_group_list.setHasFixedSize(true)
         rv_group_list.adapter = groupListRecyclerViewAdapter
-        groupListRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D","E","F","G"))
+        groupListRecyclerViewAdapter.setDataList(mutableListOf("A","B"))
     }
 }

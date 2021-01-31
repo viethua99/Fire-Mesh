@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     android:orientation="horizontal"
-    android:layout_marginBottom="10dp"
     android:weightSum="10">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardCornerRadius="6dp">
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <ImageView
                 android:id="@+id/iv_bluetooth"
@@ -42,17 +42,18 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_marginTop="3dp"
-                    android:textColor="@android:color/black"
                     android:id="@+id/tv_device_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
                     android:text="00:00:00:00:00"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp" />
+
                 <LinearLayout
-                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -62,13 +63,13 @@
                         android:src="@drawable/icon_signal" />
 
                     <TextView
-                        android:textColor="@android:color/black"
                         android:id="@+id/tv_device_rssi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:text="-53 dBm"
+                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -76,15 +77,16 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:gravity="right"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_provision"
-                    android:text="Provision"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="Provision"
+                    android:textAllCaps="false" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

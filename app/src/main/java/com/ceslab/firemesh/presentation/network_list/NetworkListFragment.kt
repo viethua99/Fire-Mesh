@@ -42,6 +42,6 @@ class NetworkListFragment : BaseFragment(){
         rv_network_list.layoutManager = linearLayoutManager
         rv_network_list.setHasFixedSize(true)
         rv_network_list.adapter = networkListRecyclerViewAdapter
-        networkListRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D","E","F","G"))
+        networkListRecyclerViewAdapter.setDataList(mutableListOf("A","B"))
     }
 }
