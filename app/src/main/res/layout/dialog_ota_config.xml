@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_dialog_background"
+    android:background="@drawable/dialog_rounded_corner_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,26 +13,26 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/otaprogress_header"
+            android:id="@+id/tv_ota_header"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingTop="20dp"
             android:paddingEnd="0dp"
-            android:text="OTA Device Firmware Update"
+            android:text="@string/dialog_ota_config_header"
             android:textColor="@color/primary_color"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/device_address"
+            android:id="@+id/tv_device_name"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingTop="5dp"
             android:paddingEnd="0dp"
             android:paddingBottom="15dp"
-            android:text="Device name"
+            android:text="@string/dialog_ota_device_name"
             android:textColor="@color/primary_color"
             android:textSize="14sp" />
     </LinearLayout>
@@ -45,22 +45,22 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/radio_ota"
+            android:id="@+id/btn_partial_ota"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="0.5"
-            android:text="PARTIAL OTA"
+            android:text="@string/dialog_ota_partial_ota"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
 
         <Button
-            android:id="@+id/radio_ota_full"
+            android:id="@+id/btn_full_ota"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:text="FULL OTA"
+            android:text="@string/dialog_ota_full_ota"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>
@@ -94,7 +94,7 @@
                     android:layout_weight="0.2"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="Mode:"
+                    android:text="@string/dialog_ota_mode_colon"
                     android:textColor="@color/primary_color" />
 
                 <RadioGroup
@@ -105,21 +105,21 @@
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/reliability_radio_button"
+                        android:id="@+id/rdb_reliability"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
                         android:padding="5dp"
-                        android:text="Reliability" />
+                        android:text="@string/dialog_ota_reliability" />
 
                     <RadioButton
-                        android:id="@+id/speed_radio_button"
+                        android:id="@+id/rdb_speed"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="Speed" />
+                        android:text="@string/dialog_ota_speed" />
                 </RadioGroup>
             </LinearLayout>
 
@@ -132,24 +132,25 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/appTextView"
+                    android:id="@+id/tv_application"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="5dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="Application:"
+                    android:text="@string/dialog_ota_application_colon"
                     android:textColor="@color/primary_color" />
 
                 <Button
-                    android:id="@+id/select_app_file_btn"
+                    android:id="@+id/btn_select_application_gbl_file"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="Select Application .gpl file"
+                    android:textColor="@color/gray_7"
+                    android:text="@string/dialog_ota_select_application_gbl_file"
                     android:textAllCaps="false" />
             </LinearLayout>
 
@@ -166,7 +167,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/mtu_label"
+                    android:id="@+id/tv_mtu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -174,11 +175,11 @@
                     android:layout_weight="0.3"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="MTU:"
+                    android:text="@string/dialog_ota_mtu_colon"
                     android:textColor="@color/primary_color" />
 
                 <SeekBar
-                    android:id="@+id/mtu_seekBar"
+                    android:id="@+id/seekbar_mtu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -187,7 +188,7 @@
                     android:paddingBottom="10dp" />
 
                 <EditText
-                    android:id="@+id/mtu_value"
+                    android:id="@+id/edt_max_mtu_value"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -197,8 +198,8 @@
                     android:gravity="end"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:text="250"
-                    android:textSize="10sp" />
+                    android:text="@string/dialog_ota_max_mtu"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -211,58 +212,58 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/connection_label"
+                    android:id="@+id/tv_priority"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="5dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.2"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="Priority"
+                    android:text="@string/dialog_ota_priority"
                     android:textColor="@color/primary_color" />
 
                 <TextView
-                    android:id="@+id/min_label"
+                    android:id="@+id/tv_min_priority"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="5dp"
                     android:layout_weight="0.1"
-                    android:text="LOW"
-                    android:textSize="10sp" />
+                    android:text="@string/dialog_ota_priority_low"
+                    android:textSize="12sp" />
 
                 <SeekBar
-                    android:id="@+id/connection_seekBar"
+                    android:id="@+id/seekbar_priority"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.4"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp" />
 
                 <TextView
-                    android:id="@+id/max_label"
+                    android:id="@+id/tv_max_priority"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="5dp"
                     android:layout_weight="0.1"
-                    android:text="HIGH"
-                    android:textSize="10sp" />
+                    android:text="@string/dialog_ota_priority_high"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
 
     <Button
-        android:id="@+id/ota_proceed"
+        android:id="@+id/btn_ota_proceed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:clickable="false"
         android:padding="10dp"
-        android:text="OTA"
+        android:text="@string/dialog_ota"
         android:textColor="@color/white"
         android:textSize="14sp" />
 </LinearLayout>

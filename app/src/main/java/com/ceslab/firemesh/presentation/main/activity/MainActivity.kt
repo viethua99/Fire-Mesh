@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.main
+package com.ceslab.firemesh.presentation.main.activity
 
 
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseActivity
+import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import timber.log.Timber
 
 class MainActivity : BaseActivity() {

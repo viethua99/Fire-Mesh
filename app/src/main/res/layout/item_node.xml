@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:layout_margin="10dp"
     android:layout_marginBottom="10dp"
+    android:orientation="horizontal"
     android:weightSum="10">
 
     <androidx.cardview.widget.CardView
@@ -14,9 +14,9 @@
         app:cardCornerRadius="10dp">
 
         <LinearLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -29,83 +29,85 @@
                     android:id="@+id/tv_node_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Demo Node"
+                    android:text="@string/item_node_node_name"
                     android:textColor="@color/primary_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_marginTop="3dp"
-                    android:textColor="@android:color/black"
-                    android:id="@+id/tv_device_address"
+                    android:id="@+id/tv_node_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00:00:00:00:00"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/item_node_node_address"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
                 <LinearLayout
-                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/icon_status" />
+                        android:src="@drawable/img_status" />
 
                     <TextView
-                        android:textColor="@android:color/black"
                         android:id="@+id/tv_node_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
-                        android:text="Connected"
+                        android:text="@string/item_node_node_status"
+                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:src="@drawable/icon_battery" />
+                        android:src="@drawable/img_battery" />
 
                     <TextView
-                        android:textColor="@android:color/black"
                         android:id="@+id/tv_node_battery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
-                        android:text="-53 dBm"
+                        android:text="@string/item_node_node_battery_percent"
+                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
 
-               <ImageView
-                   android:background="@drawable/icon_flame"
-                   android:layout_width="50dp"
-                   android:layout_height="50dp"/>
                 <ImageView
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/icon_group_2"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"/>
+                    android:layout_height="50dp"
+                    android:background="@drawable/img_flame" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/img_group_2" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

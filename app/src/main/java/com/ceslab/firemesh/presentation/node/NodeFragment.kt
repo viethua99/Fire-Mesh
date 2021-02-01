@@ -17,13 +17,14 @@ class NodeFragment : BaseFragment() {
     }
 
     private lateinit var nodePagerAdapter: NodePagerAdapter
+
     override fun getResLayoutId(): Int {
         return R.layout.fragment_node
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(true) //able to use options menu in fragment
     }
 
 

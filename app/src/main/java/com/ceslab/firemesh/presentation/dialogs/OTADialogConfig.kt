@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.ceslab.firemesh.R
+import timber.log.Timber
 
 class OTADialogConfig : DialogFragment() {
 
@@ -16,8 +17,9 @@ class OTADialogConfig : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Timber.d("onCreateView")
         val view = inflater.inflate(R.layout.dialog_ota_config, container, false)
-        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // Make dialog concern rounded
         return view
     }
 }

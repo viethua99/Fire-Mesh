@@ -2,10 +2,9 @@ package com.ceslab.firemesh.presentation.splash
 
 import android.os.Bundle
 import android.os.Handler
-import androidx.core.os.postDelayed
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseActivity
-import com.ceslab.firemesh.presentation.main.MainActivity
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import timber.log.Timber
 
 class SplashActivity : BaseActivity() {

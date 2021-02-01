@@ -4,5 +4,5 @@
     <item
         app:showAsAction="always"
         android:id="@+id/item_ota"
-        android:title="OTA" />
+        android:title="@string/options_menu_item_ota" />
 </menu>

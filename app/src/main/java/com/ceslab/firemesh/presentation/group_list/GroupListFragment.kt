@@ -4,12 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
-import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.main.MainActivity
-import com.ceslab.firemesh.presentation.network.NetworkFragment
-import com.ceslab.firemesh.presentation.scan.NetworkListRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_group_list.*
-import kotlinx.android.synthetic.main.fragment_scan.*
 import timber.log.Timber
 
 class GroupListFragment : BaseFragment(){
@@ -35,6 +30,7 @@ class GroupListFragment : BaseFragment(){
         rv_group_list.layoutManager = linearLayoutManager
         rv_group_list.setHasFixedSize(true)
         rv_group_list.adapter = groupListRecyclerViewAdapter
+
         groupListRecyclerViewAdapter.setDataList(mutableListOf("A","B"))
     }
 }

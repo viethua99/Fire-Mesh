@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Provisioning Device"
+        android:text="@string/dialog_provision_bottom_provisioning_device"
         android:textColor="@color/primary_color"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
-        android:hint="Node name">
+        android:hint="@string/dialog_provision_bottom_node_name_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_node_name"
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Network"
+            android:text="@string/dialog_provision_bottom_network"
             android:textColor="@color/primary_color"
             android:textSize="16sp" />
 
@@ -60,5 +60,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-        android:text="Provision" />
+        android:text="@string/dialog_provision_bottom_provision" />
 </LinearLayout>

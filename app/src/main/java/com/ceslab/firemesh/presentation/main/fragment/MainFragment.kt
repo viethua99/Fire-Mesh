@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.main
+package com.ceslab.firemesh.presentation.main.fragment
 
 import android.view.View
 import com.ceslab.firemesh.R

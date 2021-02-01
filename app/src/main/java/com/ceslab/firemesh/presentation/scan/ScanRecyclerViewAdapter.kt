@@ -46,7 +46,7 @@ class ScanRecyclerViewAdapter(context: Context) :
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         var tvDeviceName: TextView = view.findViewById(R.id.tv_device_name)
-        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_device_address)
+        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_node_address)
         var tvRssi: TextView = view.findViewById(R.id.tv_device_rssi)
         var btnProvision: Button = view.findViewById(R.id.btn_provision)
 

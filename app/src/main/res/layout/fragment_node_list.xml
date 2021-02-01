@@ -4,8 +4,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="#ececec"
-
+        android:background="@color/gray_background_color"
         android:id="@+id/rv_node_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

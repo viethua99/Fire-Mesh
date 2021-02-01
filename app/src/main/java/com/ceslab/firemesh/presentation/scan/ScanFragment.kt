@@ -29,16 +29,19 @@ class ScanFragment : BaseFragment(){
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         scannerRecyclerViewAdapter = ScanRecyclerViewAdapter(view!!.context)
-        scannerRecyclerViewAdapter.itemClickListener = object : BaseRecyclerViewAdapter.ItemClickListener<String> {
-            override fun onClick(position: Int, item: String) {
-                val provisionBottomDialog = ProvisionBottomDialog()
-                provisionBottomDialog.show(fragmentManager!!,"ProvisionBottomDialog")
-
-            }
-        }
+        scannerRecyclerViewAdapter.itemClickListener = onProvisionButtonClickedListener
         rv_scan.layoutManager = linearLayoutManager
         rv_scan.setHasFixedSize(true)
         rv_scan.adapter = scannerRecyclerViewAdapter
+
         scannerRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D"))
+    }
+
+    private val onProvisionButtonClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<String> {
+        override fun onClick(position: Int, item: String) {
+            Timber.d("onProvisionButtonClickedListener: clicked")
+            val provisionBottomDialog = ProvisionBottomDialog()
+            provisionBottomDialog.show(fragmentManager!!,"ProvisionBottomDialog")
+        }
     }
 }

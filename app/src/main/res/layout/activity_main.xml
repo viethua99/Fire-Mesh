@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.main.MainActivity">
+    tools:context=".presentation.main.activity.MainActivity">
 
     <LinearLayout
         android:id="@+id/bluetooth_enable"
@@ -26,7 +25,7 @@
             android:id="@+id/bluetooth_enable_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.3"
             android:text="@string/main_activity_enable_button"
             android:textAllCaps="false" />
@@ -51,7 +50,7 @@
             android:id="@+id/location_enable_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.3"
             android:text="@string/main_activity_enable_button"
             android:textAllCaps="false" />

@@ -1,6 +1,6 @@
 package com.ceslab.firemesh.di
 
-import com.ceslab.firemesh.presentation.main.MainActivity
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

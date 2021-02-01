@@ -5,10 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.group_list.GroupListRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.main.MainActivity
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
-import kotlinx.android.synthetic.main.fragment_group_list.*
 import kotlinx.android.synthetic.main.fragment_node_list.*
 import timber.log.Timber
 
@@ -32,15 +30,19 @@ class NodeListFragment : BaseFragment(){
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         nodeListRecyclerViewAdapter = NodeListRecyclerViewAdapter(view!!.context)
-        nodeListRecyclerViewAdapter.itemClickListener = object : BaseRecyclerViewAdapter.ItemClickListener<String>{
-            override fun onClick(position: Int, item: String) {
-                val mainActivity = activity as MainActivity
-                mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
-            }
-        }
+        nodeListRecyclerViewAdapter.itemClickListener = onNodeItemClickedListener
         rv_node_list.layoutManager = linearLayoutManager
         rv_node_list.setHasFixedSize(true)
         rv_node_list.adapter = nodeListRecyclerViewAdapter
+
         nodeListRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D"))
+    }
+
+    private val onNodeItemClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<String> {
+        override fun onClick(position: Int, item: String) {
+            Timber.d("onNodeItemClickedListener: clicked")
+            val mainActivity = activity as MainActivity
+            mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+        }
     }
 }

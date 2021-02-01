@@ -23,7 +23,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/icon_alarm" />
+                android:src="@drawable/img_alarm" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -36,17 +36,17 @@
                     android:id="@+id/tv_device_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unknown Device"
+                    android:text="@string/item_scanned_device_device_name"
                     android:textColor="@color/primary_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_device_address"
+                    android:id="@+id/tv_node_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="00:00:00:00:00"
+                    android:text="@string/item_scanned_device_device_address"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
@@ -60,7 +60,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/icon_signal" />
+                        android:src="@drawable/img_signal" />
 
                     <TextView
                         android:id="@+id/tv_device_rssi"
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
-                        android:text="-53 dBm"
+                        android:text="@string/item_scanned_device_rssi"
                         android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -85,7 +85,7 @@
                     android:id="@+id/btn_provision"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Provision"
+                    android:text="@string/item_scanned_provision_button"
                     android:textAllCaps="false" />
             </LinearLayout>
         </LinearLayout>

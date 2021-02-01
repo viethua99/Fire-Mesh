@@ -24,7 +24,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/icon_group_2" />
+                android:src="@drawable/img_group_2" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
                     android:id="@+id/tv_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Demo Group"
+                    android:text="@string/item_group_group_name"
                     android:textColor="@color/primary_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="Group Key"
+                    android:text="@string/item_group_group_key"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>

@@ -6,6 +6,8 @@
     <string name="nav_item_groups">Groups</string>
     <string name="nav_item_nodes">Nodes</string>
 
+    <string name="options_menu_item_ota">OTA</string>
+
     <string name="main_activity_enable_button">Enable</string>
     <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
     <string name="main_activity_location_adapter_disabled">Location adapter is disabled</string>
@@ -20,17 +22,68 @@
     <string name="fragment_node_config_group">Group</string>
     <string name="fragment_node_config_functionality">Functionality</string>
 
-    <string name="fragment_node_info_node_name">Node name: </string>
-    <string name="fragment_node_info_unicast_address">Unicast address: </string>
-    <string name="fragment_node_info_uuid">UUID: </string>
-    <string name="fragment_node_info_network_name">Network name: </string>
-    <string name="fragment_node_info_net_key">Netkey: </string>
-    <string name="fragment_node_info_app_key">Appkey: </string>
-    <string name="fragment_node_info_dev_key">Devkey: </string>
+    <string name="fragment_node_info_node_name">Node Name</string>
+    <string name="fragment_node_info_node_details">Node Details</string>
+    <string name="fragment_node_info_unicast_address">Unicast Address</string>
+    <string name="fragment_node_info_uuid">UUID</string>
+    <string name="fragment_node_info_network_name">Network Name</string>
+    <string name="fragment_node_info_network_key">Network Key</string>
+    <string name="fragment_node_info_app_key">App Key:</string>
+    <string name="fragment_node_info_dev_key">Dev Key:</string>
+    <string name="fragment_node_info_model_table">Model Table</string>
     <string name="fragment_node_info_cell_element">Element</string>
     <string name="fragment_node_info_cell_vendor">Vendor</string>
     <string name="fragment_node_info_cell_id">ID</string>
     <string name="fragment_node_info_cell_description">Model Description</string>
+
+    <string name="item_group_group_name">Group Name</string>
+    <string name="item_group_group_key">Group Key</string>
+
+    <string name="item_network_network_name">Network Name</string>
+    <string name="item_network_network_key">Network Key</string>
+
+    <string name="item_scanned_device_device_name">Device Name</string>
+    <string name="item_scanned_device_rssi">-53 dBm</string>
+    <string name="item_scanned_provision_button">Provision</string>
+
+    <string name="item_scanned_device_device_address">00:00:00:00:00</string>
+
+    <string name="item_node_node_name">Node Name</string>
+    <string name="item_node_node_address">00:00:00:00:00</string>
+    <string name="item_node_node_status">Connected</string>
+    <string name="item_node_node_battery_percent">100%</string>
+
+
+
+
+    <string name="dialog_ota">OTA</string>
+    <string name="dialog_ota_config_header">OTA Device Firmware Update</string>
+    <string name="dialog_ota_process_header">OTA Progress</string>
+    <string name="dialog_ota_process_file_name_colon">File name:</string>
+    <string name="dialog_ota_process_file_size_colon">File size:</string>
+    <string name="dialog_ota_process_packet_size_colon">Packet size:</string>
+    <string name="dialog_ota_process_zero_percent">0%</string>
+    <string name="dialog_ota_process_end">End</string>
+    <string name="dialog_ota_device_name">Device name</string>
+    <string name="dialog_ota_partial_ota">PARTIAL OTA</string>
+    <string name="dialog_ota_full_ota">FULL OTA</string>
+    <string name="dialog_ota_mode_colon">Mode:</string>
+    <string name="dialog_ota_mtu_colon">MTU:</string>
+    <string name="dialog_ota_max_mtu">250</string>
+    <string name="dialog_ota_reliability">Reliability</string>
+    <string name="dialog_ota_speed">Speed</string>
+    <string name="dialog_ota_priority">Priority</string>
+    <string name="dialog_ota_priority_low">LOW</string>
+    <string name="dialog_ota_priority_high">HIGH</string>
+    <string name="dialog_ota_application_colon">Application:</string>
+    <string name="dialog_ota_select_application_gbl_file"> Select Application .gbl file</string>
+
+    <string name="dialog_provision_bottom_provisioning_device">Provisioning Device</string>
+    <string name="dialog_provision_bottom_provision">Provision</string>
+    <string name="dialog_provision_bottom_node_name_hint">Node name</string>
+    <string name="dialog_provision_bottom_network">Network</string>
+
+
 
 
 </resources>

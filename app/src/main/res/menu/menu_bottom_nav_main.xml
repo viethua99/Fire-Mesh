@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_item_networks"
-        android:icon="@drawable/icon_mesh"
+        android:icon="@drawable/img_mesh"
         android:title="@string/nav_item_networks" />
     <item
         android:id="@+id/nav_item_scan"
-        android:icon="@drawable/icon_scan"
+        android:icon="@drawable/img_scan"
         android:title="@string/nav_item_scan" />
 </menu>
