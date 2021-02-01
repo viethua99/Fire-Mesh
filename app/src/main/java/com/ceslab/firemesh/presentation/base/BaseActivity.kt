@@ -5,9 +5,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.ceslab.firemesh.factory.ViewModelFactory
 import timber.log.Timber
+import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var fragmentManager: FragmentManager
     protected abstract fun getResLayoutId(): Int

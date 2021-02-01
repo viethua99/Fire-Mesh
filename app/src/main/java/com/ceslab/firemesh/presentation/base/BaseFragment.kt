@@ -7,13 +7,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.ceslab.firemesh.factory.ViewModelFactory
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by Viet Hua on 01/30/2021.
  */
 
 abstract class BaseFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     protected abstract fun getResLayoutId(): Int
     protected abstract fun onMyViewCreated(view: View)
