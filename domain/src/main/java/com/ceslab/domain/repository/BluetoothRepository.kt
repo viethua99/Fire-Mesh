@@ -1,7 +1,8 @@
 package com.ceslab.domain.repository
 
-import io.reactivex.rxjava3.core.Completable
+import com.ceslab.domain.model.BluetoothStatus
+import io.reactivex.rxjava3.core.Observable
 
 interface BluetoothRepository {
-    fun testMethod(): Completable
+    fun checkBluetoothState(): Observable<BluetoothStatus>
 }
