@@ -8,6 +8,7 @@ import android.view.View
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.dialogs.OTADialogConfig
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import kotlinx.android.synthetic.main.fragment_node.*
 import timber.log.Timber
 
@@ -30,6 +31,7 @@ class NodeFragment : BaseFragment() {
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setupDeviceViewPager()
     }
 

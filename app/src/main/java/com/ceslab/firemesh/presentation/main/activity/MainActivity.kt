@@ -10,13 +10,12 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.ceslab.domain.model.BluetoothStatus
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
@@ -68,27 +67,30 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private val onBluetoothStatusObserver = Observer<BluetoothStatus> {
-        Timber.d("onBluetoothStatusObserver: $it")
-        when(it){
-            BluetoothStatus.BLUETOOTH_STATUS_CHANGED -> showBluetoothEnableView()
-            BluetoothStatus.LOCATION_STATUS_CHANGED -> showLocationEnableView()
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            if (item?.itemId == android.R.id.home) {
+                onBackPressed()
+                return true
+            }
         }
+        return super.onOptionsItemSelected(item)
     }
 
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidInjection.inject(this)
-
-        mainActivityViewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
-        mainActivityViewModel.checkBluetoothState()
-        mainActivityViewModel.bluetoothStatus.observe(this, onBluetoothStatusObserver)
+        mainActivityViewModel =
+            ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
     }
 
     private fun setupViews() {
         Timber.d("setupViews")
-        replaceFragment(MainFragment(), MainFragment.TAG, R.id.container_main)
+        replaceFragmentWithoutAddToBackStack(MainFragment(), MainFragment.TAG, R.id.container_main)
         showBluetoothEnableView()
         showLocationEnableView()
     }

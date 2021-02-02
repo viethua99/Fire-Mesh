@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <FrameLayout
         android:layout_above="@id/bottom_nav_network"
         android:id="@+id/container_nav_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <androidx.viewpager.widget.ViewPager
+        android:layout_above="@id/bottom_nav_network"
+        android:id="@+id/network_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_network"
         android:layout_width="match_parent"
-        app:labelVisibilityMode="labeled"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:itemIconSize="26sp"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_nav_network" />
 </RelativeLayout>
