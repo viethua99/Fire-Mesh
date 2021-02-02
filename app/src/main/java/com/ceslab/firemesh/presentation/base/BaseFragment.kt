@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.ceslab.firemesh.factory.ViewModelFactory
 import timber.log.Timber
+import util.AndroidDialogUtil
 import javax.inject.Inject
 
 /**
@@ -46,25 +47,25 @@ abstract class BaseFragment : Fragment() {
             .commit()
     }
 
-    fun showToastMessage(message: String) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-    }
-
     fun showProgressDialog(message: String) {
-
+        AndroidDialogUtil.getInstance().showLoadingDialog(activity, message)
     }
 
     fun showWarningDialog(message: String) {
+        AndroidDialogUtil.getInstance().showWarningDialog(activity, message)
+    }
 
+    fun showSuccessDialog(message: String) {
+        AndroidDialogUtil.getInstance().showSuccessDialog(activity, message)
     }
 
 
     fun showFailedDialog(message: String) {
-
+        AndroidDialogUtil.getInstance().showFailureDialog(activity, message)
     }
 
     fun hideDialog() {
-
+        AndroidDialogUtil.getInstance().hideDialog()
     }
 
 }

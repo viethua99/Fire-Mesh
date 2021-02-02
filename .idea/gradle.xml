@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/ble-mesh-core" />
             <option value="$PROJECT_DIR$/ble_mesh-android_api-v2_high-release" />
             <option value="$PROJECT_DIR$/ble_mesh-android_api-v2_low-release" />
+            <option value="$PROJECT_DIR$/sweetDialog" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
