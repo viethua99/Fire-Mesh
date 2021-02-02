@@ -1,15 +1,18 @@
 package com.ceslab.firemesh.presentation.scan
 
+import android.os.Handler
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.dialogs.ProvisionBottomDialog
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.presentation.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_scan.*
 import timber.log.Timber
 
-class ScanFragment : BaseFragment(){
+class ScanFragment : BaseFragment() {
     companion object {
         const val TAG = "ScanFragment"
     }
@@ -23,9 +26,16 @@ class ScanFragment : BaseFragment(){
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
         setupRecyclerView()
+        btn_scanning.setOnClickListener {
+            tv_scanning_message.text = "Looking for nearby devices..."
+            Handler().postDelayed(Runnable {
+                scannerRecyclerViewAdapter.setDataList(mutableListOf("A", "B", "C", "D"))
+                looking_for_devices_background.visibility = View.INVISIBLE
+            }, 5000)
+        }
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         scannerRecyclerViewAdapter = ScanRecyclerViewAdapter(view!!.context)
@@ -34,14 +44,14 @@ class ScanFragment : BaseFragment(){
         rv_scan.setHasFixedSize(true)
         rv_scan.adapter = scannerRecyclerViewAdapter
 
-        scannerRecyclerViewAdapter.setDataList(mutableListOf("A","B","C","D"))
     }
 
-    private val onProvisionButtonClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<String> {
-        override fun onClick(position: Int, item: String) {
-            Timber.d("onProvisionButtonClickedListener: clicked")
-            val provisionBottomDialog = ProvisionBottomDialog()
-            provisionBottomDialog.show(fragmentManager!!,"ProvisionBottomDialog")
+    private val onProvisionButtonClickedListener =
+        object : BaseRecyclerViewAdapter.ItemClickListener<String> {
+            override fun onClick(position: Int, item: String) {
+                Timber.d("onProvisionButtonClickedListener: clicked")
+                val provisionBottomDialog = ProvisionBottomDialog()
+                provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
+            }
         }
-    }
 }
