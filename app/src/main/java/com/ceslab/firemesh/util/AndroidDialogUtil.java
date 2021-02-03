@@ -1,4 +1,4 @@
-package util;
+package com.ceslab.firemesh.util;
 
 import android.content.Context;
 
@@ -30,7 +30,7 @@ public class AndroidDialogUtil {
         return INSTANCE;
     }
 
-    public void showSuccessDialog(Context context,String message) {
+    public void showSuccessDialog(Context context, String message) {
         hideDialog();
         sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE);
         sweetAlertDialog

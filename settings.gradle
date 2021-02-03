@@ -1,5 +1,4 @@
 include ':sweetDialog'
-include ':ble-mesh-core'
 include ':ble_mesh-android_api-v2_low-release'
 include ':ble_mesh-android_api-v2_high-release'
 include ':app'

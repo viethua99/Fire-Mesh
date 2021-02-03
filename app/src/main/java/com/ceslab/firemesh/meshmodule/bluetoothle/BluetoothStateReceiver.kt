@@ -1,18 +1,17 @@
-package com.ceslab.ble_mesh_core.bluetoothle
-
+package com.ceslab.firemesh.meshmodule.bluetoothle
 
 import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import timber.log.Timber
 
 /**
  * Created by Viet Hua on 11/23/2020.
  */
 
 class BluetoothStateReceiver : BroadcastReceiver() {
-    private val TAG: String = javaClass.canonicalName!!
 
     private val listeners: ArrayList<BluetoothStateListener> = ArrayList()
 
@@ -48,7 +47,7 @@ class BluetoothStateReceiver : BroadcastReceiver() {
     private fun notifyListeners(enabled: Boolean) {
         synchronized(listeners) {
             listeners.forEach { listener ->
-                Log.d(TAG, "onBluetoothStateChanged=$enabled")
+                Timber.d("onBluetoothStateChanged=$enabled")
                 listener.onBluetoothStateChanged(enabled)
             }
         }

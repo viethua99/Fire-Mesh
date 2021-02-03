@@ -1,18 +1,17 @@
-package com.ceslab.ble_mesh_core.bluetoothle
-
+package com.ceslab.firemesh.meshmodule.bluetoothle
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
 import android.util.Log
+import timber.log.Timber
 
 /**
  * Created by Viet Hua on 11/23/2020.
  */
 
 class LocationStateReceiver : BroadcastReceiver() {
-    private val TAG: String = javaClass.canonicalName!!
 
     private val listeners: ArrayList<LocationStateListener> = ArrayList()
 
@@ -37,7 +36,7 @@ class LocationStateReceiver : BroadcastReceiver() {
     private fun notifyListeners() {
         synchronized(listeners) {
             listeners.forEach { listener ->
-                Log.d(TAG, "onLocationStateChanged")
+                Timber.d("onLocationStateChanged")
                 listener.onLocationStateChanged()
             }
         }

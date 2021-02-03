@@ -15,8 +15,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import dagger.android.AndroidInjection
@@ -67,9 +69,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (supportFragmentManager.backStackEntryCount > 0) {
             if (item?.itemId == android.R.id.home) {
@@ -86,6 +85,8 @@ class MainActivity : BaseActivity() {
         AndroidInjection.inject(this)
         mainActivityViewModel =
             ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
+
+        mainActivityViewModel.getMeshStatus().observe(this, onGetMeshStatusObserver)
     }
 
     private fun setupViews() {
@@ -158,6 +159,16 @@ class MainActivity : BaseActivity() {
             }
         } else {
             location_enable.visibility = View.GONE
+        }
+    }
+
+
+    private val onGetMeshStatusObserver = Observer<MeshStatus> {
+        it.let {
+            when(it) {
+                MeshStatus.BLUETOOTH_STATE_CHANGED -> showBluetoothEnableView()
+                else -> showLocationEnableView()
+            }
         }
     }
 }

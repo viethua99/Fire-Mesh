@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.ceslab.firemesh.factory.ViewModelFactory
+import com.ceslab.firemesh.util.AndroidDialogUtil
 import timber.log.Timber
-import util.AndroidDialogUtil
 import javax.inject.Inject
 
 /**

@@ -10,13 +10,13 @@ import androidx.fragment.app.DialogFragment
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
+import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.dialog_provision_bottom_sheet.view.*
 import kotlinx.android.synthetic.main.fragment_scan.*
 import timber.log.Timber
-import util.AndroidDialogUtil
 
 class ProvisionBottomDialog : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {

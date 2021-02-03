@@ -1,10 +1,9 @@
-package com.ceslab.ble_mesh_core.bluetoothle
-
+package com.ceslab.firemesh.meshmodule.bluetoothle
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
 import android.os.ParcelUuid
-import android.util.Log
+import timber.log.Timber
 import java.util.ArrayList
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -13,7 +12,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
  */
 
 class BluetoothScanner(bluetoothStateReceiver: BluetoothStateReceiver) : ScanCallback(), BluetoothStateReceiver.BluetoothStateListener {
-    private val TAG: String = javaClass.canonicalName!!
 
     private var leScanStarted: Boolean = false
 
@@ -79,8 +77,6 @@ class BluetoothScanner(bluetoothStateReceiver: BluetoothStateReceiver) : ScanCal
         return leScanStarted
     }
 
-    //
-
     private fun initBluetoothLeScanner() {
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
@@ -104,7 +100,7 @@ class BluetoothScanner(bluetoothStateReceiver: BluetoothStateReceiver) : ScanCal
 
     override fun onBluetoothStateChanged(enabled: Boolean) {
         synchronized(leScanStarted) {
-            Log.d(TAG, "onBluetoothStateChanged")
+            Timber.d( "onBluetoothStateChanged")
             if (leScanStarted) {
                 leScanStarted = false
             }

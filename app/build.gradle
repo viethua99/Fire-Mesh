@@ -43,10 +43,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
 
-    //Import Module
-    implementation project(':ble-mesh-core')
-    implementation project(':sweetDialog')
+    //BLE MESH Modules
+    implementation project(path: ':ble_mesh-android_api-v2_low-release')
+    implementation project(path: ':ble_mesh-android_api-v2_high-release')
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    //Dialog module
+    implementation project(':sweetDialog')
     //Rx Java/RxAndroid
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
