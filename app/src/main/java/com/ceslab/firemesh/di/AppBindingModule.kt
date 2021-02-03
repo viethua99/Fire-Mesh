@@ -1,6 +1,7 @@
 package com.ceslab.firemesh.di
 
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.presentation.scan.ScanFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -8,5 +9,8 @@ import dagger.android.ContributesAndroidInjector
 abstract class AppBindingModule {
     @ContributesAndroidInjector
     abstract fun mainActivity() : MainActivity
+
+    @ContributesAndroidInjector
+    abstract fun scanFragment(): ScanFragment
 
 }

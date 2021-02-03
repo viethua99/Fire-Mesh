@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.factory.ViewModelKey
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
+import com.ceslab.firemesh.presentation.scan.ScanViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -18,4 +19,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainActivityViewModel::class)
     abstract fun bindMainActivityModel(mainActivityViewModel: MainActivityViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScanViewModel::class)
+    abstract fun bindScanViewModel(scanViewModel: ScanViewModel):ViewModel
 }

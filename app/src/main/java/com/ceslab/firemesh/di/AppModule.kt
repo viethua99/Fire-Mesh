@@ -7,6 +7,10 @@ import android.location.LocationManager
 import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothScanner
 import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothStateReceiver
 import com.ceslab.firemesh.meshmodule.bluetoothle.LocationStateReceiver
+import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
+import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConnectionManager
+import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
+import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.myapp.MyApplication
 import dagger.Module
 import dagger.Provides
@@ -42,6 +46,38 @@ class AppModule {
     @Singleton
     fun provideBluetoothScanner(bluetoothStateReceiver: BluetoothStateReceiver): BluetoothScanner {
         return BluetoothScanner(bluetoothStateReceiver)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBluetoothMeshManager(context: Context): BluetoothMeshManager {
+        return BluetoothMeshManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMeshNetworkManager(bluetoothMeshManager: BluetoothMeshManager): MeshNetworkManager {
+        return MeshNetworkManager(bluetoothMeshManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMeshConnectionManager(
+        context: Context,
+        bluetoothScanner: BluetoothScanner,
+        bluetoothMeshManager: BluetoothMeshManager
+    ): MeshConnectionManager {
+        return MeshConnectionManager(
+            context,
+            bluetoothScanner,
+            bluetoothMeshManager.bluetoothMesh.connectableDeviceHelper
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideMeshNodeManager(): MeshNodeManager {
+        return MeshNodeManager()
     }
 
 }

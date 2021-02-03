@@ -7,11 +7,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import timber.log.Timber
 
 class ScanRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<String, ScanRecyclerViewAdapter.ViewHolder>(context) {
+    BaseRecyclerViewAdapter<ConnectableDeviceDescription, ScanRecyclerViewAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,9 +25,9 @@ class ScanRecyclerViewAdapter(context: Context) :
         holder.renderUI(connectableDeviceDescription)
     }
 
-    fun replaceDeviceByIndex(connectableDeviceDescription: String) {
+    fun replaceDeviceByIndex(connectableDeviceDescription: ConnectableDeviceDescription) {
         Timber.d("replaceDeviceByIndex")
-        val pastDeviceIndex = getDeviceIndexByAddress(connectableDeviceDescription)
+        val pastDeviceIndex = getDeviceIndexByAddress(connectableDeviceDescription.deviceAddress)
         if (pastDeviceIndex >= 0) {
             val pastDevice = dataList[pastDeviceIndex]
             dataList[pastDeviceIndex] = connectableDeviceDescription
@@ -40,7 +41,7 @@ class ScanRecyclerViewAdapter(context: Context) :
     }
 
     private fun getDeviceIndexByAddress(deviceAddress: String?): Int {
-        return -1
+        return dataList.indexOfFirst { deviceInfo -> deviceInfo.deviceAddress.equals(deviceAddress) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,9 +53,17 @@ class ScanRecyclerViewAdapter(context: Context) :
 
 
 
-        fun renderUI(connectableDeviceDescription: String) {
+        fun renderUI(connectableDeviceDescription: ConnectableDeviceDescription) {
+            if(connectableDeviceDescription.deviceName == null){
+                tvDeviceName.text = "Unknown Device"
+            } else {
+                tvDeviceName.text = connectableDeviceDescription.deviceName
+            }
+
+            tvDeviceAddress.text = connectableDeviceDescription.deviceAddress
+            tvRssi.text = connectableDeviceDescription.rssi.toString()  + " dBm"
             btnProvision.setOnClickListener {
-                itemClickListener.onClick(adapterPosition,"Test")
+                itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
             }
         }
     }
