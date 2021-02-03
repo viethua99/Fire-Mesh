@@ -1,7 +1,7 @@
 package com.ceslab.firemesh.presentation.scan
 
 import android.graphics.Color
-import android.os.Handler
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -10,9 +10,7 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.dialogs.ProvisionBottomDialog
-import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.splash.SplashActivity
+import com.ceslab.firemesh.presentation.provision_dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_scan.*
 import timber.log.Timber
@@ -92,6 +90,9 @@ class ScanFragment : BaseFragment() {
             override fun onClick(position: Int, item: ConnectableDeviceDescription) {
                 Timber.d("onProvisionButtonClickedListener: clicked")
                 val provisionBottomDialog = ProvisionBottomDialog()
+                val bundle = Bundle()
+                bundle.putSerializable("ConnectableDeviceDescription",item)
+                provisionBottomDialog.arguments = bundle
                 provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
             }
         }

@@ -2,12 +2,13 @@ package com.ceslab.firemesh.meshmodule.model
 
 import android.bluetooth.le.ScanResult
 import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
+import java.io.Serializable
 
 /**
  * Created by Viet Hua on 11/23/2020.
  */
 
-class ConnectableDeviceDescription {
+class ConnectableDeviceDescription : Serializable {
     var deviceName: String? = null
     var deviceAddress: String? = null
     var rssi: Int = 0

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.factory.ViewModelKey
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
+import com.ceslab.firemesh.presentation.provision_dialog.ProvisionBottomDialog
+import com.ceslab.firemesh.presentation.provision_dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.scan.ScanViewModel
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ScanViewModel::class)
     abstract fun bindScanViewModel(scanViewModel: ScanViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProvisionDialogViewModel::class)
+    abstract fun bindProvisionDialogViewModel(provisionDialogViewModel: ProvisionDialogViewModel):ViewModel
 }

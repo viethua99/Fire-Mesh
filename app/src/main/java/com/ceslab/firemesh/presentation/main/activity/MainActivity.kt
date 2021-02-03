@@ -167,7 +167,7 @@ class MainActivity : BaseActivity() {
         it.let {
             when(it) {
                 MeshStatus.BLUETOOTH_STATE_CHANGED -> showBluetoothEnableView()
-                else -> showLocationEnableView()
+                MeshStatus.LOCATION_STATE_CHANGED -> showLocationEnableView()
             }
         }
     }
