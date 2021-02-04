@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.factory.ViewModelKey
+import com.ceslab.firemesh.presentation.group_list.GroupListViewModel
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
+import com.ceslab.firemesh.presentation.network_list.NetworkListViewModel
 import com.ceslab.firemesh.presentation.provision_dialog.ProvisionBottomDialog
 import com.ceslab.firemesh.presentation.provision_dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.scan.ScanViewModel
@@ -27,6 +29,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ScanViewModel::class)
     abstract fun bindScanViewModel(scanViewModel: ScanViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NetworkListViewModel::class)
+    abstract fun bindNetworkListViewModel(networkListViewModel: NetworkListViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(GroupListViewModel::class)
+    abstract fun bindGroupListViewModel(groupListViewModel: GroupListViewModel):ViewModel
 
     @Binds
     @IntoMap
