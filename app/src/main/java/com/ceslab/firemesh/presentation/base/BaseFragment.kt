@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.util.AndroidDialogUtil
 import timber.log.Timber
@@ -42,6 +43,7 @@ abstract class BaseFragment : Fragment() {
         Timber.d("replaceFragment: name=${fragment.javaClass.name}")
         val fragmentManager = childFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,android.R.anim.slide_out_right)
         fragmentTransaction.replace(containerId, fragment, tag)
             .addToBackStack(tag)
             .commit()
