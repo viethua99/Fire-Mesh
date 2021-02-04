@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
-import com.ceslab.firemesh.presentation.network_list.NetworkListViewModel
+import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupClickListener
+import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupDialog
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
-import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group_list.*
 import timber.log.Timber
@@ -29,6 +29,12 @@ class GroupListFragment : BaseFragment(){
        Timber.d("onMyViewCreated")
         setupViewModel()
         setupRecyclerView()
+        setupAddGroupFab()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
     }
 
     private fun setupViewModel() {
@@ -47,10 +53,26 @@ class GroupListFragment : BaseFragment(){
         rv_group_list.adapter = groupListRecyclerViewAdapter
     }
 
+    private fun setupAddGroupFab() {
+        Timber.d("setupAddGroupFab")
+        fab_add_group.setOnClickListener {
+            Timber.d("onAddGroupClick")
+            val addGroupDialog = AddGroupDialog()
+            addGroupDialog.show(fragmentManager!!, "AddGroupDialog")
+            addGroupDialog.setAddGroupClickListener(onAddGroupClickListener)
+        }
+    }
+
     private val groupListObserver = Observer<Set<Group>> {
         activity?.runOnUiThread {
             groupListRecyclerViewAdapter.setDataList(it.toMutableList())
 
+        }
+    }
+
+    private val onAddGroupClickListener = object : AddGroupClickListener {
+        override fun onClicked() {
+           groupListViewModel.getGroupList()
         }
     }
 }

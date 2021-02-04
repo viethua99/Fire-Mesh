@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.provision_dialog
+package com.ceslab.firemesh.presentation.scan.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,11 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
-import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.network.NetworkFragment
 import com.ceslab.firemesh.presentation.node.NodeFragment
-import com.ceslab.firemesh.presentation.scan.ScanViewModel
 import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.ceslab.firemesh.util.AppUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -75,7 +72,8 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        provisionDialogViewModel = ViewModelProvider(this, viewModelFactory).get(ProvisionDialogViewModel::class.java)
+        provisionDialogViewModel = ViewModelProvider(this, viewModelFactory).get(
+            ProvisionDialogViewModel::class.java)
         provisionDialogViewModel.isProvisioningSucceed.observe(this,isProvisioningSucceedObserver)
         provisionDialogViewModel.errorMessage.observe(this,onProvisioningErrorObserver)
     }
@@ -95,11 +93,11 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
                         networkIndex = position
                     }
                 }
-            if (AppUtil.isDeviceNameValid(nodeName)) {
+            if (AppUtil.isNameValid(nodeName)) {
                  val deviceDescription = mAgrs.getSerializable("ConnectableDeviceDescription") as ConnectableDeviceDescription
-                dialog?.hide()
                 AndroidDialogUtil.getInstance().showLoadingDialog(activity,"Provisioning...")
                 provisionDialogViewModel.provisionDevice(deviceDescription,networkIndex)
+                dialog?.dismiss()
             }
         }
     }

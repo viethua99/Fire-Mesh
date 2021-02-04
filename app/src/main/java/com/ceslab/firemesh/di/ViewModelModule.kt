@@ -5,10 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.factory.ViewModelKey
 import com.ceslab.firemesh.presentation.group_list.GroupListViewModel
+import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupViewModel
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
 import com.ceslab.firemesh.presentation.network_list.NetworkListViewModel
-import com.ceslab.firemesh.presentation.provision_dialog.ProvisionBottomDialog
-import com.ceslab.firemesh.presentation.provision_dialog.ProvisionDialogViewModel
+import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkViewModel
+import com.ceslab.firemesh.presentation.scan.dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.scan.ScanViewModel
 import dagger.Binds
 import dagger.Module
@@ -44,4 +45,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ProvisionDialogViewModel::class)
     abstract fun bindProvisionDialogViewModel(provisionDialogViewModel: ProvisionDialogViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddGroupViewModel::class)
+    abstract fun bindAddGroupDialogViewModel(addGroupViewModel: AddGroupViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddNetworkViewModel::class)
+    abstract fun bindAddNetworkDialogViewModel(addNetworkViewModel: AddNetworkViewModel):ViewModel
 }

@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.provision_dialog
+package com.ceslab.firemesh.presentation.scan.dialog
 
 
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,6 @@ import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.meshmodule.model.MeshConnectableDevice
-import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.connectable_device.ConnectableDevice
 import com.siliconlab.bluetoothmesh.adk.data_model.node.Node

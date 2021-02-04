@@ -15,11 +15,9 @@ class NetworkListViewModel @Inject constructor(
 ) : ViewModel(){
     private val networkList = MutableLiveData<Set<Subnet>>()
 
-    init {
-        networkList.value = meshNetworkManager.network?.subnets!!
-    }
 
     fun getNetworkList() : LiveData<Set<Subnet>>{
+        networkList.value = meshNetworkManager.network?.subnets!!
         return networkList
     }
 
