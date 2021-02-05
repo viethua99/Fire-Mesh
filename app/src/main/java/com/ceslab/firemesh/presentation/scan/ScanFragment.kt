@@ -92,7 +92,7 @@ class ScanFragment : BaseFragment() {
                 val provisionBottomDialog =
                     ProvisionBottomDialog()
                 val bundle = Bundle()
-                bundle.putSerializable("ConnectableDeviceDescription",item)
+                bundle.putSerializable(ProvisionBottomDialog.DEVICE_DESCRIPTION_KEY,item)
                 provisionBottomDialog.arguments = bundle
                 provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
             }

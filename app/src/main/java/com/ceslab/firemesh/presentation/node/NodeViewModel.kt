@@ -15,7 +15,7 @@ class NodeViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
-
+    var isFirstConfig = false
     private val meshStatus = MutableLiveData<MeshStatus>()
     private val meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
 
@@ -23,14 +23,20 @@ class NodeViewModel @Inject constructor(
         Timber.d("connectToNode")
         meshConnectionManager.addMeshConnectionListener(meshConnectionListener)
         meshConnectionManager.addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
-        meshConnectionManager.connect(bluetoothMeshManager.provisionedMeshConnectableDevice!!, true)
+
+        if(isFirstConfig){
+            meshConnectionManager.connect(bluetoothMeshManager.provisionedMeshConnectableDevice!!, true)
+        }
     }
 
     fun disconnectFromNode(){
         Timber.d("disconnectFromNode")
         meshConnectionManager.removeMeshConnectionListener(meshConnectionListener)
         meshConnectionManager.removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
-        meshConnectionManager.disconnect()
+
+        if(isFirstConfig){
+            meshConnectionManager.disconnect()
+        }
     }
 
     fun getMeshStatus(): LiveData<MeshStatus> {
@@ -40,19 +46,21 @@ class NodeViewModel @Inject constructor(
     private val meshConnectionListener = object : ConnectionStatusListener {
         override fun connecting() {
             Timber.d("connecting")
-            meshStatus.value = MeshStatus.CONNECTING_NODE
+            meshStatus.value = MeshStatus.MESH_CONNECTING
         }
 
         override fun connected() {
             Timber.d("connected")
-            meshConnectionManager.setupInitialNodeConfiguration(meshNodeToConfigure.node)
-            meshStatus.value = MeshStatus.CONNECTED_NODE
+            if(isFirstConfig){
+                meshConnectionManager.setupInitialNodeConfiguration(meshNodeToConfigure.node)
+            }
+            meshStatus.value = MeshStatus.MESH_CONNECTED
 
         }
 
         override fun disconnected() {
             Timber.d("disconnected")
-            meshStatus.value = MeshStatus.DISCONNECTED_NODE
+            meshStatus.value = MeshStatus.MESH_DISCONNECTED
         }
     }
 

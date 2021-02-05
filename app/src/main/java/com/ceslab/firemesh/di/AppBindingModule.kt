@@ -3,11 +3,13 @@ package com.ceslab.firemesh.di
 import com.ceslab.firemesh.presentation.group_list.GroupListFragment
 import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupDialog
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.presentation.network.NetworkFragment
 import com.ceslab.firemesh.presentation.network_list.NetworkListFragment
 import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkDialog
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigFragment
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoFragment
+import com.ceslab.firemesh.presentation.node_list.NodeListFragment
 import com.ceslab.firemesh.presentation.scan.dialog.ProvisionBottomDialog
 import com.ceslab.firemesh.presentation.scan.ScanFragment
 import dagger.Module
@@ -25,6 +27,9 @@ abstract class AppBindingModule {
     abstract fun networkListFragment(): NetworkListFragment
 
     @ContributesAndroidInjector
+    abstract fun networkFragment(): NetworkFragment
+
+    @ContributesAndroidInjector
     abstract fun groupListFragment(): GroupListFragment
 
     @ContributesAndroidInjector
@@ -35,6 +40,9 @@ abstract class AppBindingModule {
 
     @ContributesAndroidInjector
     abstract fun nodeFragment(): NodeFragment
+
+    @ContributesAndroidInjector
+    abstract fun nodeListFragment(): NodeListFragment
 
     @ContributesAndroidInjector
     abstract fun provisionBottomDialog(): ProvisionBottomDialog

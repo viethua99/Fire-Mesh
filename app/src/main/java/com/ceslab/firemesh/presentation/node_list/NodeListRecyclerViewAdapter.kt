@@ -3,12 +3,15 @@ package com.ceslab.firemesh.presentation.node_list
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
+import com.ceslab.firemesh.util.ConverterUtil
 
 class NodeListRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<String, NodeListRecyclerViewAdapter.ViewHolder>(context) {
+    BaseRecyclerViewAdapter<MeshNode, NodeListRecyclerViewAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -17,21 +20,30 @@ class NodeListRecyclerViewAdapter(context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val connectableDeviceDescription = dataList[position]
-        holder.renderUI(connectableDeviceDescription)
+        val meshNode = dataList[position]
+        holder.renderUI(meshNode)
     }
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        var tvNodeName: TextView = view.findViewById(R.id.tv_node_name)
+        var tvNodeAddress: TextView = view.findViewById(R.id.tv_node_address)
+        var tvNodeStatus : TextView = view.findViewById(R.id.tv_node_status)
+        var tvNodeBattery: TextView = view.findViewById(R.id.tv_node_battery)
         init {
             view.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?) {
-            itemClickListener.onClick(adapterPosition, "test")
+            itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
         }
 
-        fun renderUI(connectableDeviceDescription: String) {
+        fun renderUI(meshNode: MeshNode) {
+            val node = meshNode.node
+            tvNodeName.text = node.name
+            tvNodeAddress.text = node.primaryElementAddress?.toString()
+            tvNodeStatus.text = "Disconnected"
+            tvNodeBattery.text = "999%"
 
         }
     }

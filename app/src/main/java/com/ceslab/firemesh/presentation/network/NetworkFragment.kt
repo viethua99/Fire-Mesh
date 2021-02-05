@@ -1,14 +1,16 @@
 package com.ceslab.firemesh.presentation.network
 
 import android.view.View
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.ceslab.firemesh.R
-import com.ceslab.firemesh.presentation.group_list.GroupListFragment
-import com.ceslab.firemesh.presentation.node_list.NodeListFragment
+import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
+import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.main.fragment.MainViewPagerAdapter
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.siliconlab.bluetoothmesh.adk.ErrorType
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_network.*
 import timber.log.Timber
 
@@ -16,16 +18,38 @@ class NetworkFragment : BaseFragment(){
     companion object {
         const val TAG = "NetworkFragment"
     }
+
+    private lateinit var networkViewModel: NetworkViewModel
+
     override fun getResLayoutId(): Int {
         return R.layout.fragment_network
     }
 
     override fun onMyViewCreated(view: View) {
        Timber.d("onMyViewCreated")
+        setupViewModel()
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupBottomNavigationView()
         setupViewPager()
+        connectToNetwork()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("onDestroy")
+        disconnectFromNetwork()
+    }
+
+    private fun setupViewModel() {
+        Timber.d("setupViewModel")
+        AndroidSupportInjection.inject(this)
+        networkViewModel = ViewModelProvider(this, viewModelFactory).get(NetworkViewModel::class.java)
+        networkViewModel.getMeshStatus().observe(this,meshStatusObserver)
+        networkViewModel.getConnectionMessage().observe(this,connectionMessageObserver)
+        networkViewModel.getErrorMessage().observe(this,errorMessageObserver)
+
+    }
+
 
 
     private fun setupViewPager() {
@@ -69,4 +93,35 @@ class NetworkFragment : BaseFragment(){
             }
         }
     }
+
+    private fun connectToNetwork(){
+        Timber.d("connectToNetwork")
+        networkViewModel.connectToNetwork()
+    }
+
+    private fun disconnectFromNetwork(){
+        Timber.d("disconnectFromNode")
+        networkViewModel.disconnectFromNetwork()
+    }
+
+    private val meshStatusObserver = Observer<MeshStatus> {
+        activity?.runOnUiThread {
+            when(it){
+                MeshStatus.MESH_CONNECTING -> showProgressDialog("Connecting")
+                MeshStatus.MESH_CONNECTED -> hideDialog()
+                MeshStatus.MESH_DISCONNECTED -> hideDialog()
+            }
+        }
+    }
+    private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {
+        activity?.runOnUiThread {
+
+        }
+    }
+    private val errorMessageObserver = Observer<ErrorType> {
+        activity?.runOnUiThread {
+
+        }
+    }
+
 }

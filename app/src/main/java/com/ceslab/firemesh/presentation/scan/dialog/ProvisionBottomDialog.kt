@@ -27,9 +27,14 @@ import javax.inject.Inject
 
 class ProvisionBottomDialog : BottomSheetDialogFragment() {
 
+    companion object {
+        const val IS_FIRST_CONFIG_KEY = "IS_FIRST_CONFIG_KEY"
+        const val DEVICE_DESCRIPTION_KEY = "DEVICE_DESCRIPTION_KEY"
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    lateinit var mAgrs: Bundle
+    private lateinit var mAgrs: Bundle
     private var networkIndex = 0
 
     private lateinit var provisionDialogViewModel: ProvisionDialogViewModel
@@ -73,9 +78,10 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         provisionDialogViewModel = ViewModelProvider(this, viewModelFactory).get(
-            ProvisionDialogViewModel::class.java)
-        provisionDialogViewModel.isProvisioningSucceed.observe(this,isProvisioningSucceedObserver)
-        provisionDialogViewModel.errorMessage.observe(this,onProvisioningErrorObserver)
+            ProvisionDialogViewModel::class.java
+        )
+        provisionDialogViewModel.isProvisioningSucceed.observe(this, isProvisioningSucceedObserver)
+        provisionDialogViewModel.errorMessage.observe(this, onProvisioningErrorObserver)
     }
 
     private val onProvisionButtonClicked = View.OnClickListener {
@@ -94,9 +100,10 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
                     }
                 }
             if (AppUtil.isNameValid(nodeName)) {
-                 val deviceDescription = mAgrs.getSerializable("ConnectableDeviceDescription") as ConnectableDeviceDescription
-                AndroidDialogUtil.getInstance().showLoadingDialog(activity,"Provisioning...")
-                provisionDialogViewModel.provisionDevice(deviceDescription,networkIndex)
+                val deviceDescription =
+                    mAgrs.getSerializable(DEVICE_DESCRIPTION_KEY) as ConnectableDeviceDescription
+                AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Provisioning...")
+                provisionDialogViewModel.provisionDevice(deviceDescription, networkIndex)
                 dialog?.dismiss()
             }
         }
@@ -104,17 +111,22 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
 
     private val isProvisioningSucceedObserver = Observer<Boolean> {
         it.let {
-            if(it){
+            if (it) {
                 AndroidDialogUtil.getInstance().hideDialog()
                 val mainActivity = activity as MainActivity
-                mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+                val args = Bundle()
+                args.putBoolean(IS_FIRST_CONFIG_KEY, true)
+                val nodeFragment = NodeFragment()
+                nodeFragment.arguments = args
+                mainActivity.replaceFragment(nodeFragment, NodeFragment.TAG, R.id.container_main)
             }
         }
     }
 
     private val onProvisioningErrorObserver = Observer<ErrorType> {
         it.let {
-            AndroidDialogUtil.getInstance().showFailureDialog(activity,"Provision Failed: errorCode:${it.errorCode}")
+            AndroidDialogUtil.getInstance()
+                .showFailureDialog(activity, "Provision Failed: errorCode:${it.errorCode}")
 
         }
     }

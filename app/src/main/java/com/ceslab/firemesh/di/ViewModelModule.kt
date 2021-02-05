@@ -7,11 +7,13 @@ import com.ceslab.firemesh.factory.ViewModelKey
 import com.ceslab.firemesh.presentation.group_list.GroupListViewModel
 import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupViewModel
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
+import com.ceslab.firemesh.presentation.network.NetworkViewModel
 import com.ceslab.firemesh.presentation.network_list.NetworkListViewModel
 import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkViewModel
 import com.ceslab.firemesh.presentation.node.NodeViewModel
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoViewModel
+import com.ceslab.firemesh.presentation.node_list.NodeListViewModel
 import com.ceslab.firemesh.presentation.scan.dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.scan.ScanViewModel
 import dagger.Binds
@@ -41,6 +43,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(NetworkViewModel::class)
+    abstract fun bindNetworkViewModel(networkViewModel: NetworkViewModel):ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(GroupListViewModel::class)
     abstract fun bindGroupListViewModel(groupListViewModel: GroupListViewModel):ViewModel
 
@@ -58,6 +65,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NodeViewModel::class)
     abstract fun bindNodeViewModel(nodeViewModel: NodeViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NodeListViewModel::class)
+    abstract fun bindNodeListViewModel(nodeListViewModel: NodeListViewModel):ViewModel
 
 
     @Binds
