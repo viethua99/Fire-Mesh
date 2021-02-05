@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_node_info_node_details"
-        android:textStyle="bold"
         android:layout_margin="10dp"
+        android:text="@string/fragment_node_info_node_details"
         android:textColor="@color/primary_color"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,6 +42,7 @@
 
 
             <TextView
+                android:id="@+id/tv_node_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -78,6 +81,7 @@
 
 
             <TextView
+                android:id="@+id/tv_node_unicast_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -117,6 +121,7 @@
 
 
             <TextView
+                android:id="@+id/tv_node_uuid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -155,7 +160,7 @@
 
 
             <TextView
-                android:id="@+id/tv_network_key_index"
+                android:id="@+id/tv_node_network_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -194,6 +199,7 @@
 
 
             <TextView
+                android:id="@+id/tv_node_network_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -232,6 +238,7 @@
 
 
             <TextView
+                android:id="@+id/tv_node_app_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -269,6 +276,7 @@
 
 
             <TextView
+                android:id="@+id/tv_node_dev_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -281,17 +289,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_node_info_model_table"
-        android:textStyle="bold"
         android:layout_margin="10dp"
+        android:text="@string/fragment_node_info_model_table"
         android:textColor="@color/primary_color"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TableLayout
-        android:layout_marginHorizontal="10dp"
         android:id="@+id/table_models"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
         android:stretchColumns="3">
 
         <TableRow

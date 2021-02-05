@@ -7,7 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import android.os.ParcelUuid
 import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothScanner
-import com.ceslab.firemesh.meshmodule.listener.MeshConnectionListener
+import com.ceslab.firemesh.meshmodule.listener.MeshLoadedListener
+import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
+import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.model.MeshConnectableDevice
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.configuration_control.ConfigurationControl
@@ -44,7 +46,10 @@ class MeshConnectionManager(
     private var networkInfo: Subnet? = null
     private var currentState =
         CONNECTION_STATE.DISCONNECTED
-    private val listeners: ArrayList<MeshConnectionListener> = ArrayList()
+    private val connectionStatusListeners: ArrayList<ConnectionStatusListener> = ArrayList()
+    private val connectionMessageListeners: ArrayList<ConnectionMessageListener> = ArrayList()
+    private val meshLoadedListeners: ArrayList<MeshLoadedListener> = ArrayList()
+
     private var connectionTimeoutRunnable: Runnable = Runnable {
         connectionTimeout()
     }
@@ -133,19 +138,44 @@ class MeshConnectionManager(
         })
     }
 
-    fun addListener(meshConnectionListener: MeshConnectionListener) {
-        synchronized(listeners) {
-            listeners.add(meshConnectionListener)
-
+    fun addMeshConnectionListener(connectionStatusListener: ConnectionStatusListener) {
+        synchronized(connectionStatusListeners) {
+            connectionStatusListeners.add(connectionStatusListener)
             notifyCurrentState()
         }
     }
 
-    fun removeListener(meshConnectionListener: MeshConnectionListener) {
-        synchronized(listeners) {
-            listeners.remove(meshConnectionListener)
+    fun removeMeshConnectionListener(connectionStatusListener: ConnectionStatusListener) {
+        synchronized(connectionStatusListeners) {
+            connectionStatusListeners.remove(connectionStatusListener)
         }
     }
+
+    fun addMeshMessageListener(connectionMessageListener: ConnectionMessageListener) {
+        synchronized(connectionMessageListeners) {
+            connectionMessageListeners.add(connectionMessageListener)
+        }
+    }
+
+    fun removeMeshMessageListener(connectionMessageListener: ConnectionMessageListener) {
+        synchronized(connectionMessageListeners) {
+            connectionMessageListeners.remove(connectionMessageListener)
+        }
+    }
+
+    fun addMeshConfigurationLoadedListener(meshLoadedListener: MeshLoadedListener) {
+        synchronized(meshLoadedListeners) {
+            meshLoadedListeners.add(meshLoadedListener)
+        }
+    }
+
+    fun removeMeshConfigurationLoadedListener(meshLoadedListener: MeshLoadedListener) {
+        synchronized(meshLoadedListeners) {
+            meshLoadedListeners.remove(meshLoadedListener)
+        }
+    }
+
+
 
     fun setupInitialNodeConfiguration(node: Node) {
         Timber.d("setupInitialNodeConfiguration")
@@ -195,7 +225,7 @@ class MeshConnectionManager(
             }
 
             override fun success(node: Node, enabled: Boolean) {
-                listeners.forEach { listener -> listener.initialConfigurationLoaded() }
+                meshLoadedListeners.forEach { listener -> listener.initialConfigurationLoaded() }
             }
         })
     }
@@ -205,7 +235,7 @@ class MeshConnectionManager(
         Timber.d("startScan")
         networkInfo?.apply {
             if (nodes.isEmpty()) {
-                connectionMessage(MeshConnectionListener.MessageType.NO_NODE_IN_NETWORK)
+                connectionMessage(ConnectionMessageListener.MessageType.NO_NODE_IN_NETWORK)
                 return
             }
 
@@ -236,17 +266,17 @@ class MeshConnectionManager(
 
     private fun notifyCurrentState() {
         Timber.d("notifyCurrentState")
-        synchronized(listeners) {
+        synchronized(connectionStatusListeners) {
             uiHandler.post {
                 when (currentState) {
                     CONNECTION_STATE.DISCONNECTED -> {
-                        listeners.forEach { listener -> listener.disconnected() }
+                        connectionStatusListeners.forEach { listener -> listener.disconnected() }
                     }
                     CONNECTION_STATE.CONNECTING -> {
-                        listeners.forEach { listener -> listener.connecting() }
+                        connectionStatusListeners.forEach { listener -> listener.connecting() }
                     }
                     CONNECTION_STATE.CONNECTED -> {
-                        listeners.forEach { listener -> listener.connected() }
+                        connectionStatusListeners.forEach { listener -> listener.connected() }
                     }
                 }
             }
@@ -260,18 +290,18 @@ class MeshConnectionManager(
         connectionErrorMessage(ErrorType(ErrorType.TYPE.COULD_NOT_CONNECT_TO_DEVICE))
     }
 
-    private fun connectionMessage(message: MeshConnectionListener.MessageType) {
-        synchronized(listeners) {
+    private fun connectionMessage(message: ConnectionMessageListener.MessageType) {
+        synchronized(connectionMessageListeners) {
             uiHandler.post {
-                listeners.forEach { listener -> listener.connectionMessage(message) }
+                connectionMessageListeners.forEach { listener -> listener.connectionMessage(message) }
             }
         }
     }
 
     private fun connectionErrorMessage(errorType: ErrorType) {
-        synchronized(listeners) {
+        synchronized(connectionMessageListeners) {
             uiHandler.post {
-                listeners.forEach { listener -> listener.connectionErrorMessage(errorType) }
+                connectionMessageListeners.forEach { listener -> listener.connectionErrorMessage(errorType) }
             }
         }
     }

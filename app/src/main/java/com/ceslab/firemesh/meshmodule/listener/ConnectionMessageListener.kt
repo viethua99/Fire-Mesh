@@ -2,19 +2,7 @@ package com.ceslab.firemesh.meshmodule.listener
 
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 
-/**
- * Created by Viet Hua on 11/23/2020.
- */
-
-interface MeshConnectionListener {
-    fun connecting()
-
-    fun connected()
-
-    fun disconnected()
-
-    fun initialConfigurationLoaded()
-
+interface ConnectionMessageListener {
     fun connectionMessage(messageType: MessageType)
 
     fun connectionErrorMessage(error: ErrorType)
