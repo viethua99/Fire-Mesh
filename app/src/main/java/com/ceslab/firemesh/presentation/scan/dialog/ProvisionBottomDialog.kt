@@ -34,7 +34,8 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var mAgrs: Bundle
+
+    private lateinit var deviceDescription: ConnectableDeviceDescription
     private var networkIndex = 0
 
     private lateinit var provisionDialogViewModel: ProvisionDialogViewModel
@@ -42,7 +43,13 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogTheme)
-        mAgrs = arguments!!
+
+        arguments?.let {
+            if (it.containsKey(DEVICE_DESCRIPTION_KEY)) {
+                deviceDescription =
+                    it.getSerializable(DEVICE_DESCRIPTION_KEY) as ConnectableDeviceDescription
+            }
+        }
     }
 
     override fun onCreateView(
@@ -52,11 +59,6 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
     ): View? {
         Timber.d("onCreateView")
         val view = inflater.inflate(R.layout.dialog_provision_bottom_sheet, container, false)
-        val list = listOf("Test1", "Test2", "Test3")
-        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, list)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        view.spinner_network.adapter = adapter
-        view.btn_provision.setOnClickListener(onProvisionButtonClicked)
         return view
     }
 
@@ -64,6 +66,7 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated")
         setupViewModel()
+        setupNetworkSpinner(view)
         dialog?.setOnShowListener {
             val dialog = it as BottomSheetDialog
             val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
@@ -84,24 +87,33 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
         provisionDialogViewModel.errorMessage.observe(this, onProvisioningErrorObserver)
     }
 
+    private fun setupNetworkSpinner(view: View) {
+        Timber.d("setupNetworkSpinner")
+        activity?.runOnUiThread {
+            view.edt_node_name.setText(deviceDescription.deviceName)
+            val adapter = ArrayAdapter(
+                context!!,
+                android.R.layout.simple_spinner_item,
+                provisionDialogViewModel.getNetworkNameList()
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            view.spinner_network.adapter = adapter
+            view.btn_provision.setOnClickListener(onProvisionButtonClicked)
+        }
+
+    }
+
     private val onProvisionButtonClicked = View.OnClickListener {
         activity?.runOnUiThread {
             val nodeName = view!!.edt_node_name.text.toString()
             view!!.spinner_network.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>) {}
-                    override fun onItemSelected(
-                        parent: AdapterView<*>,
-                        view: View,
-                        position: Int,
-                        id: Long
-                    ) {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         networkIndex = position
                     }
                 }
             if (AppUtil.isNameValid(nodeName)) {
-                val deviceDescription =
-                    mAgrs.getSerializable(DEVICE_DESCRIPTION_KEY) as ConnectableDeviceDescription
                 AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Provisioning...")
                 provisionDialogViewModel.provisionDevice(deviceDescription, networkIndex)
                 dialog?.dismiss()

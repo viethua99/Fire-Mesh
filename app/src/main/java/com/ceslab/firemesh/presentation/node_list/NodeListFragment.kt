@@ -54,6 +54,7 @@ class NodeListFragment : BaseFragment(){
     private val onNodeItemClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<MeshNode> {
         override fun onClick(position: Int, item: MeshNode) {
             Timber.d("onNodeItemClickedListener: clicked")
+            nodeListViewModel.setDeviceToConfigure(item)
             val mainActivity = activity as MainActivity
             mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
         }

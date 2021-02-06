@@ -24,6 +24,11 @@ class ProvisionDialogViewModel @Inject constructor(
     val isProvisioningSucceed = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<ErrorType>()
 
+    fun getNetworkNameList(): List<String> {
+        Timber.d("getNetworkNameList")
+        return networkList.map { it.name }
+    }
+
     fun provisionDevice(meshDeviceDescription: ConnectableDeviceDescription, spinnerIndex: Int) {
         Timber.d("provisionDevice:${meshDeviceDescription.deviceAddress} ---$spinnerIndex")
         selectedDeviceDescription = meshDeviceDescription
