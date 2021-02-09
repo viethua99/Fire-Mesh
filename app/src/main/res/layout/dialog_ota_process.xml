@@ -40,7 +40,7 @@
                     android:paddingTop="5dp"
                     android:paddingEnd="0dp"
                     android:paddingBottom="15dp"
-                    android:text="@string/dialog_ota_device_name"
+                    android:text="@string/dialog_ota_node_name"
                     android:textColor="@android:color/background_light"
                     android:textSize="14sp" />
             </LinearLayout>

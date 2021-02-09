@@ -64,7 +64,7 @@
     <string name="dialog_ota_process_packet_size_colon">Packet size:</string>
     <string name="dialog_ota_process_zero_percent">0%</string>
     <string name="dialog_ota_process_end">End</string>
-    <string name="dialog_ota_device_name">Device name</string>
+    <string name="dialog_ota_node_name">Node name</string>
     <string name="dialog_ota_partial_ota">PARTIAL OTA</string>
     <string name="dialog_ota_full_ota">FULL OTA</string>
     <string name="dialog_ota_mode_colon">Mode:</string>

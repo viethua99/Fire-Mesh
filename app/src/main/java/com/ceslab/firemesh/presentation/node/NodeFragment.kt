@@ -1,10 +1,14 @@
 package com.ceslab.firemesh.presentation.node
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
@@ -20,6 +24,8 @@ import timber.log.Timber
 class NodeFragment : BaseFragment() {
     companion object {
         const val TAG = "NodeFragment"
+        const val IS_OTA_INIT_KEY = "IS_OTA_INIT_KEY"
+        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
     }
 
     private lateinit var nodePagerAdapter: NodePagerAdapter
@@ -68,8 +74,16 @@ class NodeFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.d("onOptionsItemSelected: ${item.title}")
         if (item.itemId == R.id.item_ota) {
-            val otaDialog = OTADialogConfig()
-            otaDialog.show(fragmentManager!!,"OtaDialog")
+            if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION)
+            } else {
+                val otaDialog = OTADialogConfig()
+                val bundle = Bundle()
+                bundle.putBoolean(IS_OTA_INIT_KEY,true)
+                otaDialog.arguments = bundle
+                otaDialog.show(fragmentManager!!,"OtaDialog")
+            }
+
             return true
         }
         return false
