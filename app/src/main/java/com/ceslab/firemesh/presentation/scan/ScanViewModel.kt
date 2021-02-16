@@ -19,13 +19,12 @@ import javax.inject.Inject
 class ScanViewModel @Inject constructor(
     private val context: Context,
     private val bluetoothScanner: BluetoothScanner,
-    private val bluetoothMeshManager: BluetoothMeshManager,
-    private val meshNodeManager: MeshNodeManager
+    private val bluetoothMeshManager: BluetoothMeshManager
 ) : ViewModel() {
 
     val scannedDeviceResult = MutableLiveData<ConnectableDeviceDescription>()
-
     private val scanStatus = MutableLiveData<Boolean>()
+
     fun scanUnprovisionedDevice() {
         Timber.d("scanUnprovisionedDevice")
         var isLeScanStarted = bluetoothScanner.isLeScanStarted()
@@ -43,6 +42,14 @@ class ScanViewModel @Inject constructor(
 
     fun isLeScanStarted(): LiveData<Boolean> {
         return scanStatus
+    }
+
+    fun stopScan(){
+        Timber.d("stopScan")
+        if(bluetoothScanner.isLeScanStarted()){
+            bluetoothScanner.stopLeScan()
+            scanStatus.value = false
+        }
     }
 
     private fun addDeviceToScannerList(connectableDeviceDescription: ConnectableDeviceDescription) {

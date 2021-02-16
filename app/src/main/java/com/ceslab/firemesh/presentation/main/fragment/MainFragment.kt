@@ -50,6 +50,10 @@ class MainFragment : BaseFragment() {
                         bottom_nav_main.menu.findItem(R.id.nav_item_scan).isChecked = true
                         (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_scan)
                     }
+                    MainViewPagerAdapter.OTA_LIST_PAGE ->  {
+                        bottom_nav_main.menu.findItem(R.id.nav_item_ota_list).isChecked = true
+                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_ota)
+                    }
                 }
             }
         })
@@ -67,6 +71,11 @@ class MainFragment : BaseFragment() {
                 R.id.nav_item_scan -> {
                     main_view_pager.currentItem = MainViewPagerAdapter.SCAN_PAGE
                     true
+                }
+                R.id.nav_item_ota_list -> {
+                    main_view_pager.currentItem = MainViewPagerAdapter.OTA_LIST_PAGE
+                    true
+
                 }
                 else -> false
             }

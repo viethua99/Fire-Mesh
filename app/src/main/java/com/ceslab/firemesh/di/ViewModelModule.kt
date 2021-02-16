@@ -11,9 +11,11 @@ import com.ceslab.firemesh.presentation.network.NetworkViewModel
 import com.ceslab.firemesh.presentation.network_list.NetworkListViewModel
 import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkViewModel
 import com.ceslab.firemesh.presentation.node.NodeViewModel
+import com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog.OTAConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoViewModel
 import com.ceslab.firemesh.presentation.node_list.NodeListViewModel
+import com.ceslab.firemesh.presentation.ota_list.OTAListViewModel
 import com.ceslab.firemesh.presentation.scan.dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.scan.ScanViewModel
 import dagger.Binds
@@ -76,6 +78,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ProvisionDialogViewModel::class)
     abstract fun bindProvisionDialogViewModel(provisionDialogViewModel: ProvisionDialogViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OTAListViewModel::class)
+    abstract fun bindOTAListViewModel(otaListViewModel: OTAListViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OTAConfigViewModel::class)
+    abstract fun bindOTAConfigViewModel(otaConfigViewModel: OTAConfigViewModel):ViewModel
 
     @Binds
     @IntoMap

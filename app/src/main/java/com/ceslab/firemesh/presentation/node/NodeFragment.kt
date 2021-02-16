@@ -7,14 +7,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseFragment
-import com.ceslab.firemesh.presentation.dialogs.OTADialogConfig
+import com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog.OTAConfigDialog
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.scan.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
@@ -25,7 +24,6 @@ class NodeFragment : BaseFragment() {
     companion object {
         const val TAG = "NodeFragment"
         const val IS_OTA_INIT_KEY = "IS_OTA_INIT_KEY"
-        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
     }
 
     private lateinit var nodePagerAdapter: NodePagerAdapter
@@ -39,7 +37,6 @@ class NodeFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
-        setHasOptionsMenu(true) //able to use options menu in fragment
 
         arguments?.let {
             if (it.containsKey(ProvisionBottomDialog.IS_FIRST_CONFIG_KEY)) {
@@ -61,32 +58,6 @@ class NodeFragment : BaseFragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setupDeviceViewPager()
         connectToNode()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        Timber.d("onCreateOptionsMenu")
-        inflater.inflate(R.menu.menu_ota_node, menu)
-        val scanItem = menu.findItem(R.id.item_ota)
-        scanItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Timber.d("onOptionsItemSelected: ${item.title}")
-        if (item.itemId == R.id.item_ota) {
-            if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION)
-            } else {
-                val otaDialog = OTADialogConfig()
-                val bundle = Bundle()
-                bundle.putBoolean(IS_OTA_INIT_KEY,true)
-                otaDialog.arguments = bundle
-                otaDialog.show(fragmentManager!!,"OtaDialog")
-            }
-
-            return true
-        }
-        return false
     }
 
     private fun setupViewModel() {

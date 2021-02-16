@@ -8,6 +8,7 @@ import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothScanner
 import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothStateReceiver
 import com.ceslab.firemesh.meshmodule.bluetoothle.LocationStateReceiver
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.*
+import com.ceslab.firemesh.meshmodule.ota.OTAManager
 import com.ceslab.firemesh.myapp.MyApplication
 import dagger.Module
 import dagger.Provides
@@ -43,6 +44,12 @@ class AppModule {
     @Singleton
     fun provideBluetoothScanner(bluetoothStateReceiver: BluetoothStateReceiver): BluetoothScanner {
         return BluetoothScanner(bluetoothStateReceiver)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOTAManager(bluetoothStateReceiver: BluetoothStateReceiver): OTAManager {
+        return OTAManager(bluetoothStateReceiver)
     }
 
     @Provides

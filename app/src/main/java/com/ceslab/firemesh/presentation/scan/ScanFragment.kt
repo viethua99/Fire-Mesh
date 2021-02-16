@@ -23,15 +23,40 @@ class ScanFragment : BaseFragment() {
 
     private lateinit var scannerRecyclerViewAdapter: ScanRecyclerViewAdapter
     private lateinit var scanViewModel: ScanViewModel
+    private  var isViewCreated = false
 
     override fun getResLayoutId(): Int {
         return R.layout.fragment_scan
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("onStop")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("onDestroy")
+
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(!isVisibleToUser && isViewCreated) {
+            scanViewModel.stopScan()
+        }
     }
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
         setupViewModel()
         setupViews()
+        isViewCreated = true
     }
 
     private fun setupViewModel() {
@@ -79,7 +104,7 @@ class ScanFragment : BaseFragment() {
 
     private val scanUnprovisionedDeviceObserver = Observer<ConnectableDeviceDescription> {
         activity?.runOnUiThread {
-            scanning_gradient_container.visibility = View.INVISIBLE
+            looking_for_devices_background.visibility = View.INVISIBLE
             scannerRecyclerViewAdapter.replaceDeviceByIndex(it)
 
         }

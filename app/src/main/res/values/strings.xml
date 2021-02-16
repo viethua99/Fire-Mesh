@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Fire Mesh</string>
 
+    <string name="nav_item_ota">OTA</string>
     <string name="nav_item_scan">Scan</string>
     <string name="nav_item_networks">Networks</string>
     <string name="nav_item_groups">Groups</string>
@@ -56,7 +57,8 @@
 
 
 
-    <string name="dialog_ota">OTA</string>
+    <string name="dialog_start_ota">Start OTA</string>
+    <string name="dialog_cancel_ota">Cancel</string>
     <string name="dialog_ota_config_header">OTA Device Firmware Update</string>
     <string name="dialog_ota_process_header">OTA Progress</string>
     <string name="dialog_ota_process_file_name_colon">File name:</string>
@@ -76,7 +78,9 @@
     <string name="dialog_ota_priority_low">LOW</string>
     <string name="dialog_ota_priority_high">HIGH</string>
     <string name="dialog_ota_application_colon">Application:</string>
+    <string name="dialog_ota_apploader_colon">Apploader:</string>
     <string name="dialog_ota_select_application_gbl_file"> Select Application .gbl file</string>
+    <string name="dialog_ota_select_apploader_gbl_file"> Select Apploader .gbl file</string>
 
     <string name="dialog_provision_bottom_provisioning_device">Provisioning Device</string>
     <string name="dialog_provision_bottom_provision">Provision</string>

@@ -14,9 +14,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class BluetoothScanner(bluetoothStateReceiver: BluetoothStateReceiver) : ScanCallback(), BluetoothStateReceiver.BluetoothStateListener {
 
     private var leScanStarted: Boolean = false
-
     private var bluetoothLeScanner: BluetoothLeScanner? = null
-
     private val scanCallbacks = ConcurrentLinkedQueue<ScanCallback>()
 
     init {

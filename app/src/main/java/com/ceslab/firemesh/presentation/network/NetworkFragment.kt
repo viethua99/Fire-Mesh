@@ -115,11 +115,12 @@ class NetworkFragment : BaseFragment(){
     }
     private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {
         activity?.runOnUiThread {
-
+            showWarningDialog(it.name)
         }
     }
     private val errorMessageObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
+            showFailedDialog(it.type.name)
 
         }
     }

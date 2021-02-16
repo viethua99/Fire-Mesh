@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.dialogs
+package com.ceslab.firemesh.presentation.ota_list.dialog.ota_process_dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.ceslab.firemesh.R
 
-class OTADialogProcess: DialogFragment() {
+class OTAProcessDialog: DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

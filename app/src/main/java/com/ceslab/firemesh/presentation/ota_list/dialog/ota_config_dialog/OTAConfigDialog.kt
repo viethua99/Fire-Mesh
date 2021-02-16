@@ -1,7 +1,8 @@
-package com.ceslab.firemesh.presentation.dialogs
+package com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -14,28 +15,31 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.factory.ViewModelFactory
+import com.ceslab.firemesh.meshmodule.ota.OTAType
 import com.ceslab.firemesh.presentation.node.NodeFragment
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_ota_config.view.*
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
-import java.util.*
+import javax.inject.Inject
 
-class OTADialogConfig : DialogFragment() {
+class OTAConfigDialog : DialogFragment() {
 
     companion object {
         private const val FILE_CHOOSER_REQUEST_CODE = 9999
 
     }
 
-    lateinit var mView: View
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private lateinit var otaConfigViewModel: OTAConfigViewModel
+    private lateinit var mView: View
+
     private var isOTAInit: Boolean = false
 
-    // OTA file paths
-    private var appPath = ""
     private var currentMTU = 247
     private var currentPriority = 2
     private var isReliable = true
@@ -65,6 +69,7 @@ class OTADialogConfig : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated")
+        setupViewModel()
         setupViews(view)
     }
 
@@ -83,31 +88,28 @@ class OTADialogConfig : DialogFragment() {
                         ""
                     }
 
-                    if (!hasOtaFileCorrectExtension(filename)) {
+                    if (!otaConfigViewModel.hasOtaFileCorrectExtension(filename)) {
                         return
                     }
-                    prepareOtaFile(uri, filename)
+                    mView.btn_select_application_gbl_file.text = filename
+                    otaConfigViewModel.prepareOtaFile(uri, filename)
                 }
             }
         }
 
         if (arePartialOTAFilesCorrect()) {
             mView.btn_ota_proceed.isClickable = true
-            mView.btn_ota_proceed.setBackgroundColor(
-                ContextCompat.getColor(
-                    activity!!.applicationContext,
-                    R.color.primary_color
-                )
-            )
+            mView.btn_ota_proceed.setBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.primary_color))
         } else {
             mView.btn_ota_proceed.isClickable = false
-            mView.btn_ota_proceed.setBackgroundColor(
-                ContextCompat.getColor(
-                    activity!!.applicationContext,
-                    R.color.gray_7
-                )
-            )
+            mView.btn_ota_proceed.setBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.gray_7))
         }
+    }
+
+    private fun setupViewModel() {
+        Timber.d("setupViewModel")
+        AndroidSupportInjection.inject(this)
+        otaConfigViewModel = ViewModelProvider(this, viewModelFactory).get(OTAConfigViewModel::class.java)
     }
 
     private fun setupViews(view: View) {
@@ -121,8 +123,14 @@ class OTADialogConfig : DialogFragment() {
             )
         )
         view.btn_ota_proceed.setOnClickListener(onProceedButtonClicked)
+
         view.btn_select_application_gbl_file.setOnClickListener(onSelectApplicationFileClicked)
+
+        view.btn_partial_ota.backgroundTintList =
+            ColorStateList.valueOf(resources.getColor(R.color.button_clicked_color))
         view.btn_partial_ota.setOnClickListener(onPartialOTAButtonClicked)
+
+        view.btn_full_ota.setOnClickListener(onFullOTAButtonClicked)
 
         view.edt_mtu_value.setOnEditorActionListener(onMaxMTUValueEdited)
 
@@ -134,9 +142,32 @@ class OTADialogConfig : DialogFragment() {
         view.seekbar_priority.progress = 2
         view.seekbar_priority.setOnSeekBarChangeListener(onPriorityBarChanged)
 
-       view.rdb_reliability.setOnClickListener { isReliable = true }
+        view.rdb_reliability.setOnClickListener { isReliable = true }
+
         view.rdb_speed.setOnClickListener { isReliable = false }
     }
+
+    private fun changeOTATypeView(otaType: OTAType) {
+        Timber.d("changeOTATypeView: $otaType")
+        when (otaType) {
+            OTAType.PARTIAL_OTA -> {
+                mView.btn_partial_ota.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.button_clicked_color))
+                mView.btn_full_ota.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.primary_color))
+                mView.layout_app_loader.visibility = View.GONE
+            }
+
+            OTAType.FULL_OTA -> {
+                mView.btn_full_ota.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.button_clicked_color))
+                mView.btn_partial_ota.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.primary_color))
+                mView.layout_app_loader.visibility = View.VISIBLE
+            }
+        }
+    }
+
 
     private fun arePartialOTAFilesCorrect(): Boolean {
         Timber.d("arePartialOTAFilesCorrect")
@@ -147,7 +178,7 @@ class OTADialogConfig : DialogFragment() {
         Timber.d("getFileName")
         var result: String? = null
         if ((uri?.scheme == "content")) {
-            val cursor = activity!!.contentResolver.query(uri, null, null, null, null)
+            val cursor = context!!.contentResolver.query(uri, null, null, null, null)
             cursor.use { c ->
                 if (c != null && c.moveToFirst()) {
                     result = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME))
@@ -164,36 +195,10 @@ class OTADialogConfig : DialogFragment() {
         return result
     }
 
-    private fun prepareOtaFile(uri: Uri?, filename: String?) {
-        Timber.d("prepareOtaFile")
-        try {
-            val inStream = activity!!.contentResolver.openInputStream(uri!!)
-            if (inStream == null) {
-                return
-            }
-            val file = File(activity!!.cacheDir, filename)
-            val output: OutputStream = FileOutputStream(file)
-            val buffer = ByteArray(4 * 1024)
-            var read: Int
-            while ((inStream.read(buffer).also { read = it }) != -1) {
-                output.write(buffer, 0, read)
-            }
-
-            appPath = file.absolutePath
-            mView.btn_select_application_gbl_file.text = filename
-            output.flush()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun hasOtaFileCorrectExtension(filename: String?): Boolean {
-        Timber.d("hasOtaFileCorrectExtension")
-        return filename?.toUpperCase(Locale.getDefault())?.contains(".GBL")!!
-    }
 
     private val onProceedButtonClicked = View.OnClickListener {
         Timber.d("onProceedButtonClicked")
+        otaConfigViewModel.startOTAProcess(isReliable,currentMTU,currentPriority)
     }
 
 
@@ -211,15 +216,23 @@ class OTADialogConfig : DialogFragment() {
 
     private val onPartialOTAButtonClicked = View.OnClickListener {
         Timber.d("onPartialOTAButtonClicked")
+        changeOTATypeView(OTAType.PARTIAL_OTA)
+        otaConfigViewModel.setOTAType(OTAType.PARTIAL_OTA)
+    }
+
+    private val onFullOTAButtonClicked = View.OnClickListener {
+        Timber.d("onFullOTAButtonClicked")
+        // changeOTAModeView(OTAMode.FULL_OTA)
+        //otaMode = OTAMode.FULL_OTA
 
     }
 
     private val onMaxMTUValueEdited = TextView.OnEditorActionListener { _, _, _ ->
         if (mView.edt_mtu_value.text != null) {
-            var test = mView.edt_mtu_value.text.toString().toInt()
-            if (test < 23) test = 23 else if (test > 250) test = 250
-            mView.seekbar_mtu.progress = test - 23
-            currentMTU = test
+            var mtuValue = mView.edt_mtu_value.text.toString().toInt()
+            if (mtuValue < 23) mtuValue = 23 else if (mtuValue > 250) mtuValue = 250
+            mView.seekbar_mtu.progress = mtuValue - 23
+            currentMTU = mtuValue
         }
         false
     }
@@ -229,7 +242,7 @@ class OTADialogConfig : DialogFragment() {
         override fun onStopTrackingTouch(p0: SeekBar?) {}
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             Timber.d("onProgressChanged: $progress")
-            mView.edt_mtu_value.setText(" ${progress+23}")
+            mView.edt_mtu_value.setText(" ${progress + 23}")
             currentMTU = progress + 23
         }
     }
@@ -246,5 +259,4 @@ class OTADialogConfig : DialogFragment() {
             } //LOW
         }
     }
-
 }
