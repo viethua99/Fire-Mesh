@@ -54,7 +54,7 @@ class OTAConfigViewModel @Inject constructor(
 
     fun startOTAProcess(isReliable:Boolean,mtuValue:Int,priority:Int) {
         Timber.d("startOTAProcess: $isReliable -- $mtuValue -- $priority")
-        otaManager.startOTAProcess(isReliable,mtuValue,priority,stackPath,applicationPath)
+        otaManager.startOTA(isReliable,mtuValue,priority,stackPath,applicationPath)
     }
 
 }
