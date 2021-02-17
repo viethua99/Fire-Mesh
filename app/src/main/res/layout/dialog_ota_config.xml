@@ -83,207 +83,402 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-
-                <TextView
-                    android:layout_width="0dp"
+                android:id="@+id/layout_setup"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:layout_weight="0.2"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/dialog_ota_mode_colon"
+                        android:textColor="@color/primary_color" />
+
+                    <RadioGroup
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.8"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rdb_reliability"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:padding="5dp"
+                            android:text="@string/dialog_ota_reliability" />
+
+                        <RadioButton
+                            android:id="@+id/rdb_speed"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/dialog_ota_speed" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:layout_weight="0.2"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/dialog_ota_mode_colon"
-                    android:textColor="@color/primary_color" />
-
-                <RadioGroup
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.8"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/rdb_reliability"
+                    <TextView
+                        android:id="@+id/tv_application"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/dialog_ota_application_colon"
+                        android:textColor="@color/primary_color" />
+
+                    <Button
+                        android:id="@+id/btn_select_application_gbl_file"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:checked="true"
-                        android:padding="5dp"
-                        android:text="@string/dialog_ota_reliability" />
+                        android:text="@string/dialog_ota_select_application_gbl_file"
+                        android:textAllCaps="false"
+                        android:textColor="@color/gray_7" />
+                </LinearLayout>
 
-                    <RadioButton
-                        android:id="@+id/rdb_speed"
+                <LinearLayout
+                    android:id="@+id/layout_app_loader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_apploader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/dialog_ota_apploader_colon"
+                        android:textColor="@color/primary_color" />
+
+                    <Button
+                        android:id="@+id/btn_select_apploader_gbl_file"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="@string/dialog_ota_speed" />
-                </RadioGroup>
-            </LinearLayout>
+                        android:text="@string/dialog_ota_select_apploader_gbl_file"
+                        android:textAllCaps="false"
+                        android:textColor="@color/gray_7" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_7" />
 
-                <TextView
-                    android:id="@+id/tv_application"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_margin="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/dialog_ota_application_colon"
-                    android:textColor="@color/primary_color" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_select_application_gbl_file"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/tv_mtu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:layout_weight="0.3"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/dialog_ota_mtu_colon"
+                        android:textColor="@color/primary_color" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_mtu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp" />
+
+                    <EditText
+                        android:id="@+id/edt_mtu_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="5dp"
+                        android:layout_weight="0.1"
+                        android:background="@color/white"
+                        android:gravity="end"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:text="@string/dialog_ota_max_mtu"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/dialog_ota_select_application_gbl_file"
-                    android:textAllCaps="false"
-                    android:textColor="@color/gray_7" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/layout_app_loader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_apploader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_margin="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/dialog_ota_apploader_colon"
-                    android:textColor="@color/primary_color" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_select_apploader_gbl_file"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/dialog_ota_select_apploader_gbl_file"
-                    android:textAllCaps="false"
-                    android:textColor="@color/gray_7" />
+                    <TextView
+                        android:id="@+id/tv_priority"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:layout_weight="0.2"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/dialog_ota_priority"
+                        android:textColor="@color/primary_color" />
+
+                    <TextView
+                        android:id="@+id/tv_min_priority"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="5dp"
+                        android:layout_weight="0.1"
+                        android:text="@string/dialog_ota_priority_low"
+                        android:textSize="12sp" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_priority"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.4"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp" />
+
+                    <TextView
+                        android:id="@+id/tv_max_priority"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="5dp"
+                        android:layout_weight="0.1"
+                        android:text="@string/dialog_ota_priority_high"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray_7" />
 
-
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/layout_progress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal">
-
+                android:layout_height="match_parent"
+                android:orientation="vertical">
                 <TextView
-                    android:id="@+id/tv_mtu"
-                    android:layout_width="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_color"
+                    android:text="OTA Progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:layout_marginStart="10dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.3"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/dialog_ota_mtu_colon"
-                    android:textColor="@color/primary_color" />
+                    android:layout_marginVertical="5dp"
+                    android:orientation="horizontal">
 
-                <SeekBar
-                    android:id="@+id/seekbar_mtu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.6"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp" />
+                    <TextView
+                        android:id="@+id/tv_file_name_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_ota_process_file_name_colon"
+                        android:textColor="@color/primary_color"
+                        android:textSize="14sp" />
 
-                <EditText
-                    android:id="@+id/edt_mtu_value"
-                    android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/tv_file_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center"
+                        android:text="application.gbl"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="10dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.1"
-                    android:background="@color/white"
-                    android:gravity="end"
-                    android:inputType="number"
-                    android:maxLength="3"
-                    android:text="@string/dialog_ota_max_mtu"
-                    android:textSize="12sp" />
+                    android:layout_marginVertical="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_file_size_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_ota_process_file_size_colon"
+                        android:textColor="@color/primary_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_file_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="99999 bytes"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_packet_size_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_ota_process_packet_size_colon"
+                        android:textColor="@color/primary_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_packet_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="999"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_ota_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:paddingTop="5dp"
+                        android:elegantTextHeight="true"
+                        android:fontFamily="sans-serif"
+                        android:text="" />
+
+                    <TextView
+                        android:id="@+id/tv_data_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@id/tv_ota_step"
+                        android:gravity="end"
+                        android:layout_marginEnd="5dp"
+                        android:elegantTextHeight="true"
+                        android:fontFamily="sans-serif-medium"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:maxLength="13"
+                        android:layout_alignEnd="@id/progress_bar_ota_progress"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        android:id="@+id/spinner_connecting"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="5dp"
+                        android:layout_above="@id/tv_data_size"
+                        android:layout_alignStart="@id/tv_data_size"
+                        android:layout_alignEnd="@id/tv_data_size"
+                        android:indeterminate="true"
+                        android:visibility="invisible" />
+
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar_ota_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_toStartOf="@id/tv_data_size"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_below="@id/tv_ota_step"
+                        android:elevation="5dp"
+                        android:max="100"
+                        android:progressTint="@color/primary_color"
+                        android:scaleY="5" />
+
+                    <TextView
+                        android:id="@+id/tv_data_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_gravity="center"
+                        android:layout_alignTop="@id/progress_bar_ota_progress"
+                        android:layout_alignBottom="@id/progress_bar_ota_progress"
+                        android:layout_below="@id/tv_ota_step"
+                        android:elegantTextHeight="true"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:text="@string/dialog_ota_process_zero_percent" />
+                </RelativeLayout>
+                <Chronometer
+                    android:id="@+id/chrono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elegantTextHeight="true"
+                    android:gravity="center_horizontal"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_priority"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.2"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/dialog_ota_priority"
-                    android:textColor="@color/primary_color" />
-
-                <TextView
-                    android:id="@+id/tv_min_priority"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.1"
-                    android:text="@string/dialog_ota_priority_low"
-                    android:textSize="12sp" />
-
-                <SeekBar
-                    android:id="@+id/seekbar_priority"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.4"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp" />
-
-                <TextView
-                    android:id="@+id/tv_max_priority"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.1"
-                    android:text="@string/dialog_ota_priority_high"
-                    android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -297,8 +492,8 @@
             android:id="@+id/btn_ota_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="5dp"
+            android:layout_weight="1"
             android:padding="10dp"
             android:text="@string/dialog_cancel_ota"
             android:textColor="@color/white"

@@ -122,7 +122,10 @@ class OTAConfigDialog : DialogFragment() {
                 R.color.gray_7
             )
         )
+        dialog!!.setCanceledOnTouchOutside(false)
+
         view.btn_ota_proceed.setOnClickListener(onProceedButtonClicked)
+        view.btn_ota_cancel.setOnClickListener(onCancelButtonClicked)
 
         view.btn_select_application_gbl_file.setOnClickListener(onSelectApplicationFileClicked)
 
@@ -198,7 +201,14 @@ class OTAConfigDialog : DialogFragment() {
 
     private val onProceedButtonClicked = View.OnClickListener {
         Timber.d("onProceedButtonClicked")
-        otaConfigViewModel.startOTAProcess(isReliable,currentMTU,currentPriority)
+    //    otaConfigViewModel.startOTAProcess(isReliable,currentMTU,currentPriority)
+        mView.layout_setup.visibility = View.GONE
+        mView.layout_progress.visibility = View.VISIBLE
+    }
+
+    private val onCancelButtonClicked = View.OnClickListener {
+        Timber.d("onCancelButtonClicked")
+        dialog!!.dismiss()
     }
 
 
@@ -222,7 +232,7 @@ class OTAConfigDialog : DialogFragment() {
 
     private val onFullOTAButtonClicked = View.OnClickListener {
         Timber.d("onFullOTAButtonClicked")
-        // changeOTAModeView(OTAMode.FULL_OTA)
+         changeOTATypeView(OTAType.FULL_OTA)
         //otaMode = OTAMode.FULL_OTA
 
     }
