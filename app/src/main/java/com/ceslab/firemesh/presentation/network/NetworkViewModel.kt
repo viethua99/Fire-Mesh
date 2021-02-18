@@ -24,16 +24,20 @@ class NetworkViewModel @Inject constructor(
 
     fun connectToNetwork(){
         Timber.d("connectToNetwork")
-        meshConnectionManager.addMeshConnectionListener(connectionStatusListener)
-        meshConnectionManager.addMeshMessageListener(connectionMessageListener)
-        meshConnectionManager.connect(currentSubnet)
+        meshConnectionManager.apply {
+            addMeshConnectionListener(connectionStatusListener)
+            addMeshMessageListener(connectionMessageListener)
+            connect(currentSubnet)
+        }
     }
 
     fun disconnectFromNetwork(){
         Timber.d("disconnectFromNetwork")
-        meshConnectionManager.removeMeshConnectionListener(connectionStatusListener)
-        meshConnectionManager.removeMeshMessageListener(connectionMessageListener)
-        meshConnectionManager.disconnect()
+        meshConnectionManager.apply {
+            removeMeshConnectionListener(connectionStatusListener)
+            removeMeshMessageListener(connectionMessageListener)
+            disconnect()
+        }
     }
 
     fun getMeshStatus(): LiveData<MeshStatus> {

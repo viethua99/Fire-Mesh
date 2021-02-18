@@ -21,8 +21,10 @@ class NodeViewModel @Inject constructor(
 
     fun connectToNode() {
         Timber.d("connectToNode")
-        meshConnectionManager.addMeshConnectionListener(meshConnectionListener)
-        meshConnectionManager.addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
+        meshConnectionManager.apply {
+            addMeshConnectionListener(meshConnectionListener)
+            addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
+        }
 
         if(isFirstConfig){
             meshConnectionManager.connect(bluetoothMeshManager.provisionedMeshConnectableDevice!!, true)
@@ -31,8 +33,10 @@ class NodeViewModel @Inject constructor(
 
     fun disconnectFromNode(){
         Timber.d("disconnectFromNode")
-        meshConnectionManager.removeMeshConnectionListener(meshConnectionListener)
-        meshConnectionManager.removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
+        meshConnectionManager.apply {
+            removeMeshConnectionListener(meshConnectionListener)
+            removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
+        }
 
         if(isFirstConfig){
             meshConnectionManager.disconnect()

@@ -1,19 +1,12 @@
 package com.ceslab.firemesh.presentation.node
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseFragment
-import com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog.OTAConfigDialog
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.scan.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection

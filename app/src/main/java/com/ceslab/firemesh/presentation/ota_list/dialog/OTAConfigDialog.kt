@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog
+package com.ceslab.firemesh.presentation.ota_list.dialog
 
 import android.app.Activity
 import android.content.Intent
@@ -115,35 +115,38 @@ class OTAConfigDialog : DialogFragment() {
     private fun setupViews(view: View) {
         Timber.d("setupViews")
         mView = view
+        view.btn_ota_proceed.apply {
+            setBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.gray_7))
+            setOnClickListener(onProceedButtonClicked)
+        }
 
-        view.btn_ota_proceed.setBackgroundColor(
-            ContextCompat.getColor(
-                activity!!.applicationContext,
-                R.color.gray_7
-            )
-        )
         dialog!!.setCanceledOnTouchOutside(false)
 
-        view.btn_ota_proceed.setOnClickListener(onProceedButtonClicked)
         view.btn_ota_cancel.setOnClickListener(onCancelButtonClicked)
 
         view.btn_select_application_gbl_file.setOnClickListener(onSelectApplicationFileClicked)
 
-        view.btn_partial_ota.backgroundTintList =
-            ColorStateList.valueOf(resources.getColor(R.color.button_clicked_color))
-        view.btn_partial_ota.setOnClickListener(onPartialOTAButtonClicked)
+        view.btn_partial_ota.apply {
+            backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.button_clicked_color))
+            setOnClickListener(onPartialOTAButtonClicked)
+        }
+
 
         view.btn_full_ota.setOnClickListener(onFullOTAButtonClicked)
 
         view.edt_mtu_value.setOnEditorActionListener(onMaxMTUValueEdited)
 
-        view.seekbar_mtu.max = 250 - 23
-        view.seekbar_mtu.progress = 250 - 23
-        view.seekbar_mtu.setOnSeekBarChangeListener(onMTUBarChanged)
+        view.seekbar_mtu.apply {
+            max = 250 - 23
+            progress = 250 - 23
+            setOnSeekBarChangeListener(onMTUBarChanged)
+        }
 
-        view.seekbar_priority.max = 2
-        view.seekbar_priority.progress = 2
-        view.seekbar_priority.setOnSeekBarChangeListener(onPriorityBarChanged)
+        view.seekbar_priority.apply {
+            max = 2
+            progress = 2
+            setOnSeekBarChangeListener(onPriorityBarChanged)
+        }
 
         view.rdb_reliability.setOnClickListener { isReliable = true }
 

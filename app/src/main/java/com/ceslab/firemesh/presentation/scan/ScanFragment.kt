@@ -78,9 +78,11 @@ class ScanFragment : BaseFragment() {
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         scannerRecyclerViewAdapter = ScanRecyclerViewAdapter(view!!.context)
         scannerRecyclerViewAdapter.itemClickListener = onProvisionButtonClickedListener
-        rv_scan.layoutManager = linearLayoutManager
-        rv_scan.setHasFixedSize(true)
-        rv_scan.adapter = scannerRecyclerViewAdapter
+        rv_scan.apply {
+            layoutManager = linearLayoutManager
+            setHasFixedSize(true)
+            adapter = scannerRecyclerViewAdapter
+        }
     }
 
     private val onScanButtonClickListener = View.OnClickListener {

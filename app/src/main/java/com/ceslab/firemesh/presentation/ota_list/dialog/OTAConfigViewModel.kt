@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog
+package com.ceslab.firemesh.presentation.ota_list.dialog
 
 import android.content.Context
 import android.net.Uri

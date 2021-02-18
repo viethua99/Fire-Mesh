@@ -44,9 +44,11 @@ class NetworkFragment : BaseFragment(){
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         networkViewModel = ViewModelProvider(this, viewModelFactory).get(NetworkViewModel::class.java)
-        networkViewModel.getMeshStatus().observe(this,meshStatusObserver)
-        networkViewModel.getConnectionMessage().observe(this,connectionMessageObserver)
-        networkViewModel.getErrorMessage().observe(this,errorMessageObserver)
+        networkViewModel.apply {
+            getMeshStatus().observe(this@NetworkFragment,meshStatusObserver)
+            getConnectionMessage().observe(this@NetworkFragment,connectionMessageObserver)
+            getErrorMessage().observe(this@NetworkFragment,errorMessageObserver)
+        }
 
     }
 
@@ -56,24 +58,26 @@ class NetworkFragment : BaseFragment(){
         Timber.d("setupViewPager")
         (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_groups)
         val networkViewPagerAdapter = NetworkViewPagerAdapter(childFragmentManager)
-        network_view_pager.adapter = networkViewPagerAdapter
-        network_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        network_view_pager.apply {
+            adapter = networkViewPagerAdapter
+            addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) {}
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    NetworkViewPagerAdapter.GROUP_LIST_PAGE ->{
-                        bottom_nav_network.menu.findItem(R.id.nav_item_groups).isChecked = true
-                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_groups)
-                    }
-                    NetworkViewPagerAdapter.NODE_LIST_PAGE ->  {
-                        bottom_nav_network.menu.findItem(R.id.nav_item_nodes).isChecked = true
-                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_nodes)
+                override fun onPageSelected(position: Int) {
+                    when (position) {
+                        NetworkViewPagerAdapter.GROUP_LIST_PAGE ->{
+                            bottom_nav_network.menu.findItem(R.id.nav_item_groups).isChecked = true
+                            (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_groups)
+                        }
+                        NetworkViewPagerAdapter.NODE_LIST_PAGE ->  {
+                            bottom_nav_network.menu.findItem(R.id.nav_item_nodes).isChecked = true
+                            (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_nodes)
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
     private fun setupBottomNavigationView() {

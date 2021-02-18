@@ -49,15 +49,19 @@ class NodeConfigViewModel @Inject constructor(
     fun setConfigListeners(){
         Timber.d("setListeners")
         meshConnectionManager.removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
-        meshConfigurationManager.addNodeFeatureListener(nodeFeatureListener)
-        meshConfigurationManager.addConfigurationStatusListener(configurationStatusListener)
+        meshConfigurationManager.apply {
+            addNodeFeatureListener(nodeFeatureListener)
+            addConfigurationStatusListener(configurationStatusListener)
+        }
     }
 
     fun removeConfigListeners() {
         Timber.d("removeMeshConnectionListener")
         meshConnectionManager.removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
-        meshConfigurationManager.removeConfigurationStatusListener(configurationStatusListener)
-        meshConfigurationManager.removeNodeFeatureListener(nodeFeatureListener)
+        meshConfigurationManager.apply {
+            removeConfigurationStatusListener(configurationStatusListener)
+            removeNodeFeatureListener(nodeFeatureListener)
+        }
     }
 
     fun changeGroup(newGroup: Group?)  {
@@ -91,10 +95,11 @@ class NodeConfigViewModel @Inject constructor(
     private val meshConfigurationLoadedListener = object : MeshLoadedListener {
         override fun initialConfigurationLoaded() {
             Timber.d("initialConfigurationLoaded")
-            meshConfigurationManager.checkFriendStatus()
-            meshConfigurationManager.checkRelayStatus()
-            meshConfigurationManager.checkProxyStatus()
-
+            meshConfigurationManager.apply {
+                checkFriendStatus()
+                checkRelayStatus()
+                checkProxyStatus()
+            }
         }
     }
 

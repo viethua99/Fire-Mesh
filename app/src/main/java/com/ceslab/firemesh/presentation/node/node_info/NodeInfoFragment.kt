@@ -67,43 +67,48 @@ class NodeInfoFragment : BaseFragment() {
         var tableIndex = 0
         meshNode.node.elements?.forEachIndexed { elementIndex, element ->
             val models = mutableListOf<Model>()
-            models.addAll(element.sigModels)
-            models.addAll(element.vendorModels)
+            models.apply {
+                addAll(element.sigModels)
+                addAll(element.vendorModels)
 
-            models.forEach { model ->
-                Timber.d("model:${model.name}")
-                val modelName = model.name
-                val modelType: String
-                val modelId: String
+                forEach { model ->
+                    Timber.d("model:${model.name}")
+                    val modelName = model.name
+                    val modelType: String
+                    val modelId: String
 
-                if (model.isSIGModel) {
-                    modelType = "SIG"
+                    if (model.isSIGModel) {
+                        modelType = "SIG"
 
-                    val sigInfo = ConverterUtil.inv_atou16(model.id)
-                    modelId = "0x" + ConverterUtil.getHexValueNoSpace(sigInfo)
-                } else {
-                    val vendorInfo = ConverterUtil.inv_atou32(model.id)
-                    val vendorType = byteArrayOf(vendorInfo[2], vendorInfo[3])
-                    val vendorId = byteArrayOf(vendorInfo[0], vendorInfo[1])
+                        val sigInfo = ConverterUtil.inv_atou16(model.id)
+                        modelId = "0x" + ConverterUtil.getHexValueNoSpace(sigInfo)
+                    } else {
+                        val vendorInfo = ConverterUtil.inv_atou32(model.id)
+                        val vendorType = byteArrayOf(vendorInfo[2], vendorInfo[3])
+                        val vendorId = byteArrayOf(vendorInfo[0], vendorInfo[1])
 
-                    modelType = "0x" + ConverterUtil.getHexValueNoSpace(vendorType)
-                    modelId = "0x" + ConverterUtil.getHexValueNoSpace(vendorId)
+                        modelType = "0x" + ConverterUtil.getHexValueNoSpace(vendorType)
+                        modelId = "0x" + ConverterUtil.getHexValueNoSpace(vendorId)
+                    }
+
+                    val modelInfo = ModelTableDescription(elementIndex, modelType, modelId, modelName)
+                    table_models.addView(createRowElement(modelInfo))
+                    tableIndex++
                 }
-
-                val modelInfo = ModelTableDescription(elementIndex, modelType, modelId, modelName)
-                table_models.addView(createRowElement(modelInfo))
-                tableIndex++
             }
+
         }
     }
 
     private fun createRowElement(modelTableDescription: ModelTableDescription): TableRow {
         val row = layoutInflater.inflate(R.layout.item_model_table_row, null) as TableRow
-        row.cell_element.text = modelTableDescription.elementIndex.toString()
-        row.cell_vendor.text = modelTableDescription.modelType
-        row.cell_id.text = modelTableDescription.modelId
-        row.cell_description.text = modelTableDescription.modelName
-        row.cell_description.isSelected = true
+        row.apply {
+            cell_element.text = modelTableDescription.elementIndex.toString()
+            cell_vendor.text = modelTableDescription.modelType
+            cell_id.text = modelTableDescription.modelId
+            cell_description.text = modelTableDescription.modelName
+            cell_description.isSelected = true
+        }
         return row
     }
 

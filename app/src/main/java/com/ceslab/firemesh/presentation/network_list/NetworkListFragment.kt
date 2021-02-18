@@ -44,9 +44,11 @@ class NetworkListFragment : BaseFragment(){
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         networkListRecyclerViewAdapter = NetworkListRecyclerViewAdapter(view!!.context)
         networkListRecyclerViewAdapter.itemClickListener = onNetworkItemClickedListener
-        rv_network_list.layoutManager = linearLayoutManager
-        rv_network_list.setHasFixedSize(true)
-        rv_network_list.adapter = networkListRecyclerViewAdapter
+        rv_network_list.apply {
+            layoutManager = linearLayoutManager
+            setHasFixedSize(true)
+            adapter = networkListRecyclerViewAdapter
+        }
 
     }
 
@@ -62,8 +64,10 @@ class NetworkListFragment : BaseFragment(){
         fab_add_network.setOnClickListener {
             Timber.d("onAddGroupClick")
             val addNetworkDialog = AddNetworkDialog()
-            addNetworkDialog.show(fragmentManager!!, "AddNetworkDialog")
-            addNetworkDialog.setAddNetworkClickListener(onAddNetworkClickListener)
+            addNetworkDialog.apply {
+                show(fragmentManager!!, "AddNetworkDialog")
+                setAddNetworkClickListener(onAddNetworkClickListener)
+            }
         }
     }
 
@@ -71,7 +75,6 @@ class NetworkListFragment : BaseFragment(){
         override fun onClick(position: Int, item: Subnet) {
             Timber.d("onNetworkItemClickedListener: clicked")
             networkListViewModel.setCurrentNetwork(item)
-
             val mainActivity = activity as MainActivity
             mainActivity.replaceFragment(NetworkFragment(),NetworkFragment.TAG,R.id.container_main)
         }

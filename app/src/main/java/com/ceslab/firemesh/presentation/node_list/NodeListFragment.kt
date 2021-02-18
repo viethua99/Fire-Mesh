@@ -46,9 +46,11 @@ class NodeListFragment : BaseFragment(){
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         nodeListRecyclerViewAdapter = NodeListRecyclerViewAdapter(view!!.context)
         nodeListRecyclerViewAdapter.itemClickListener = onNodeItemClickedListener
-        rv_node_list.layoutManager = linearLayoutManager
-        rv_node_list.setHasFixedSize(true)
-        rv_node_list.adapter = nodeListRecyclerViewAdapter
+        rv_node_list.apply {
+            layoutManager = linearLayoutManager
+            setHasFixedSize(true)
+            adapter = nodeListRecyclerViewAdapter
+        }
     }
 
     private val onNodeItemClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<MeshNode> {

@@ -39,13 +39,14 @@ class NodeConfigFragment : BaseFragment() {
         AndroidSupportInjection.inject(this)
         nodeConfigViewModel =
             ViewModelProvider(this, viewModelFactory).get(NodeConfigViewModel::class.java)
-        nodeConfigViewModel.setConfigListeners()
-        nodeConfigViewModel.getMeshNodeToConfigure().observe(this, meshNodeToConfigureObserver)
-        nodeConfigViewModel.getRelayStatus().observe(this, relayStatusObserver)
-        nodeConfigViewModel.getFriendStatus().observe(this, friendStatusObserver)
-        nodeConfigViewModel.getProxyStatus().observe(this, proxyStatusObserver)
-        nodeConfigViewModel.getConfigurationStatus().observe(this, configurationStatusObserver)
-
+        nodeConfigViewModel.apply {
+            setConfigListeners()
+            getMeshNodeToConfigure().observe(this@NodeConfigFragment, meshNodeToConfigureObserver)
+            getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
+            getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
+            getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
+            getConfigurationStatus().observe(this@NodeConfigFragment, configurationStatusObserver)
+        }
 
     }
 
@@ -59,12 +60,10 @@ class NodeConfigFragment : BaseFragment() {
                     val isSupportFriend = supportsFriend()
                     val isSupportRelay = supportsRelay()
                     val isSupportLowPower = supportsLowPower()
-                    Timber.d(
-                        "supportProxy: ${isSupportProxy} " +
-                                "--- supportFriend:${isSupportFriend}" +
-                                "--- supportRelay: ${isSupportRelay}" +
-                                "--- supportLpn: ${isSupportLowPower}"
-                    )
+                    Timber.d(String.format("supportProxy: $isSupportProxy " +
+                            "--- supportFriend:$isSupportFriend" +
+                            "--- supportRelay: $isSupportRelay" +
+                            "--- supportLpn: $isSupportLowPower"))
 
                     if (isSupportFriend) sw_friend.visibility =
                         View.VISIBLE else sw_friend.visibility = View.GONE
@@ -155,35 +154,27 @@ class NodeConfigFragment : BaseFragment() {
                     functionalitiesName
                 )
                 functionalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner_functionality.apply {
+                    onItemSelectedListener = null
+                    adapter = functionalityAdapter
+                    if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
+                        functionalitiesNamed.find { it.functionality == functionality }
+                            ?.let { functionalityNamed ->
+                               setSelection(functionalitiesNamed.indexOf(functionalityNamed), false)
+                            }
 
-                spinner_functionality.onItemSelectedListener = null
-                spinner_functionality.adapter = functionalityAdapter
-                if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
-                    functionalitiesNamed.find { it.functionality == functionality }
-                        ?.let { functionalityNamed ->
-                            spinner_functionality.setSelection(
-                                functionalitiesNamed.indexOf(
-                                    functionalityNamed
-                                ), false
-                            )
-                        }
+                    } else {
+                        setSelection(Adapter.NO_SELECTION, false)
+                    }
 
-                } else {
-                    spinner_functionality.setSelection(Adapter.NO_SELECTION, false)
-                }
-                spinner_functionality.onItemSelectedListener =
-                    object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(
-                            parent: AdapterView<*>?,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
+                    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                             nodeConfigViewModel.changeFunctionality(functionalitiesNamed[position].functionality)
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
+                }
             }
         }
     }

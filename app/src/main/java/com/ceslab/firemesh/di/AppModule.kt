@@ -16,6 +16,7 @@ import javax.inject.Singleton
 
 @Module
 class AppModule {
+
     @Provides
     @Singleton
     fun provideContext(myApplication: MyApplication):Context {
@@ -66,16 +67,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMeshConnectionManager(
-        context: Context,
-        bluetoothScanner: BluetoothScanner,
-        bluetoothMeshManager: BluetoothMeshManager
-    ): MeshConnectionManager {
-        return MeshConnectionManager(
-            context,
-            bluetoothScanner,
-            bluetoothMeshManager.bluetoothMesh.connectableDeviceHelper
-        )
+    fun provideMeshConnectionManager(context: Context, bluetoothScanner: BluetoothScanner, bluetoothMeshManager: BluetoothMeshManager): MeshConnectionManager {
+        return MeshConnectionManager(context, bluetoothScanner, bluetoothMeshManager.bluetoothMesh.connectableDeviceHelper)
     }
 
     @Provides

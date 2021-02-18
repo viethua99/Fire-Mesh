@@ -10,13 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
-import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.meshmodule.ota.OTADevice
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node_list.OTAListRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog.OTAConfigDialog
+import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_ota_list.*
 import kotlinx.android.synthetic.main.fragment_ota_list.btn_scanning
@@ -55,9 +54,12 @@ class OTAListFragment : BaseFragment() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         otaListViewModel = ViewModelProvider(this, viewModelFactory).get(OTAListViewModel::class.java)
-        otaListViewModel.isLeScanStarted().observe(this, isLeScanStartedObserver)
-        otaListViewModel.scannedDeviceResult.observe(this, scanOTADeviceObserver)
-        otaListViewModel.getConnectStatus().observe(this,connectStatusObserver)
+        otaListViewModel.apply {
+            isLeScanStarted().observe(this@OTAListFragment, isLeScanStartedObserver)
+            scannedDeviceResult.observe(this@OTAListFragment, scanOTADeviceObserver)
+            getConnectStatus().observe(this@OTAListFragment,connectStatusObserver)
+        }
+
     }
 
     private fun setupViews() {
@@ -72,9 +74,11 @@ class OTAListFragment : BaseFragment() {
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         otaListRecyclerViewAdapter = OTAListRecyclerViewAdapter(view!!.context)
         otaListRecyclerViewAdapter.itemClickListener = onOTAButtonClickedListener
-        rv_ota_list.layoutManager = linearLayoutManager
-        rv_ota_list.setHasFixedSize(true)
-        rv_ota_list.adapter = otaListRecyclerViewAdapter
+        rv_ota_list.apply {
+            layoutManager = linearLayoutManager
+            setHasFixedSize(true)
+            adapter = otaListRecyclerViewAdapter
+        }
     }
 
 

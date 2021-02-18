@@ -7,7 +7,7 @@ import com.ceslab.firemesh.presentation.network.NetworkFragment
 import com.ceslab.firemesh.presentation.network_list.NetworkListFragment
 import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkDialog
 import com.ceslab.firemesh.presentation.node.NodeFragment
-import com.ceslab.firemesh.presentation.ota_list.dialog.ota_config_dialog.OTAConfigDialog
+import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigDialog
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigFragment
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoFragment
 import com.ceslab.firemesh.presentation.node_list.NodeListFragment
@@ -19,9 +19,12 @@ import dagger.android.ContributesAndroidInjector
 
 @Module(includes = [ViewModelModule::class])
 abstract class AppBindingModule {
+
+    //ACTIVITIES
     @ContributesAndroidInjector
     abstract fun mainActivity() : MainActivity
 
+    //FRAGMENTS
     @ContributesAndroidInjector
     abstract fun scanFragment(): ScanFragment
 
@@ -47,10 +50,12 @@ abstract class AppBindingModule {
     abstract fun nodeListFragment(): NodeListFragment
 
     @ContributesAndroidInjector
+    abstract fun otaListFragment(): OTAListFragment
+
+    //DIALOGS
+    @ContributesAndroidInjector
     abstract fun provisionBottomDialog(): ProvisionBottomDialog
 
-    @ContributesAndroidInjector
-    abstract fun otaListFragment(): OTAListFragment
 
     @ContributesAndroidInjector
     abstract fun otaConfigDialog(): OTAConfigDialog
