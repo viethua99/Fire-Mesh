@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.scan
+package com.ceslab.firemesh.presentation.provision_list
 
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -9,14 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothScanner
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
-import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.meshmodule.model.MeshConnectableDevice
 import com.siliconlab.bluetoothmesh.adk.provisioning.ProvisionerConnection
 import timber.log.Timber
 import javax.inject.Inject
 
-class ScanViewModel @Inject constructor(
+class ProvisionViewModel @Inject constructor(
     private val context: Context,
     private val bluetoothScanner: BluetoothScanner,
     private val bluetoothMeshManager: BluetoothMeshManager

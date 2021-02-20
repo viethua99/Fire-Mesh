@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.network_list
+package com.ceslab.firemesh.presentation.subnet_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,20 +9,20 @@ import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import timber.log.Timber
 import javax.inject.Inject
 
-class NetworkListViewModel @Inject constructor(
+class SubnetListViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshNetworkManager: MeshNetworkManager
 ) : ViewModel(){
-    private val networkList = MutableLiveData<Set<Subnet>>()
+    private val subnetList = MutableLiveData<Set<Subnet>>()
 
 
-    fun getNetworkList() : LiveData<Set<Subnet>>{
-        networkList.value = meshNetworkManager.network?.subnets!!
-        return networkList
+    fun getSubnetList() : LiveData<Set<Subnet>>{
+        subnetList.value = meshNetworkManager.network?.subnets!!
+        return subnetList
     }
 
-    fun setCurrentNetwork(subnet: Subnet) {
-        Timber.d("setCurrentNetwork")
+    fun setCurrentSubnet(subnet: Subnet) {
+        Timber.d("setCurrentSubnet")
         bluetoothMeshManager.currentSubnet = subnet
     }
 }

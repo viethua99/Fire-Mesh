@@ -2,8 +2,8 @@
     <string name="app_name">Fire Mesh</string>
 
     <string name="nav_item_ota">OTA</string>
-    <string name="nav_item_scan">Scan</string>
-    <string name="nav_item_networks">Networks</string>
+    <string name="nav_item_provision">Provision</string>
+    <string name="nav_item_subnets">Subnets</string>
     <string name="nav_item_groups">Groups</string>
     <string name="nav_item_nodes">Nodes</string>
 
@@ -12,6 +12,17 @@
     <string name="main_activity_enable_button">Enable</string>
     <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
     <string name="main_activity_location_adapter_disabled">Location adapter is disabled</string>
+
+    <string name="fragment_provision_list_press_start_message">Press start to scan unprovisioned device</string>
+    <string name="fragment_provision_list_looking_for_nearby_devices">Looking for nearby devices...</string>
+    <string name="fragment_provision_list_start_scanning">Start Scanning</string>
+    <string name="fragment_provision_list_stop_scanning">Stop Scanning</string>
+
+    <string name="fragment_ota_list_press_start_message">Press start to scan ota device</string>
+    <string name="fragment_ota_list_looking_for_nearby_devices">Looking for nearby devices...</string>
+    <string name="fragment_ota_list_start_scanning">Start Scanning</string>
+    <string name="fragment_ota_list_stop_scanning">Stop Scanning</string>
+
 
     <string name="fragment_node_config_lpn">Low power energy</string>
     <string name="fragment_node_config_lpn_supported">Supported</string>
@@ -40,8 +51,8 @@
     <string name="item_group_group_name">Group Name</string>
     <string name="item_group_app_key">App Key</string>
 
-    <string name="item_network_network_name">Network Name</string>
-    <string name="item_network_network_key">Network Key</string>
+    <string name="item_subnet_subnet_name">Network Name</string>
+    <string name="item_network_sub_key">Subnet Key</string>
 
     <string name="item_scanned_device_device_name">Device Name</string>
     <string name="item_scanned_device_rssi">-53 dBm</string>

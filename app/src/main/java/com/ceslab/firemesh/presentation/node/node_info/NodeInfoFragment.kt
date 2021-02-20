@@ -8,13 +8,12 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.ModelTableDescription
 import com.ceslab.firemesh.presentation.base.BaseFragment
-import com.ceslab.firemesh.presentation.node.node_config.NodeConfigViewModel
 import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.data_model.model.Model
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_info.*
 import kotlinx.android.synthetic.main.item_model_table_row.view.*
-import kotlinx.android.synthetic.main.item_network.*
+import kotlinx.android.synthetic.main.item_subnet.*
 import timber.log.Timber
 
 class NodeInfoFragment : BaseFragment() {
@@ -52,7 +51,7 @@ class NodeInfoFragment : BaseFragment() {
             tv_node_uuid.text = ConverterUtil.getHexValue(meshNode.node.uuid)
 
             val network = meshNode.node.subnets.iterator().next()
-            tv_network_name.text = network.name
+            tv_subnet_name.text = network.name
 
             tv_node_network_key.text = ConverterUtil.getHexValue(network.netKey.key)
             tv_node_app_key.text =

@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_scan"
+        android:id="@+id/rv_provision"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/scanning_gradient_container"
@@ -20,19 +20,18 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/graphic_loading" />
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/img_alarm" />
 
         <TextView
-
             android:id="@+id/tv_scanning_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Press start to scan device"
-            android:textSize="24sp" />
+            android:text="@string/fragment_provision_list_press_start_message"
+            android:textSize="21sp" />
     </LinearLayout>
 
 
@@ -50,7 +49,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:paddingHorizontal="10dp"
-            android:text="Start Scanning"
+            android:text="@string/fragment_provision_list_start_scanning"
             android:textAllCaps="false"
             android:textSize="18sp" />
     </RelativeLayout>

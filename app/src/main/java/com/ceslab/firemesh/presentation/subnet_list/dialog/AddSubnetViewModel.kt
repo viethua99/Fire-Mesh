@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.network_list.dialog
+package com.ceslab.firemesh.presentation.subnet_list.dialog
 
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
@@ -7,20 +7,20 @@ import com.siliconlab.bluetoothmesh.adk.data_model.subnet.SubnetCreationExceptio
 import timber.log.Timber
 import javax.inject.Inject
 
-class AddNetworkViewModel @Inject constructor(
+class AddSubnetViewModel @Inject constructor(
     private val meshNetworkManager: MeshNetworkManager
 
 ) : ViewModel() {
 
-    fun addNetwork(newNetworkName: String){
-        Timber.d("addGroup: $newNetworkName")
-        if (!AppUtil.isNameValid(newNetworkName)) {
+    fun addSubnet(newSubnetName: String){
+        Timber.d("addSubnet: $newSubnetName")
+        if (!AppUtil.isNameValid(newSubnetName)) {
             return
         }
         try {
-            meshNetworkManager.createSubnet(newNetworkName)
+            meshNetworkManager.createSubnet(newSubnetName)
         } catch (e: SubnetCreationException) {
-            Timber.e("addNetwork exception: $e")
+            Timber.e("addSubnet exception: $e")
         }
 
     }

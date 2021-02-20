@@ -3,17 +3,17 @@ package com.ceslab.firemesh.di
 import com.ceslab.firemesh.presentation.group_list.GroupListFragment
 import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupDialog
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.network.NetworkFragment
-import com.ceslab.firemesh.presentation.network_list.NetworkListFragment
-import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkDialog
+import com.ceslab.firemesh.presentation.subnet.SubnetFragment
+import com.ceslab.firemesh.presentation.subnet_list.SubnetListFragment
+import com.ceslab.firemesh.presentation.subnet_list.dialog.AddSubnetDialog
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigDialog
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigFragment
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoFragment
 import com.ceslab.firemesh.presentation.node_list.NodeListFragment
 import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
-import com.ceslab.firemesh.presentation.scan.dialog.ProvisionBottomDialog
-import com.ceslab.firemesh.presentation.scan.ScanFragment
+import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
+import com.ceslab.firemesh.presentation.provision_list.ProvisionListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -26,13 +26,13 @@ abstract class AppBindingModule {
 
     //FRAGMENTS
     @ContributesAndroidInjector
-    abstract fun scanFragment(): ScanFragment
+    abstract fun provisionListFragment(): ProvisionListFragment
 
     @ContributesAndroidInjector
-    abstract fun networkListFragment(): NetworkListFragment
+    abstract fun subnetListFragment(): SubnetListFragment
 
     @ContributesAndroidInjector
-    abstract fun networkFragment(): NetworkFragment
+    abstract fun subnetFragment(): SubnetFragment
 
     @ContributesAndroidInjector
     abstract fun groupListFragment(): GroupListFragment
@@ -64,6 +64,6 @@ abstract class AppBindingModule {
     abstract fun addGroupDialog(): AddGroupDialog
 
     @ContributesAndroidInjector
-    abstract fun addNetworkDialog(): AddNetworkDialog
+    abstract fun addNetworkDialog(): AddSubnetDialog
 
 }

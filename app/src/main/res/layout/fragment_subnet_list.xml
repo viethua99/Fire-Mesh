@@ -5,14 +5,38 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_network_list"
+        android:id="@+id/rv_subnet_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_background_color" />
 
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="10dp"
+        android:id="@+id/no_subnet_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/gray_background_color"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/img_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="No subnet in mesh, please create a new subnet"
+            android:textSize="20sp" />
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:textColor="@color/white"
-        android:id="@+id/fab_add_network"
+        android:id="@+id/fab_add_subnet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -22,6 +46,6 @@
         app:iconTint="@color/white"
         app:iconSize="20sp"
         android:textSize="12sp"
-        android:text="Add network"
+        android:text="Add subnet"
         app:icon="@drawable/ic_add" />
 </RelativeLayout>

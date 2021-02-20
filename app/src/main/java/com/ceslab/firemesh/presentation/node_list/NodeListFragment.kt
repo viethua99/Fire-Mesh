@@ -12,6 +12,7 @@ import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node.NodeViewModel
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_group_list.*
 import kotlinx.android.synthetic.main.fragment_node_list.*
 import timber.log.Timber
 
@@ -63,6 +64,10 @@ class NodeListFragment : BaseFragment(){
     }
 
     private val meshNodeListObserver = Observer<Set<MeshNode>> {
-       nodeListRecyclerViewAdapter.setDataList(it.toMutableList())
+        if(it.isNotEmpty()){
+            no_node_background.visibility = View.GONE
+            nodeListRecyclerViewAdapter.setDataList(it.toMutableList())
+        }
+
     }
 }

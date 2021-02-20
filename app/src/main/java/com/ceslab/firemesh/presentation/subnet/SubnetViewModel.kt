@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.network
+package com.ceslab.firemesh.presentation.subnet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import com.siliconlab.bluetoothmesh.adk.ErrorType
 import timber.log.Timber
 import javax.inject.Inject
 
-class NetworkViewModel @Inject constructor(
+class SubnetViewModel @Inject constructor(
     bluetoothMeshManager: BluetoothMeshManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
@@ -22,8 +22,8 @@ class NetworkViewModel @Inject constructor(
     private val errorMessage = MutableLiveData<ErrorType>()
     private val currentSubnet = bluetoothMeshManager.currentSubnet!!
 
-    fun connectToNetwork(){
-        Timber.d("connectToNetwork")
+    fun connectToSubnet(){
+        Timber.d("connectToSubnet")
         meshConnectionManager.apply {
             addMeshConnectionListener(connectionStatusListener)
             addMeshMessageListener(connectionMessageListener)
@@ -31,8 +31,8 @@ class NetworkViewModel @Inject constructor(
         }
     }
 
-    fun disconnectFromNetwork(){
-        Timber.d("disconnectFromNetwork")
+    fun disconnectFromSubnet(){
+        Timber.d("disconnectFromSubnet")
         meshConnectionManager.apply {
             removeMeshConnectionListener(connectionStatusListener)
             removeMeshMessageListener(connectionMessageListener)

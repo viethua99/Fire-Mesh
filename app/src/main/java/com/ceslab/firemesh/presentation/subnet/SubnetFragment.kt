@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.network
+package com.ceslab.firemesh.presentation.subnet
 
 import android.view.View
 import androidx.lifecycle.Observer
@@ -11,18 +11,18 @@ import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_network.*
+import kotlinx.android.synthetic.main.fragment_subnet.*
 import timber.log.Timber
 
-class NetworkFragment : BaseFragment(){
+class SubnetFragment(private val subnetName:String) : BaseFragment(){
     companion object {
-        const val TAG = "NetworkFragment"
+        const val TAG = "SubnetFragment"
     }
 
-    private lateinit var networkViewModel: NetworkViewModel
+    private lateinit var subnetViewModel: SubnetViewModel
 
     override fun getResLayoutId(): Int {
-        return R.layout.fragment_network
+        return R.layout.fragment_subnet
     }
 
     override fun onMyViewCreated(view: View) {
@@ -31,23 +31,23 @@ class NetworkFragment : BaseFragment(){
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupBottomNavigationView()
         setupViewPager()
-        connectToNetwork()
+        connectToSubnet()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
-        disconnectFromNetwork()
+        disconnectFromSubnet()
     }
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        networkViewModel = ViewModelProvider(this, viewModelFactory).get(NetworkViewModel::class.java)
-        networkViewModel.apply {
-            getMeshStatus().observe(this@NetworkFragment,meshStatusObserver)
-            getConnectionMessage().observe(this@NetworkFragment,connectionMessageObserver)
-            getErrorMessage().observe(this@NetworkFragment,errorMessageObserver)
+        subnetViewModel = ViewModelProvider(this, viewModelFactory).get(SubnetViewModel::class.java)
+        subnetViewModel.apply {
+            getMeshStatus().observe(this@SubnetFragment,meshStatusObserver)
+            getConnectionMessage().observe(this@SubnetFragment,connectionMessageObserver)
+            getErrorMessage().observe(this@SubnetFragment,errorMessageObserver)
         }
 
     }
@@ -56,23 +56,21 @@ class NetworkFragment : BaseFragment(){
 
     private fun setupViewPager() {
         Timber.d("setupViewPager")
-        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_groups)
-        val networkViewPagerAdapter = NetworkViewPagerAdapter(childFragmentManager)
-        network_view_pager.apply {
-            adapter = networkViewPagerAdapter
+        (activity as MainActivity).supportActionBar?.title = subnetName
+        val subnetViewPagerAdapter = SubnetViewPagerAdapter(childFragmentManager)
+        subnet_view_pager.apply {
+            adapter = subnetViewPagerAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrollStateChanged(state: Int) {}
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
                 override fun onPageSelected(position: Int) {
                     when (position) {
-                        NetworkViewPagerAdapter.GROUP_LIST_PAGE ->{
-                            bottom_nav_network.menu.findItem(R.id.nav_item_groups).isChecked = true
-                            (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_groups)
+                        SubnetViewPagerAdapter.GROUP_LIST_PAGE ->{
+                            bottom_nav_subnet.menu.findItem(R.id.nav_item_groups).isChecked = true
                         }
-                        NetworkViewPagerAdapter.NODE_LIST_PAGE ->  {
-                            bottom_nav_network.menu.findItem(R.id.nav_item_nodes).isChecked = true
-                            (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_nodes)
+                        SubnetViewPagerAdapter.NODE_LIST_PAGE ->  {
+                            bottom_nav_subnet.menu.findItem(R.id.nav_item_nodes).isChecked = true
                         }
                     }
                 }
@@ -82,15 +80,15 @@ class NetworkFragment : BaseFragment(){
 
     private fun setupBottomNavigationView() {
         Timber.d("setupBottomNavigationView")
-        bottom_nav_network.setOnNavigationItemSelectedListener {
+        bottom_nav_subnet.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_item_groups -> {
-                    network_view_pager.currentItem = NetworkViewPagerAdapter.GROUP_LIST_PAGE
+                    subnet_view_pager.currentItem = SubnetViewPagerAdapter.GROUP_LIST_PAGE
                     true
 
                 }
                 R.id.nav_item_nodes -> {
-                    network_view_pager.currentItem =NetworkViewPagerAdapter.NODE_LIST_PAGE
+                    subnet_view_pager.currentItem =SubnetViewPagerAdapter.NODE_LIST_PAGE
                     true
                 }
                 else -> false
@@ -98,14 +96,14 @@ class NetworkFragment : BaseFragment(){
         }
     }
 
-    private fun connectToNetwork(){
-        Timber.d("connectToNetwork")
-        networkViewModel.connectToNetwork()
+    private fun connectToSubnet(){
+        Timber.d("connectToSubnet")
+        subnetViewModel.connectToSubnet()
     }
 
-    private fun disconnectFromNetwork(){
-        Timber.d("disconnectFromNode")
-        networkViewModel.disconnectFromNetwork()
+    private fun disconnectFromSubnet(){
+        Timber.d("disconnectFromSubnet")
+        subnetViewModel.disconnectFromSubnet()
     }
 
     private val meshStatusObserver = Observer<MeshStatus> {

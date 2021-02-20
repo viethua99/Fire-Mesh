@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.scan.dialog
+package com.ceslab.firemesh.presentation.provision_list.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater

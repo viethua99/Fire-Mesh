@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.scan
+package com.ceslab.firemesh.presentation.provision_list
 
 import android.content.Context
 import android.view.View
@@ -11,12 +11,12 @@ import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import timber.log.Timber
 
-class ScanRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<ConnectableDeviceDescription, ScanRecyclerViewAdapter.ViewHolder>(context) {
+class ProvisionRecyclerViewAdapter(context: Context) :
+    BaseRecyclerViewAdapter<ConnectableDeviceDescription, ProvisionRecyclerViewAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = layoutInflater.inflate(R.layout.item_scanned_device, parent, false)
+        val view = layoutInflater.inflate(R.layout.item_unprovisioned_device, parent, false)
         return ViewHolder(view)
     }
 

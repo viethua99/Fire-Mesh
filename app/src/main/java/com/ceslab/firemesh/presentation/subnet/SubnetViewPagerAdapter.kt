@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.network
+package com.ceslab.firemesh.presentation.subnet
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.ceslab.firemesh.presentation.group_list.GroupListFragment
 import com.ceslab.firemesh.presentation.node_list.NodeListFragment
 
-class NetworkViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+class SubnetViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
     companion object {
         const val GROUP_LIST_PAGE = 0
         const val NODE_LIST_PAGE = 1

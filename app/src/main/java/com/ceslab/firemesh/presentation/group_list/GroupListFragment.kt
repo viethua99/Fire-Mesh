@@ -11,6 +11,7 @@ import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupDialog
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group_list.*
+import kotlinx.android.synthetic.main.fragment_subnet_list.*
 import timber.log.Timber
 
 class GroupListFragment : BaseFragment(){
@@ -65,8 +66,10 @@ class GroupListFragment : BaseFragment(){
 
     private val groupListObserver = Observer<Set<Group>> {
         activity?.runOnUiThread {
-            groupListRecyclerViewAdapter.setDataList(it.toMutableList())
-
+            if(it.isNotEmpty()) {
+                no_group_background.visibility = View.GONE
+                groupListRecyclerViewAdapter.setDataList(it.toMutableList())
+            }
         }
     }
 

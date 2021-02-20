@@ -7,17 +7,17 @@ import com.ceslab.firemesh.factory.ViewModelKey
 import com.ceslab.firemesh.presentation.group_list.GroupListViewModel
 import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupViewModel
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
-import com.ceslab.firemesh.presentation.network.NetworkViewModel
-import com.ceslab.firemesh.presentation.network_list.NetworkListViewModel
-import com.ceslab.firemesh.presentation.network_list.dialog.AddNetworkViewModel
+import com.ceslab.firemesh.presentation.subnet.SubnetViewModel
+import com.ceslab.firemesh.presentation.subnet_list.SubnetListViewModel
+import com.ceslab.firemesh.presentation.subnet_list.dialog.AddSubnetViewModel
 import com.ceslab.firemesh.presentation.node.NodeViewModel
 import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoViewModel
 import com.ceslab.firemesh.presentation.node_list.NodeListViewModel
 import com.ceslab.firemesh.presentation.ota_list.OTAListViewModel
-import com.ceslab.firemesh.presentation.scan.dialog.ProvisionDialogViewModel
-import com.ceslab.firemesh.presentation.scan.ScanViewModel
+import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionDialogViewModel
+import com.ceslab.firemesh.presentation.provision_list.ProvisionViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -35,18 +35,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ScanViewModel::class)
-    abstract fun bindScanViewModel(scanViewModel: ScanViewModel):ViewModel
+    @ViewModelKey(ProvisionViewModel::class)
+    abstract fun bindProvisionViewModel(provisionViewModel: ProvisionViewModel):ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(NetworkListViewModel::class)
-    abstract fun bindNetworkListViewModel(networkListViewModel: NetworkListViewModel):ViewModel
+    @ViewModelKey(SubnetListViewModel::class)
+    abstract fun bindSubnetListViewModel(subnetListViewModel: SubnetListViewModel):ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(NetworkViewModel::class)
-    abstract fun bindNetworkViewModel(networkViewModel: NetworkViewModel):ViewModel
+    @ViewModelKey(SubnetViewModel::class)
+    abstract fun bindSubnetViewModel(subnetViewModel: SubnetViewModel):ViewModel
 
     @Binds
     @IntoMap
@@ -96,6 +96,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AddNetworkViewModel::class)
-    abstract fun bindAddNetworkDialogViewModel(addNetworkViewModel: AddNetworkViewModel):ViewModel
+    @ViewModelKey(AddSubnetViewModel::class)
+    abstract fun bindAddNetworkDialogViewModel(addSubnetViewModel: AddSubnetViewModel):ViewModel
 }

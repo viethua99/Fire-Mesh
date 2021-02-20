@@ -5,23 +5,23 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:layout_above="@id/bottom_nav_network"
-        android:id="@+id/container_nav_network"
+        android:layout_above="@id/bottom_nav_subnet"
+        android:id="@+id/container_nav_subnet"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <androidx.viewpager.widget.ViewPager
-        android:layout_above="@id/bottom_nav_network"
-        android:id="@+id/network_view_pager"
+        android:layout_above="@id/bottom_nav_subnet"
+        android:id="@+id/subnet_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav_network"
+        android:id="@+id/bottom_nav_subnet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:itemIconSize="26sp"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_bottom_nav_network" />
+        app:menu="@menu/menu_bottom_nav_subnet" />
 </RelativeLayout>

@@ -11,22 +11,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adding Network"
+        android:text="Adding Subnet"
         android:textColor="@color/primary_color"
         android:textSize="22sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_network_name"
+        android:id="@+id/til_subnet_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
-        android:hint="Network name">
+        android:hint="Subnet name">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_network_name"
+            android:id="@+id/edt_subnet_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -35,10 +35,10 @@
 
 
     <Button
-        android:id="@+id/btn_add_network"
+        android:id="@+id/btn_add_subnet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-        android:text="Add Network" />
+        android:text="Add Subnet" />
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.scan
+package com.ceslab.firemesh.presentation.provision_list
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,23 +10,23 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.scan.dialog.ProvisionBottomDialog
+import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_scan.*
+import kotlinx.android.synthetic.main.fragment_provision_list.*
 import timber.log.Timber
 
-class ScanFragment : BaseFragment() {
+class ProvisionListFragment : BaseFragment() {
     companion object {
-        const val TAG = "ScanFragment"
+        const val TAG = "ProvisionListFragment"
     }
 
 
-    private lateinit var scannerRecyclerViewAdapter: ScanRecyclerViewAdapter
-    private lateinit var scanViewModel: ScanViewModel
+    private lateinit var scannerRecyclerViewAdapter: ProvisionRecyclerViewAdapter
+    private lateinit var provisionViewModel: ProvisionViewModel
     private  var isViewCreated = false
 
     override fun getResLayoutId(): Int {
-        return R.layout.fragment_scan
+        return R.layout.fragment_provision_list
     }
 
     override fun onStop() {
@@ -48,7 +48,7 @@ class ScanFragment : BaseFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(!isVisibleToUser && isViewCreated) {
-            scanViewModel.stopScan()
+            provisionViewModel.stopScan()
         }
     }
 
@@ -62,9 +62,9 @@ class ScanFragment : BaseFragment() {
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        scanViewModel = ViewModelProvider(this, viewModelFactory).get(ScanViewModel::class.java)
-        scanViewModel.isLeScanStarted().observe(this, isLeScanStartedObserver)
-        scanViewModel.scannedDeviceResult.observe(this, scanUnprovisionedDeviceObserver)
+        provisionViewModel = ViewModelProvider(this, viewModelFactory).get(ProvisionViewModel::class.java)
+        provisionViewModel.isLeScanStarted().observe(this, isLeScanStartedObserver)
+        provisionViewModel.scannedDeviceResult.observe(this, scanUnprovisionedDeviceObserver)
     }
 
     private fun setupViews() {
@@ -76,9 +76,9 @@ class ScanFragment : BaseFragment() {
     private fun setupRecyclerView() {
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(view!!.context)
-        scannerRecyclerViewAdapter = ScanRecyclerViewAdapter(view!!.context)
+        scannerRecyclerViewAdapter = ProvisionRecyclerViewAdapter(view!!.context)
         scannerRecyclerViewAdapter.itemClickListener = onProvisionButtonClickedListener
-        rv_scan.apply {
+        rv_provision.apply {
             layoutManager = linearLayoutManager
             setHasFixedSize(true)
             adapter = scannerRecyclerViewAdapter
@@ -87,18 +87,18 @@ class ScanFragment : BaseFragment() {
 
     private val onScanButtonClickListener = View.OnClickListener {
         Timber.d("onScanButtonClickListener: clicked")
-        scanViewModel.scanUnprovisionedDevice()
+        provisionViewModel.scanUnprovisionedDevice()
     }
 
     private val isLeScanStartedObserver = Observer<Boolean> {
         activity?.runOnUiThread {
             if (it) {
-                btn_scanning.text = "Stop Scanning"
-                tv_scanning_message.text = "Looking for nearby devices..."
+                btn_scanning.text = getString(R.string.fragment_provision_list_stop_scanning)
+                tv_scanning_message.text = getString(R.string.fragment_provision_list_looking_for_nearby_devices)
                 btn_scanning.setBackgroundColor(Color.parseColor("#D91E2A"))
             } else {
-                btn_scanning.text = "Start Scanning"
-                tv_scanning_message.text = "Press start to scan device"
+                btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
+                tv_scanning_message.text = getString(R.string.fragment_provision_list_press_start_message)
                 btn_scanning.setBackgroundColor(Color.parseColor("#0288D1"))
             }
         }

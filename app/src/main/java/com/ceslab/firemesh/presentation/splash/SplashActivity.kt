@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class SplashActivity : BaseActivity() {
     companion object {
-        const val TRANSACTION_DELAY_TIME : Long = 2000
+        const val TRANSACTION_DELAY_TIME : Long = 1000
     }
     override fun getResLayoutId(): Int {
         return R.layout.activity_splash

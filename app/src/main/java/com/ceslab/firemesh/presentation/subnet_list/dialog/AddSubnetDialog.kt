@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.network_list.dialog
+package com.ceslab.firemesh.presentation.subnet_list.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,16 +12,16 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.dialog_add_network_bottom_sheet.view.*
+import kotlinx.android.synthetic.main.dialog_add_subnet_bottom_sheet.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class AddNetworkDialog : BottomSheetDialogFragment() {
+class AddSubnetDialog : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var addNetworkClickListener: AddNetworkClickListener
-    private lateinit var addNetworkViewModel: AddNetworkViewModel
+    private lateinit var addSubnetClickListener: AddSubnetClickListener
+    private lateinit var addSubnetViewModel: AddSubnetViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +34,8 @@ class AddNetworkDialog : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         Timber.d("onCreateView")
-        val view = inflater.inflate(R.layout.dialog_add_network_bottom_sheet, container, false)
-        view.btn_add_network.setOnClickListener(onAddNetworkButtonClicked)
+        val view = inflater.inflate(R.layout.dialog_add_subnet_bottom_sheet, container, false)
+        view.btn_add_subnet.setOnClickListener(onAddSubnetButtonClicked)
         return view
     }
 
@@ -52,22 +52,22 @@ class AddNetworkDialog : BottomSheetDialogFragment() {
             }
         }
     }
-    fun setAddNetworkClickListener(addNetworkClickListener: AddNetworkClickListener){
-        this.addNetworkClickListener = addNetworkClickListener
+    fun setAddSubnetClickListener(addSubnetClickListener: AddSubnetClickListener){
+        this.addSubnetClickListener = addSubnetClickListener
     }
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        addNetworkViewModel = ViewModelProvider(this, viewModelFactory).get(AddNetworkViewModel::class.java)
+        addSubnetViewModel = ViewModelProvider(this, viewModelFactory).get(AddSubnetViewModel::class.java)
 
     }
 
-    private val onAddNetworkButtonClicked = View.OnClickListener {
+    private val onAddSubnetButtonClicked = View.OnClickListener {
         activity?.runOnUiThread {
-            val networkName = view!!.edt_network_name.text.toString()
-            addNetworkViewModel.addNetwork(networkName)
-            addNetworkClickListener.onClicked()
+            val networkName = view!!.edt_subnet_name.text.toString()
+            addSubnetViewModel.addSubnet(networkName)
+            addSubnetClickListener.onClicked()
             dialog?.dismiss()
 
         }

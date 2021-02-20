@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.scan
+package com.ceslab.firemesh.presentation.provision_list
 
 import android.content.Context
 import android.view.View
@@ -10,12 +10,12 @@ import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 
-class NetworkListRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<Subnet, NetworkListRecyclerViewAdapter.ViewHolder>(context) {
+class SubnetListRecyclerViewAdapter(context: Context) :
+    BaseRecyclerViewAdapter<Subnet, SubnetListRecyclerViewAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = layoutInflater.inflate(R.layout.item_network, parent, false)
+        val view = layoutInflater.inflate(R.layout.item_subnet, parent, false)
         return ViewHolder(view)
     }
 
@@ -26,10 +26,10 @@ class NetworkListRecyclerViewAdapter(context: Context) :
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        var tvNetworkName: TextView = view.findViewById(R.id.tv_network_name)
-        var tvNetworkNodeCount: TextView = view.findViewById(R.id.tv_network_nodes_count)
-        var tvNetworkGroupsCount: TextView = view.findViewById(R.id.tv_network_groups_count)
-        var tvNetworkKeyIndex: TextView = view.findViewById(R.id.tv_network_key_index)
+        var tvNetworkName: TextView = view.findViewById(R.id.tv_subnet_name)
+        var tvNetworkNodeCount: TextView = view.findViewById(R.id.tv_subnet_nodes_count)
+        var tvNetworkGroupsCount: TextView = view.findViewById(R.id.tv_subnet_groups_count)
+        var tvNetworkKeyIndex: TextView = view.findViewById(R.id.tv_subnet_key_index)
 
         init {
             view.setOnClickListener(this)

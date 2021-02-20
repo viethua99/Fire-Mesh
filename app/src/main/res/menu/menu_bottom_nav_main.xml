@@ -3,11 +3,11 @@
     <item
         android:id="@+id/nav_item_networks"
         android:icon="@drawable/img_mesh"
-        android:title="@string/nav_item_networks" />
+        android:title="@string/nav_item_subnets" />
     <item
-        android:id="@+id/nav_item_scan"
-        android:icon="@drawable/img_scan"
-        android:title="@string/nav_item_scan" />
+        android:id="@+id/nav_item_provision"
+        android:icon="@drawable/img_provision"
+        android:title="@string/nav_item_provision" />
     <item
         android:id="@+id/nav_item_ota_list"
         android:icon="@drawable/img_ota"

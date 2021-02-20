@@ -5,9 +5,6 @@ import androidx.viewpager.widget.ViewPager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.network_list.NetworkListFragment
-import com.ceslab.firemesh.presentation.scan.ScanFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 
@@ -33,7 +30,7 @@ class MainFragment : BaseFragment() {
 
     private fun setupViewPager() {
         Timber.d("setupViewPager")
-        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_networks)
+        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_subnets)
         val mainViewPagerAdapter = MainViewPagerAdapter(childFragmentManager)
         main_view_pager.adapter = mainViewPagerAdapter
         main_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -42,13 +39,13 @@ class MainFragment : BaseFragment() {
 
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    MainViewPagerAdapter.NETWORK_LIST_PAGE ->{
+                    MainViewPagerAdapter.SUBNET_LIST_PAGE ->{
                         bottom_nav_main.menu.findItem(R.id.nav_item_networks).isChecked = true
-                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_networks)
+                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_subnets)
                     }
-                    MainViewPagerAdapter.SCAN_PAGE ->  {
-                        bottom_nav_main.menu.findItem(R.id.nav_item_scan).isChecked = true
-                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_scan)
+                    MainViewPagerAdapter.PROVISION_LIST ->  {
+                        bottom_nav_main.menu.findItem(R.id.nav_item_provision).isChecked = true
+                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_provision)
                     }
                     MainViewPagerAdapter.OTA_LIST_PAGE ->  {
                         bottom_nav_main.menu.findItem(R.id.nav_item_ota_list).isChecked = true
@@ -64,12 +61,12 @@ class MainFragment : BaseFragment() {
         bottom_nav_main.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_item_networks -> {
-                    main_view_pager.currentItem = MainViewPagerAdapter.NETWORK_LIST_PAGE
+                    main_view_pager.currentItem = MainViewPagerAdapter.SUBNET_LIST_PAGE
                     true
 
                 }
-                R.id.nav_item_scan -> {
-                    main_view_pager.currentItem = MainViewPagerAdapter.SCAN_PAGE
+                R.id.nav_item_provision -> {
+                    main_view_pager.currentItem = MainViewPagerAdapter.PROVISION_LIST
                     true
                 }
                 R.id.nav_item_ota_list -> {

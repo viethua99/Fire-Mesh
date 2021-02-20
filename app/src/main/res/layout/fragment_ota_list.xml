@@ -19,19 +19,18 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/graphic_loading" />
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/img_ota_2" />
 
         <TextView
-
             android:id="@+id/tv_scanning_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Press start to scan device"
-            android:textSize="24sp" />
+            android:text="@string/fragment_ota_list_press_start_message"
+            android:textSize="22sp" />
     </LinearLayout>
 
 

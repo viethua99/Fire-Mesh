@@ -37,7 +37,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_network_name"
+                    android:id="@+id/tv_subnet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_network_name"
@@ -52,7 +52,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tv_network_nodes_count"
+                        android:id="@+id/tv_subnet_nodes_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 Nodes"
@@ -60,7 +60,7 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/tv_network_groups_count"
+                        android:id="@+id/tv_subnet_groups_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -82,12 +82,12 @@
                         android:src="@drawable/ic_key" />
 
                     <TextView
-                        android:id="@+id/tv_network_key_index"
+                        android:id="@+id/tv_subnet_key_index"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
-                        android:text="@string/item_network_network_key"
+                        android:text="@string/item_network_sub_key"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
                 </LinearLayout>

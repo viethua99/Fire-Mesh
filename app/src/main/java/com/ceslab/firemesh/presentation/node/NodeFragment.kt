@@ -8,7 +8,7 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.scan.dialog.ProvisionBottomDialog
+import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node.*
 import timber.log.Timber
