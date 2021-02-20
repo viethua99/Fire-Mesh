@@ -14,6 +14,7 @@ import com.ceslab.firemesh.presentation.node.NodeViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group_list.*
 import kotlinx.android.synthetic.main.fragment_node_list.*
+import kotlinx.android.synthetic.main.fragment_subnet_list.*
 import timber.log.Timber
 
 class NodeListFragment : BaseFragment(){
@@ -61,12 +62,19 @@ class NodeListFragment : BaseFragment(){
             val mainActivity = activity as MainActivity
             mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
         }
+
+        override fun onLongClick(position: Int, item: MeshNode) {
+            Timber.d("onNodeItemClickedListener: longClicked")
+        }
     }
 
     private val meshNodeListObserver = Observer<Set<MeshNode>> {
         if(it.isNotEmpty()){
             no_node_background.visibility = View.GONE
             nodeListRecyclerViewAdapter.setDataList(it.toMutableList())
+        }  else {
+            nodeListRecyclerViewAdapter.clear()
+            no_node_background.visibility = View.VISIBLE
         }
 
     }

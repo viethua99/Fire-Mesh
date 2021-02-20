@@ -43,5 +43,6 @@ abstract class BaseRecyclerViewAdapter<T, VH : RecyclerView.ViewHolder>(val cont
 
     interface ItemClickListener<T> {
         fun onClick(position: Int, item: T)
+        fun onLongClick(position: Int,item: T)
     }
 }

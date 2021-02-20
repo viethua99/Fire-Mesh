@@ -12,8 +12,10 @@ import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.presentation.subnet_list.dialog.AddSubnetClickListener
 import com.ceslab.firemesh.presentation.subnet_list.dialog.AddSubnetDialog
 import com.ceslab.firemesh.presentation.provision_list.SubnetListRecyclerViewAdapter
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_group_list.*
 import kotlinx.android.synthetic.main.fragment_subnet_list.*
 import timber.log.Timber
 
@@ -24,7 +26,7 @@ class SubnetListFragment : BaseFragment(){
 
     private lateinit var subnetListRecyclerViewAdapter: SubnetListRecyclerViewAdapter
     private lateinit var subnetListViewModel: SubnetListViewModel
-
+    private lateinit var subnetToRemove : Subnet
 
     override fun getResLayoutId(): Int {
         return R.layout.fragment_subnet_list
@@ -56,7 +58,11 @@ class SubnetListFragment : BaseFragment(){
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         subnetListViewModel = ViewModelProvider(this, viewModelFactory).get(SubnetListViewModel::class.java)
-        subnetListViewModel.getSubnetList().observe(this,subnetListObserver)
+        subnetListViewModel.apply {
+            getSubnetList().observe(this@SubnetListFragment,subnetListObserver)
+            getRemoveSubnetStatus().observe(this@SubnetListFragment,isSubnetRemoveSucceedObserver)
+        }
+
     }
 
     private fun setupAddGroupFab() {
@@ -76,6 +82,13 @@ class SubnetListFragment : BaseFragment(){
             val mainActivity = activity as MainActivity
             mainActivity.replaceFragment(SubnetFragment(item.name),SubnetFragment.TAG,R.id.container_main)
         }
+
+        override fun onLongClick(position: Int, item: Subnet) {
+            Timber.d("onSubnetItemClickedListener: longClicked")
+            showWarningDialog("Do you want to delete subnet?")
+            subnetToRemove = item
+            setOnConfirmDialogCLicked(sweetClickListener)
+        }
     }
 
     private val subnetListObserver = Observer<Set<Subnet>> {
@@ -83,6 +96,20 @@ class SubnetListFragment : BaseFragment(){
             if (it.isNotEmpty()) {
                 no_subnet_background.visibility = View.GONE
                 subnetListRecyclerViewAdapter.setDataList(it.toMutableList())
+            }  else {
+                subnetListRecyclerViewAdapter.clear()
+                no_subnet_background.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private val isSubnetRemoveSucceedObserver = Observer<Boolean> {
+        activity?.runOnUiThread {
+            hideDialog()
+            if(it == true) {
+                showSuccessDialog("Remove Succeed")
+            } else {
+                showFailedDialog("Remove Failed")
             }
         }
     }
@@ -91,5 +118,9 @@ class SubnetListFragment : BaseFragment(){
         override fun onClicked() {
             subnetListViewModel.getSubnetList()
         }
+    }
+
+    private val sweetClickListener = SweetAlertDialog.OnSweetClickListener {
+        subnetListViewModel.removeSubnet(subnetToRemove)
     }
 }

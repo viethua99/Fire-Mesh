@@ -25,7 +25,7 @@ class SubnetListRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,View.OnLongClickListener {
         var tvNetworkName: TextView = view.findViewById(R.id.tv_subnet_name)
         var tvNetworkNodeCount: TextView = view.findViewById(R.id.tv_subnet_nodes_count)
         var tvNetworkGroupsCount: TextView = view.findViewById(R.id.tv_subnet_groups_count)
@@ -33,10 +33,16 @@ class SubnetListRecyclerViewAdapter(context: Context) :
 
         init {
             view.setOnClickListener(this)
+            view.setOnLongClickListener(this)
         }
 
         override fun onClick(p0: View?) {
             itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
+        }
+
+        override fun onLongClick(p0: View?): Boolean {
+            itemClickListener.onLongClick(adapterPosition,dataList[adapterPosition])
+            return true
         }
 
         fun renderUI(subnet: Subnet) {

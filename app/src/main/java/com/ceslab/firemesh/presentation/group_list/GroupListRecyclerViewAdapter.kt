@@ -25,10 +25,20 @@ class GroupListRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnLongClickListener {
         var tvGroupName: TextView = view.findViewById(R.id.tv_group_name)
         var tvNodeCount: TextView = view.findViewById(R.id.tv_group_nodes_count)
         var tvAppKeyIndex: TextView = view.findViewById(R.id.tv_group_app_key_index)
+
+        init {
+            view.setOnLongClickListener(this)
+        }
+
+        override fun onLongClick(p0: View?): Boolean {
+            itemClickListener.onLongClick(adapterPosition,dataList[adapterPosition])
+            return true
+        }
+
         fun renderUI(group: Group) {
             tvGroupName.text = group.name
             tvNodeCount.text = String.format("%d Nodes", group.nodes.size)

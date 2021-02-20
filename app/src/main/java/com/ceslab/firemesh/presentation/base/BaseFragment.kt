@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.util.AndroidDialogUtil
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,6 +48,10 @@ abstract class BaseFragment : Fragment() {
         fragmentTransaction.replace(containerId, fragment, tag)
             .addToBackStack(tag)
             .commit()
+    }
+
+    fun setOnConfirmDialogCLicked(sweetClickListener: SweetAlertDialog.OnSweetClickListener) {
+        AndroidDialogUtil.getInstance().setOnConfirmClickedListener(sweetClickListener)
     }
 
     fun showProgressDialog(message: String) {

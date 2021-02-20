@@ -1,11 +1,16 @@
 package com.ceslab.firemesh.meshmodule.bluetoothmesh
 
+import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
+import com.siliconlab.bluetoothmesh.adk.data_model.group.GroupRemovalCallback
 import com.siliconlab.bluetoothmesh.adk.data_model.network.Network
 import com.siliconlab.bluetoothmesh.adk.data_model.network.NetworkCreationException
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.GroupCreationException
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.SubnetCreationException
+import com.siliconlab.bluetoothmesh.adk.data_model.subnet.SubnetRemovalCallback
+import com.siliconlab.bluetoothmesh.adk.internal.data_model.group.GroupRemovalErrorResult
+import com.siliconlab.bluetoothmesh.adk.internal.data_model.subnet.SubnetRemovalErrorResult
 import timber.log.Timber
 
 /**
@@ -31,6 +36,30 @@ class MeshNetworkManager(val bluetoothMeshManager: BluetoothMeshManager) {
 
     fun createGroup(name: String, subnet: Subnet): Group? {
         return subnet.createGroup(name, null, null)
+    }
+
+    fun removeSubnet(subnet: Subnet, callback: RemoveSubnetCallback) {
+        subnet.removeSubnet(object : SubnetRemovalCallback {
+            override fun success(subnet: Subnet?) {
+                callback.success()
+            }
+
+            override fun error(subnet: Subnet?, result: SubnetRemovalErrorResult?, errorType: ErrorType?) {
+                callback.error(subnet, errorType)
+            }
+        })
+    }
+
+    fun removeGroup(group: Group, callback: RemoveGroupCallback) {
+        group.removeGroup(object : GroupRemovalCallback {
+            override fun success(group: Group?) {
+                callback.success()
+            }
+
+            override fun error(group: Group?, result: GroupRemovalErrorResult?, errorType: ErrorType?) {
+                callback.error(group, errorType)
+            }
+        })
     }
 
     private fun setupNetwork() {
@@ -75,4 +104,17 @@ class MeshNetworkManager(val bluetoothMeshManager: BluetoothMeshManager) {
             }
         }
     }
+
+    interface RemoveGroupCallback {
+        fun success()
+
+        fun error(group: Group?, errorType: ErrorType?)
+    }
+
+    interface RemoveSubnetCallback {
+        fun success()
+
+        fun error(subnet: Subnet?, error: ErrorType?)
+    }
+
 }

@@ -123,5 +123,7 @@ class ProvisionListFragment : BaseFragment() {
                 provisionBottomDialog.arguments = bundle
                 provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
             }
+
+            override fun onLongClick(position: Int, item: ConnectableDeviceDescription) {}
         }
 }

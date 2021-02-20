@@ -137,8 +137,9 @@ class OTAListFragment : BaseFragment() {
                     showProgressDialog("Connecting to GATT")
 
                 }
-
             }
+
+            override fun onLongClick(position: Int, item: OTADevice) {}
         }
 
 }
