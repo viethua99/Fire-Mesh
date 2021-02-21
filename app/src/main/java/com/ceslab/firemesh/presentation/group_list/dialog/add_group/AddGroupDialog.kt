@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.group_list.dialog
+package com.ceslab.firemesh.presentation.group_list.dialog.add_group
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -65,13 +65,9 @@ class AddGroupDialog : BottomSheetDialogFragment() {
     }
 
     private val onAddGroupButtonClicked = View.OnClickListener {
-        activity?.runOnUiThread {
             val groupName = view!!.edt_group_name.text.toString()
             addGroupViewModel.addGroup(groupName)
             addGroupClickListener.onClicked()
             dialog?.dismiss()
-
-        }
     }
-
 }

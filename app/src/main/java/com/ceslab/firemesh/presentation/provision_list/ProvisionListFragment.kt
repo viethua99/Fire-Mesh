@@ -95,7 +95,7 @@ class ProvisionListFragment : BaseFragment() {
             if (it) {
                 btn_scanning.text = getString(R.string.fragment_provision_list_stop_scanning)
                 tv_scanning_message.text = getString(R.string.fragment_provision_list_looking_for_nearby_devices)
-                btn_scanning.setBackgroundColor(Color.parseColor("#D91E2A"))
+                btn_scanning.setBackgroundColor(Color.parseColor("#F44336"))
             } else {
                 btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
                 tv_scanning_message.text = getString(R.string.fragment_provision_list_press_start_message)

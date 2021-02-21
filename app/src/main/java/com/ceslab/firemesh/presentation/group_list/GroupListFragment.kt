@@ -7,16 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupClickListener
-import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupDialog
-import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.subnet.SubnetFragment
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
+import com.ceslab.firemesh.presentation.group_list.dialog.add_group.AddGroupClickListener
+import com.ceslab.firemesh.presentation.group_list.dialog.add_group.AddGroupDialog
+import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupCallback
+import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupDialog
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
-import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group_list.*
-import kotlinx.android.synthetic.main.fragment_subnet_list.*
 import timber.log.Timber
 
 class GroupListFragment : BaseFragment(){
@@ -26,7 +23,6 @@ class GroupListFragment : BaseFragment(){
 
     private lateinit var groupListRecyclerViewAdapter: GroupListRecyclerViewAdapter
     private lateinit var groupListViewModel: GroupListViewModel
-    private lateinit var groupToRemove : Group
 
     override fun getResLayoutId(): Int {
        return R.layout.fragment_group_list
@@ -50,7 +46,6 @@ class GroupListFragment : BaseFragment(){
         groupListViewModel = ViewModelProvider(this, viewModelFactory).get(GroupListViewModel::class.java)
         groupListViewModel.apply {
             getGroupList().observe(this@GroupListFragment,groupListObserver)
-            getRemoveGroupStatus().observe(this@GroupListFragment,isGroupRemoveSucceedObserver)
         }
     }
 
@@ -69,7 +64,8 @@ class GroupListFragment : BaseFragment(){
         Timber.d("setupAddGroupFab")
         fab_add_group.setOnClickListener {
             Timber.d("onAddGroupClick")
-            val addGroupDialog = AddGroupDialog()
+            val addGroupDialog =
+                AddGroupDialog()
             addGroupDialog.show(fragmentManager!!, "AddGroupDialog")
             addGroupDialog.setAddGroupClickListener(onAddGroupClickListener)
         }
@@ -80,9 +76,9 @@ class GroupListFragment : BaseFragment(){
 
         override fun onLongClick(position: Int, item: Group) {
             Timber.d("onGroupItemClickedListener: longClicked")
-            showWarningDialog("Do you want to delete group?")
-            groupToRemove = item
-            setOnConfirmDialogCLicked(sweetClickListener)
+            val editGroupDialog = EditGroupDialog(item)
+            editGroupDialog.show(fragmentManager!!, "EditGroupDialog")
+            editGroupDialog.setEditGroupCallback(onEditGroupCallback)
         }
     }
 
@@ -98,24 +94,18 @@ class GroupListFragment : BaseFragment(){
         }
     }
 
-    private val isGroupRemoveSucceedObserver = Observer<Boolean> {
-        activity?.runOnUiThread {
-            hideDialog()
-            if(it == true) {
-                showSuccessDialog("Remove Succeed")
-            } else {
-                showFailedDialog("Remove Failed")
-            }
-        }
-    }
 
-    private val onAddGroupClickListener = object : AddGroupClickListener {
+    private val onAddGroupClickListener = object :
+        AddGroupClickListener {
         override fun onClicked() {
            groupListViewModel.getGroupList()
         }
     }
 
-    private val sweetClickListener = SweetAlertDialog.OnSweetClickListener {
-        groupListViewModel.removeGroup(groupToRemove)
+    private val onEditGroupCallback = object : EditGroupCallback {
+        override fun onChanged() {
+            groupListViewModel.getGroupList()
+        }
     }
+
 }

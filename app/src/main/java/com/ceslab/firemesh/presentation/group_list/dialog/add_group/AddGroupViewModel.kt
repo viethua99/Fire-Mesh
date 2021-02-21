@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.group_list.dialog
+package com.ceslab.firemesh.presentation.group_list.dialog.add_group
 
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager

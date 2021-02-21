@@ -15,16 +15,13 @@ class SubnetListViewModel @Inject constructor(
     private val meshNetworkManager: MeshNetworkManager
 ) : ViewModel(){
     private val subnetList = MutableLiveData<Set<Subnet>>()
-    private val isRemoveSubnetSucceed = MutableLiveData<Boolean>()
+
 
     fun getSubnetList() : LiveData<Set<Subnet>>{
         subnetList.value = meshNetworkManager.network?.subnets!!
         return subnetList
     }
 
-    fun getRemoveSubnetStatus() : LiveData<Boolean> {
-        return isRemoveSubnetSucceed
-    }
 
 
     fun setCurrentSubnet(subnet: Subnet) {
@@ -32,21 +29,4 @@ class SubnetListViewModel @Inject constructor(
         bluetoothMeshManager.currentSubnet = subnet
     }
 
-    fun removeSubnet(subnetToRemove:Subnet){
-        Timber.d("removeSubnet")
-        meshNetworkManager.removeSubnet(subnetToRemove,removeSubnetCallback)
-    }
-
-    private val removeSubnetCallback  = object : MeshNetworkManager.RemoveSubnetCallback {
-        override fun success() {
-            Timber.d("removeSubnetCallback: success")
-            subnetList.value = meshNetworkManager.network?.subnets!!
-            isRemoveSubnetSucceed.value = true
-        }
-
-        override fun error(subnet: Subnet?, error: ErrorType?) {
-            Timber.e("removeSubnetCallback: error: ${subnet!!.name} --- $error")
-            isRemoveSubnetSucceed.value = false
-        }
-    }
 }

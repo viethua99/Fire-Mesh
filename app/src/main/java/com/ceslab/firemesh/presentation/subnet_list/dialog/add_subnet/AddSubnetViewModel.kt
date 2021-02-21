@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.subnet_list.dialog
+package com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet
 
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager

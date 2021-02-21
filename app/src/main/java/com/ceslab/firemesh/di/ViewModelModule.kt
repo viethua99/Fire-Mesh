@@ -5,11 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.factory.ViewModelKey
 import com.ceslab.firemesh.presentation.group_list.GroupListViewModel
-import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupViewModel
+import com.ceslab.firemesh.presentation.group_list.dialog.add_group.AddGroupViewModel
+import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupViewModel
 import com.ceslab.firemesh.presentation.main.activity.MainActivityViewModel
 import com.ceslab.firemesh.presentation.subnet.SubnetViewModel
 import com.ceslab.firemesh.presentation.subnet_list.SubnetListViewModel
-import com.ceslab.firemesh.presentation.subnet_list.dialog.AddSubnetViewModel
+import com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet.AddSubnetViewModel
 import com.ceslab.firemesh.presentation.node.NodeViewModel
 import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigViewModel
@@ -18,6 +19,7 @@ import com.ceslab.firemesh.presentation.node_list.NodeListViewModel
 import com.ceslab.firemesh.presentation.ota_list.OTAListViewModel
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.provision_list.ProvisionViewModel
+import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -96,6 +98,16 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(EditGroupViewModel::class)
+    abstract fun bindEditGroupDialogViewModel(editGroupViewModel: EditGroupViewModel):ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(AddSubnetViewModel::class)
-    abstract fun bindAddNetworkDialogViewModel(addSubnetViewModel: AddSubnetViewModel):ViewModel
+    abstract fun bindAddSubnetDialogViewModel(addSubnetViewModel: AddSubnetViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditSubnetViewModel::class)
+    abstract fun bindEditSubnetDialogViewModel(editSubnetViewModel: EditSubnetViewModel):ViewModel
 }

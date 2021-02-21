@@ -1,11 +1,12 @@
 package com.ceslab.firemesh.di
 
 import com.ceslab.firemesh.presentation.group_list.GroupListFragment
-import com.ceslab.firemesh.presentation.group_list.dialog.AddGroupDialog
+import com.ceslab.firemesh.presentation.group_list.dialog.add_group.AddGroupDialog
+import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupDialog
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.presentation.subnet_list.SubnetListFragment
-import com.ceslab.firemesh.presentation.subnet_list.dialog.AddSubnetDialog
+import com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet.AddSubnetDialog
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigDialog
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigFragment
@@ -14,6 +15,7 @@ import com.ceslab.firemesh.presentation.node_list.NodeListFragment
 import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import com.ceslab.firemesh.presentation.provision_list.ProvisionListFragment
+import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -56,7 +58,6 @@ abstract class AppBindingModule {
     @ContributesAndroidInjector
     abstract fun provisionBottomDialog(): ProvisionBottomDialog
 
-
     @ContributesAndroidInjector
     abstract fun otaConfigDialog(): OTAConfigDialog
 
@@ -64,6 +65,12 @@ abstract class AppBindingModule {
     abstract fun addGroupDialog(): AddGroupDialog
 
     @ContributesAndroidInjector
-    abstract fun addNetworkDialog(): AddSubnetDialog
+    abstract fun editGroupDialog(): EditGroupDialog
+
+    @ContributesAndroidInjector
+    abstract fun addSubnetDialog(): AddSubnetDialog
+
+    @ContributesAndroidInjector
+    abstract fun editSubnetDialog(): EditSubnetDialog
 
 }

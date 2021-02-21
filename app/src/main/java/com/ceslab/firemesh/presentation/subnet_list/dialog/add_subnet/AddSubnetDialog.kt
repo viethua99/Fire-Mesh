@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.subnet_list.dialog
+package com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet
 
 import android.os.Bundle
 import android.view.LayoutInflater
