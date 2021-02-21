@@ -53,7 +53,13 @@ class NodeFunctionality {
                             vendorModel.vendorCompanyIdentifier(),
                             vendorModel.vendorAssignedModelIdentifier()
                         )?.let {
-                            FunctionalityNamed(it, vendorModel.name)
+                            var vendorModelName = "Unknown Model"
+                            if(it.name == VENDOR_FUNCTIONALITY.MyModelClient.name){
+                                vendorModelName = "My Model Client"
+                            } else if(it.name == VENDOR_FUNCTIONALITY.MyModelServer.name) {
+                                vendorModelName = "My Model Server"
+                            }
+                            FunctionalityNamed(it, vendorModelName)
                         }
                     } ?: emptySet())
             }
