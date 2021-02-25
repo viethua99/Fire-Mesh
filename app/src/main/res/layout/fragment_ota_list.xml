@@ -48,7 +48,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:paddingHorizontal="10dp"
-            android:text="Start Scanning"
+            android:text="@string/fragment_ota_list_start_scanning"
             android:textAllCaps="false"
             android:textSize="18sp" />
     </RelativeLayout>

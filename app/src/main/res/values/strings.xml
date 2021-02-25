@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">Fire Mesh</string>
 
     <string name="nav_item_ota">OTA</string>
@@ -12,6 +13,8 @@
     <string name="main_activity_enable_button">Enable</string>
     <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
     <string name="main_activity_location_adapter_disabled">Location adapter is disabled</string>
+
+    <!-- FRAGMENTS -->
 
     <string name="fragment_provision_list_press_start_message">Press start to scan unprovisioned device</string>
     <string name="fragment_provision_list_looking_for_nearby_devices">Looking for nearby devices...</string>
@@ -48,6 +51,18 @@
     <string name="fragment_node_info_cell_id">ID</string>
     <string name="fragment_node_info_cell_description">Model Description</string>
 
+
+    <string name="fragment_group_list_no_group_message">No group in subnet\nPlease add a new group</string>
+    <string name="fragment_group_list_add_group_fab">Add Group</string>
+
+    <string name="fragment_subnet_list_no_subnet_message">No subnet in mesh\nPlease add a new subnet</string>
+    <string name="fragment_subnet_list_add_subnet_fab">Add Subnet</string>
+
+    <string name="fragment_node_list_no_node_message">No node in group\nPlease Provision some devices</string>
+
+
+
+    <!-- LIST ITEMS -->
     <string name="item_group_group_name">Group Name</string>
     <string name="item_group_app_key">App Key</string>
 
@@ -67,7 +82,7 @@
 
 
 
-
+    <!-- DIALOGS -->
     <string name="dialog_start_ota">Start OTA</string>
     <string name="dialog_cancel_ota">Cancel</string>
     <string name="dialog_ota_config_header">OTA Device Firmware Update</string>
@@ -98,6 +113,23 @@
     <string name="dialog_provision_bottom_node_name_hint">Node name</string>
     <string name="dialog_provision_bottom_network">Network</string>
 
+    <string name="dialog_add_group_bottom_adding_group">Adding Group</string>
+    <string name="dialog_add_group_bottom_group_name_hint">Group name</string>
+    <string name="dialog_add_group_bottom_add_group_button">Add Group</string>
+
+    <string name="dialog_add_subnet_bottom_adding_subnet">Adding Subnet</string>
+    <string name="dialog_add_subnet_bottom_subnet_name_hint">Subnet name</string>
+    <string name="dialog_add_subnet_bottom_add_subnet_button">Add Subnet</string>
+
+    <string name="dialog_edit_subnet_bottom_editing_subnet">Editing Subnet</string>
+    <string name="dialog_edit_subnet_bottom_subnet_name_hint">Subnet name</string>
+    <string name="dialog_edit_subnet_bottom_delete_subnet_button">Delete Subnet</string>
+    <string name="dialog_edit_subnet_bottom_save_changes_button">Save Changes</string>
+
+    <string name="dialog_edit_group_bottom_editing_group">Editing Group</string>
+    <string name="dialog_edit_group_bottom_group_name_hint">Group name</string>
+    <string name="dialog_edit_group_bottom_delete_group_button">Delete Group</string>
+    <string name="dialog_edit_group_bottom_save_changes_button">Save Changes</string>
 
 
 

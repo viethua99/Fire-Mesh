@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Group"
+        android:text="@string/dialog_edit_group_bottom_editing_group"
         android:textColor="@color/primary_color"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
-        android:hint="Group name">
+        android:hint="@string/dialog_edit_group_bottom_group_name_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_group_name"
@@ -34,29 +34,30 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
-        android:weightSum="1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
         <Button
-            android:backgroundTint="@color/red_500"
-            android:layout_weight="0.5"
             android:id="@+id/btn_delete_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="@color/red_500"
             android:padding="10dp"
-            android:text="Delete Group" />
+            android:text="@string/dialog_edit_group_bottom_delete_group_button" />
 
         <Button
-            android:layout_marginStart="10dp"
-            android:layout_weight="0.5"
             android:id="@+id/btn_save_changes_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
             android:padding="10dp"
-            android:text="Save Changes" />
+            android:text="@string/dialog_edit_group_bottom_save_changes_button" />
     </LinearLayout>
 
 </LinearLayout>

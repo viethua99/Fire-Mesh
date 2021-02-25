@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adding Group"
+        android:text="@string/dialog_add_group_bottom_adding_group"
         android:textColor="@color/primary_color"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
-        android:hint="Group name">
+        android:hint="@string/dialog_add_group_bottom_group_name_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_group_name"
@@ -40,5 +40,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-        android:text="Add Group" />
+        android:text="@string/dialog_add_group_bottom_add_group_button" />
 </LinearLayout>

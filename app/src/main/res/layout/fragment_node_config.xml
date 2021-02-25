@@ -35,7 +35,9 @@
             android:textSize="14sp" />
     </RelativeLayout>
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
+        android:theme="@style/ColorSwitchStyle"
+        android:checked="true"
         android:id="@+id/sw_proxy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,7 +46,9 @@
         android:textColor="@color/primary_color"
         android:textSize="16sp" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
+        android:theme="@style/ColorSwitchStyle"
+
         android:id="@+id/sw_relay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +57,8 @@
         android:textColor="@color/primary_color"
         android:textSize="16sp" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
+        android:theme="@style/ColorSwitchStyle"
         android:id="@+id/sw_friend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +67,7 @@
         android:textColor="@color/primary_color"
         android:textSize="16sp" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sw_retransmission"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

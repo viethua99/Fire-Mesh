@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="No group in subnet, please create a new group"
+            android:text="@string/fragment_group_list_no_group_message"
             android:textSize="20sp" />
     </LinearLayout>
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -41,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:backgroundTint="@color/primary_color"
-        android:text="Add Group"
+        android:text="@string/fragment_group_list_add_group_fab"
         android:textSize="12sp"
         app:iconSize="20sp"
         android:textColor="@color/white"

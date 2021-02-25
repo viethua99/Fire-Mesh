@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="No subnet in mesh, please create a new subnet"
+            android:text="@string/fragment_subnet_list_no_subnet_message"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -46,6 +46,6 @@
         app:iconTint="@color/white"
         app:iconSize="20sp"
         android:textSize="12sp"
-        android:text="Add subnet"
+        android:text="@string/fragment_subnet_list_add_subnet_fab"
         app:icon="@drawable/ic_add" />
 </RelativeLayout>

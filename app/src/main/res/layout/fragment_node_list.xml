@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="No node in subnet, please provision some devices"
+            android:text="@string/fragment_node_list_no_node_message"
             android:textSize="20sp" />
     </LinearLayout>
 
