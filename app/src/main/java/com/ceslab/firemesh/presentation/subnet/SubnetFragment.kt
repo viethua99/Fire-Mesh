@@ -1,6 +1,8 @@
 package com.ceslab.firemesh.presentation.subnet
 
+import android.graphics.Color
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -11,10 +13,11 @@ import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_provision_list.*
 import kotlinx.android.synthetic.main.fragment_subnet.*
 import timber.log.Timber
 
-class SubnetFragment(private val subnetName:String) : BaseFragment(){
+class SubnetFragment(private val subnetName: String) : BaseFragment() {
     companion object {
         const val TAG = "SubnetFragment"
     }
@@ -26,7 +29,7 @@ class SubnetFragment(private val subnetName:String) : BaseFragment(){
     }
 
     override fun onMyViewCreated(view: View) {
-       Timber.d("onMyViewCreated")
+        Timber.d("onMyViewCreated")
         setupViewModel()
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupBottomNavigationView()
@@ -45,13 +48,12 @@ class SubnetFragment(private val subnetName:String) : BaseFragment(){
         AndroidSupportInjection.inject(this)
         subnetViewModel = ViewModelProvider(this, viewModelFactory).get(SubnetViewModel::class.java)
         subnetViewModel.apply {
-            getMeshStatus().observe(this@SubnetFragment,meshStatusObserver)
-            getConnectionMessage().observe(this@SubnetFragment,connectionMessageObserver)
-            getErrorMessage().observe(this@SubnetFragment,errorMessageObserver)
+            getMeshStatus().observe(this@SubnetFragment, meshStatusObserver)
+            getConnectionMessage().observe(this@SubnetFragment, connectionMessageObserver)
+            getErrorMessage().observe(this@SubnetFragment, errorMessageObserver)
         }
 
     }
-
 
 
     private fun setupViewPager() {
@@ -62,14 +64,19 @@ class SubnetFragment(private val subnetName:String) : BaseFragment(){
             adapter = subnetViewPagerAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrollStateChanged(state: Int) {}
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                }
 
                 override fun onPageSelected(position: Int) {
                     when (position) {
-                        SubnetViewPagerAdapter.GROUP_LIST_PAGE ->{
+                        SubnetViewPagerAdapter.GROUP_LIST_PAGE -> {
                             bottom_nav_subnet.menu.findItem(R.id.nav_item_groups).isChecked = true
                         }
-                        SubnetViewPagerAdapter.NODE_LIST_PAGE ->  {
+                        SubnetViewPagerAdapter.NODE_LIST_PAGE -> {
                             bottom_nav_subnet.menu.findItem(R.id.nav_item_nodes).isChecked = true
                         }
                     }
@@ -88,7 +95,7 @@ class SubnetFragment(private val subnetName:String) : BaseFragment(){
 
                 }
                 R.id.nav_item_nodes -> {
-                    subnet_view_pager.currentItem =SubnetViewPagerAdapter.NODE_LIST_PAGE
+                    subnet_view_pager.currentItem = SubnetViewPagerAdapter.NODE_LIST_PAGE
                     true
                 }
                 else -> false
@@ -96,23 +103,60 @@ class SubnetFragment(private val subnetName:String) : BaseFragment(){
         }
     }
 
-    private fun connectToSubnet(){
+    private fun connectToSubnet() {
         Timber.d("connectToSubnet")
         subnetViewModel.connectToSubnet()
     }
 
-    private fun disconnectFromSubnet(){
+    private fun disconnectFromSubnet() {
         Timber.d("disconnectFromSubnet")
         subnetViewModel.disconnectFromSubnet()
     }
 
-    private val meshStatusObserver = Observer<MeshStatus> {
+    private fun showConnectingAnimation() {
+        Timber.d("showConnectingAnimation")
         activity?.runOnUiThread {
-            when(it){
-                MeshStatus.MESH_CONNECTING -> showProgressDialog("Connecting")
-                MeshStatus.MESH_CONNECTED -> hideDialog()
-                MeshStatus.MESH_DISCONNECTED -> hideDialog()
+            val connectingGradientAnimation = AnimationUtils.loadAnimation(activity, R.anim.connection_translate_right)
+            connecting_anim_gradient_right_container.visibility = View.VISIBLE
+            connecting_anim_gradient_right_container.startAnimation(connectingGradientAnimation)
+        }
+    }
+
+    private fun hideConnectingAnimation() {
+        Timber.d("hideConnectingAnimation")
+        activity?.runOnUiThread {
+            connecting_anim_gradient_right_container.clearAnimation()
+            connecting_anim_gradient_right_container.visibility = View.GONE
+        }
+    }
+
+    private val meshStatusObserver = Observer<MeshStatus> { meshStatus ->
+        Timber.d("meshStatusObserver = $meshStatus")
+        activity?.runOnUiThread {
+            tv_subnet_connection.apply {
+                when (meshStatus) {
+                    MeshStatus.MESH_CONNECTING -> {
+                        text = "Connecting"
+                        setBackgroundColor(Color.parseColor("#FF9800"))
+                        showConnectingAnimation()
+                    }
+                    MeshStatus.MESH_CONNECTED -> {
+                        text = "Connected"
+                        setBackgroundColor(Color.parseColor("#4CAF50"))
+                        hideConnectingAnimation()
+                    }
+                    MeshStatus.MESH_DISCONNECTED -> {
+                        text = "Disconnected"
+                        setBackgroundColor(Color.parseColor("#F44336"))
+                        hideConnectingAnimation()
+                    }
+                }
+
+                setOnClickListener {
+                    subnetViewModel.changeMeshStatus(meshStatus)
+                }
             }
+
         }
     }
     private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {

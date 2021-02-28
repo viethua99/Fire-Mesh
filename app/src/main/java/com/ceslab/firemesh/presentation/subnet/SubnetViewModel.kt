@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.subnet
 
+import android.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,21 @@ class SubnetViewModel @Inject constructor(
             removeMeshConnectionListener(connectionStatusListener)
             removeMeshMessageListener(connectionMessageListener)
             disconnect()
+        }
+    }
+
+    fun changeMeshStatus(meshStatus: MeshStatus){
+        Timber.d("changeMeshStatus: $meshStatus")
+        when (meshStatus) {
+            MeshStatus.MESH_CONNECTING -> {
+                    meshConnectionManager.disconnect()
+            }
+            MeshStatus.MESH_CONNECTED -> {
+                    meshConnectionManager.disconnect()
+            }
+            MeshStatus.MESH_DISCONNECTED -> {
+                meshConnectionManager.connect(currentSubnet)
+            }
         }
     }
 

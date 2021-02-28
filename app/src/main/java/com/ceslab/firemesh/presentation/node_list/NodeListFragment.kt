@@ -1,6 +1,10 @@
 package com.ceslab.firemesh.presentation.node_list
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +15,7 @@ import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node.NodeViewModel
+import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group_list.*
 import kotlinx.android.synthetic.main.fragment_node_list.*
@@ -58,9 +63,13 @@ class NodeListFragment : BaseFragment(){
     private val onNodeItemClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<MeshNode> {
         override fun onClick(position: Int, item: MeshNode) {
             Timber.d("onNodeItemClickedListener: clicked")
-            nodeListViewModel.setDeviceToConfigure(item)
-            val mainActivity = activity as MainActivity
-            mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+            ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
+                Runnable {
+                    nodeListViewModel.setDeviceToConfigure(item)
+                    val mainActivity = activity as MainActivity
+                    mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+                }
+                ,50)
         }
 
         override fun onLongClick(position: Int, item: MeshNode) {
