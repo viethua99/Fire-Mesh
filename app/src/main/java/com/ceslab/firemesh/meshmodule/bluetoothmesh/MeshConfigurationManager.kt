@@ -1,8 +1,8 @@
 package com.ceslab.firemesh.meshmodule.bluetoothmesh
 
-import com.ceslab.firemesh.meshmodule.listener.ConfigurationStatusListener
+import com.ceslab.firemesh.meshmodule.listener.ConfigurationTaskListener
 import com.ceslab.firemesh.meshmodule.listener.NodeFeatureListener
-import com.ceslab.firemesh.meshmodule.model.ConfigurationStatus
+import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.siliconlab.bluetoothmesh.adk.ErrorType
@@ -29,7 +29,7 @@ class MeshConfigurationManager(
     private val meshNodeToConfigure: MeshNode?
 ) {
     private val nodeFeatureListeners: ArrayList<NodeFeatureListener> = ArrayList()
-    private val configurationStatusListeners: ArrayList<ConfigurationStatusListener> = ArrayList()
+    private val configurationTaskListeners: ArrayList<ConfigurationTaskListener> = ArrayList()
 
     private val configurationControl: ConfigurationControl =
         ConfigurationControl(meshNodeToConfigure!!.node)
@@ -53,15 +53,15 @@ class MeshConfigurationManager(
         }
     }
 
-    fun addConfigurationStatusListener(configurationStatusListener: ConfigurationStatusListener) {
-        synchronized(configurationStatusListeners) {
-            configurationStatusListeners.add(configurationStatusListener)
+    fun addConfigurationTaskListener(configurationTaskListener: ConfigurationTaskListener) {
+        synchronized(configurationTaskListeners) {
+            configurationTaskListeners.add(configurationTaskListener)
         }
     }
 
-    fun removeConfigurationStatusListener(configurationStatusListener: ConfigurationStatusListener) {
-        synchronized(configurationStatusListeners) {
-            configurationStatusListeners.remove(configurationStatusListener)
+    fun removeConfigurationTaskListener(configurationTaskListener: ConfigurationTaskListener) {
+        synchronized(configurationTaskListeners) {
+            configurationTaskListeners.remove(configurationTaskListener)
         }
     }
 
@@ -99,7 +99,7 @@ class MeshConfigurationManager(
     }
 
 
-    private fun startTasks() {
+     fun startTasks() {
         Timber.d("startTasks")
         taskCount = taskList.size
         takeNextTask()
@@ -117,20 +117,16 @@ class MeshConfigurationManager(
             taskList.remove(currentTask)
             taskExecutor.execute(currentTask)
         } else {
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationStatusChanged(
-                    ConfigurationStatus.NODE_CONFIG_FINISHED
-                )
+            configurationTaskListeners.forEach { listener ->
+                listener.onConfigFinish()
             }
         }
     }
 
     private fun bindNodeToGroup(group: Group): Runnable {
         Timber.d("bindNodeToGroup")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.BIND_NODE_TO_GROUP
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.BIND_NODE_TO_GROUP)
         }
         return Runnable {
             nodeControl.bind(group, NodeControlCallbackImpl())
@@ -139,10 +135,8 @@ class MeshConfigurationManager(
 
     private fun unbindNodeFromGroup(group: Group): Runnable {
         Timber.d("unbindNodeToGroup")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.UNBIND_NODE_FROM_GROUP
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.UNBIND_NODE_FROM_GROUP)
         }
         return Runnable {
             nodeControl.unbind(group, NodeControlCallbackImpl())
@@ -190,10 +184,8 @@ class MeshConfigurationManager(
 
     private fun bindModelToGroup(vendorModel: VendorModel, group: Group): Runnable {
         Timber.d("bindModelToGroup")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.BIND_MODEL_TO_GROUP
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.BIND_MODEL_TO_GROUP)
         }
         return Runnable {
             val functionalityBinder = FunctionalityBinder(group)
@@ -203,10 +195,8 @@ class MeshConfigurationManager(
 
     private fun unbindModelFromGroup(vendorModel: VendorModel, group: Group): Runnable {
         Timber.d("unbindModelFromGroup")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.UNBIND_MODEL_FROM_GROUP
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.UNBIND_MODEL_FROM_GROUP)
         }
         return Runnable {
             val functionalityBinder = FunctionalityBinder(group)
@@ -216,10 +206,8 @@ class MeshConfigurationManager(
 
     private fun setPublicationSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("setPublicationSettings")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.SET_PUBLICATION_SETTING
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.SET_PUBLICATION_SETTING)
         }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
@@ -233,10 +221,8 @@ class MeshConfigurationManager(
 
     private fun clearPublicationSettings(model: VendorModel): Runnable {
         Timber.d("clearPublicationSettings")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.CLEAR_PUBLICATION_SETTING
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.CLEAR_PUBLICATION_SETTING)
         }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
@@ -247,10 +233,8 @@ class MeshConfigurationManager(
 
     private fun addSubscriptionSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("addSubscriptionSettings")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.ADD_SUBSCRIPTION_SETTING
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.ADD_SUBSCRIPTION_SETTING)
         }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
@@ -264,10 +248,8 @@ class MeshConfigurationManager(
 
     private fun removeSubscriptionSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("removeSubscriptionSettings")
-        configurationStatusListeners.forEach { listener ->
-            listener.onConfigurationStatusChanged(
-                ConfigurationStatus.REMOVE_SUBSCRIPTION_SETTING
-            )
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.REMOVE_SUBSCRIPTION_SETTING)
         }
         return Runnable {
             val subscriptionSettings = SubscriptionSettings(group)
@@ -285,7 +267,7 @@ class MeshConfigurationManager(
         configurationControl.checkProxyStatus(object : CheckNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 super.success(node, enabled)
-                nodeFeatureListeners.forEach { listener -> listener.onProxyStatusChanged(enabled) }
+                nodeFeatureListeners.forEach { listener -> listener.onGetProxyStatusSucceed(enabled) }
             }
         })
     }
@@ -296,7 +278,7 @@ class MeshConfigurationManager(
 
             override fun success(node: Node?, enabled: Boolean) {
                 super.success(node, enabled)
-                nodeFeatureListeners.forEach { listener -> listener.onRelayStatusChanged(enabled) }
+                nodeFeatureListeners.forEach { listener -> listener.onGetRelayStatusSucceed(enabled) }
             }
 
         })
@@ -308,7 +290,7 @@ class MeshConfigurationManager(
 
             override fun success(node: Node?, enabled: Boolean) {
                 super.success(node, enabled)
-                nodeFeatureListeners.forEach { listener -> listener.onFriendStatusChanged(enabled) }
+                nodeFeatureListeners.forEach { listener -> listener.onGetFriendStatusSucceed(enabled) }
             }
         })
     }
@@ -318,7 +300,7 @@ class MeshConfigurationManager(
         configurationControl.setProxy(enabled, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeProxy success: $enabled")
-                nodeFeatureListeners.forEach { listener -> listener.onProxyStatusChanged(enabled) }
+                nodeFeatureListeners.forEach { listener -> listener.onGetProxyStatusSucceed(enabled) }
                 takeNextTask()
             }
         })
@@ -329,7 +311,7 @@ class MeshConfigurationManager(
         configurationControl.setRelay(enabled, 3, 20, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeRelay success: $enabled")
-                nodeFeatureListeners.forEach { listener -> listener.onRelayStatusChanged(enabled) }
+                nodeFeatureListeners.forEach { listener -> listener.onGetRelayStatusSucceed(enabled) }
                 takeNextTask()
             }
         })
@@ -340,7 +322,7 @@ class MeshConfigurationManager(
         configurationControl.setFriend(enabled, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeFriend success: $enabled")
-                nodeFeatureListeners.forEach { listener -> listener.onFriendStatusChanged(enabled) }
+                nodeFeatureListeners.forEach { listener -> listener.onGetFriendStatusSucceed(enabled) }
                 takeNextTask()
             }
         })
@@ -355,8 +337,8 @@ class MeshConfigurationManager(
 
         override fun error(node: Node?, error: ErrorType) {
             Timber.e("checkNodeBehaviorCallBack error: $error")
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationError(error)
+            configurationTaskListeners.forEach { listener ->
+                listener.onConfigError(error)
             }
             clearTasks()
         }
@@ -370,8 +352,8 @@ class MeshConfigurationManager(
 
         override fun error(errorType: ErrorType) {
             Timber.e("nodeControlCallback error: $errorType")
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationError(errorType)
+            configurationTaskListeners.forEach { listener ->
+                listener.onConfigError(errorType)
             }
         }
     }
@@ -388,8 +370,8 @@ class MeshConfigurationManager(
             errorType: ErrorType
         ) {
             Timber.e("modelBinder error: $errorType")
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationError(errorType)
+            configurationTaskListeners.forEach { listener ->
+                listener.onConfigError(errorType)
             }
         }
     }
@@ -402,8 +384,8 @@ class MeshConfigurationManager(
 
         override fun error(meshModel: Model?, errorType: ErrorType) {
             Timber.e("publicationSetting error: $errorType")
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationError(errorType)
+            configurationTaskListeners.forEach { listener ->
+                listener.onConfigError(errorType)
             }
         }
     }
@@ -416,17 +398,19 @@ class MeshConfigurationManager(
 
         override fun error(meshModel: Model?, errorType: ErrorType) {
             Timber.e("subscriptionSetting error: $errorType")
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationError(errorType)
+            configurationTaskListeners.forEach { listener ->
+                listener.onConfigError(errorType)
             }
         }
     }
 
     abstract inner class SetNodeBehaviourCallbackImpl : SetNodeBehaviourCallback {
         override fun error(node: Node?, error: ErrorType) {
-            configurationStatusListeners.forEach { listener ->
-                listener.onConfigurationError(error)
-            }
+           nodeFeatureListeners.forEach { listener ->
+               listener.onSetNodeFeatureError(error)
+           }
         }
     }
+
+
 }

@@ -7,8 +7,9 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
-import com.ceslab.firemesh.meshmodule.model.ConfigurationStatus
+import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
 import com.ceslab.firemesh.meshmodule.model.MeshNode
+import com.ceslab.firemesh.meshmodule.model.NodeConfig
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.siliconlab.bluetoothmesh.adk.ErrorType
@@ -42,57 +43,58 @@ class NodeConfigFragment : BaseFragment() {
             ViewModelProvider(this, viewModelFactory).get(NodeConfigViewModel::class.java)
         nodeConfigViewModel.apply {
             setConfigListeners()
-            getMeshNodeToConfigure().observe(this@NodeConfigFragment, meshNodeToConfigureObserver)
-            getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
-            getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
-            getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
-            getConfigurationStatus().observe(this@NodeConfigFragment, configurationStatusObserver)
+            getNodeConfig().observe(this@NodeConfigFragment,nodeConfigObserver)
+            getProxyStatus().observe(this@NodeConfigFragment,proxyStatusObserver)
+            getRelayStatus().observe(this@NodeConfigFragment,relayStatusObserver)
+            getFriendStatus().observe(this@NodeConfigFragment,friendStatusObserver)
+            getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
         }
 
     }
 
-    private fun setupNodeFeatureConfig(meshNode: MeshNode) {
+    private fun setupNodeFeatureConfig(nodeConfig: NodeConfig) {
         Timber.d("setupNodeFeatureConfig")
         activity?.runOnUiThread {
-            meshNode.apply {
-                val deviceCompositionData = node.deviceCompositionData
-                deviceCompositionData?.apply {
-                    val isSupportProxy = supportsProxy()
-                    val isSupportFriend = supportsFriend()
-                    val isSupportRelay = supportsRelay()
-                    val isSupportLowPower = supportsLowPower()
-                    Timber.d(
-                        String.format(
-                            "supportProxy: $isSupportProxy " +
-                                    "--- supportFriend:$isSupportFriend" +
-                                    "--- supportRelay: $isSupportRelay" +
-                                    "--- supportLpn: $isSupportLowPower"
-                        )
-                    )
+            nodeConfig.apply {
+                isSupportProxy?.let { isSupportProxy ->
+                    sw_proxy.isEnabled = isSupportProxy
+                }
+                isSupportFriend?.let { isSupportFriend ->
+                    sw_friend.isEnabled = isSupportFriend
+                }
 
-                    if (isSupportFriend) sw_friend.visibility =
-                        View.VISIBLE else sw_friend.visibility = View.GONE
-                    if (isSupportProxy) sw_proxy.visibility =
-                        View.VISIBLE else sw_proxy.visibility = View.GONE
-                    if (isSupportRelay) sw_relay.visibility =
-                        View.VISIBLE else sw_relay.visibility = View.GONE
-                    if (isSupportLowPower) tv_low_power_support.text =
+                isSupportRelay?.let { isSupportRelay ->
+                    sw_relay.isEnabled = isSupportRelay
+                }
+
+                isSupportLowPower?.let {
+                    if (it) tv_low_power_support.text =
                         "Is Supported" else "No Supported"
-
-                }
-                //SETUP CHANGE SWITCH STATUS
-                sw_proxy.setOnCheckedChangeListener { _, isChecked ->
-                    nodeConfigViewModel.changeProxy(isChecked)
-                }
-                sw_relay.setOnCheckedChangeListener { _, isChecked ->
-                    nodeConfigViewModel.changeRelay(isChecked)
-                }
-                sw_friend.setOnCheckedChangeListener { _, isChecked ->
-                    nodeConfigViewModel.changeFriend(isChecked)
                 }
             }
+
+            //SETUP CHANGE SWITCH STATUS
+            sw_proxy.setOnCheckedChangeListener { _, isChecked ->
+                showProgressDialog("Proxy Feature Changing")
+                nodeConfigViewModel.changeProxy(isChecked)
+            }
+            sw_relay.setOnCheckedChangeListener { _, isChecked ->
+                showProgressDialog("Relay Feature Changing")
+                nodeConfigViewModel.changeRelay(isChecked)
+            }
+            sw_friend.setOnCheckedChangeListener { _, isChecked ->
+                showProgressDialog("Friend Feature Changing")
+                nodeConfigViewModel.changeFriend(isChecked)
+            }
         }
+
+    }
+
+    private fun setFeaturesOnClickListeners() {
+        btn_get_proxy.setOnClickListener { nodeConfigViewModel.updateProxy() }
+        btn_get_relay.setOnClickListener { nodeConfigViewModel.updateRelay() }
+        btn_get_friend.setOnClickListener { nodeConfigViewModel.updateFriend() }
     }
 
     private fun setupGroupSpinner(meshNode: MeshNode) {
@@ -193,42 +195,18 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
-    private val meshNodeToConfigureObserver = Observer<MeshNode> {
-        Timber.d("meshNodeToConfigureObserver")
-        setupNodeFeatureConfig(it)
-        setupGroupSpinner(it)
-        setupFunctionalitySpinner(it)
-    }
-
-    private val friendStatusObserver = Observer<Boolean> {
-        activity?.runOnUiThread {
-            sw_friend.isChecked = it
-        }
-    }
-    private val relayStatusObserver = Observer<Boolean> {
-        activity?.runOnUiThread {
-            sw_relay.isChecked = it
-        }
-    }
-    private val proxyStatusObserver = Observer<Boolean> {
-        activity?.runOnUiThread {
-            sw_proxy.isChecked = it
-        }
-    }
-
-    private val configurationStatusObserver = Observer<ConfigurationStatus> {
+    private val configurationStatusObserver = Observer<ConfigurationTask> {
         Timber.d("configurationStatusObserver: $it")
         activity?.runOnUiThread {
             when (it) {
-                ConfigurationStatus.BIND_NODE_TO_GROUP -> showProgressDialog("Bind node to group")
-                ConfigurationStatus.UNBIND_NODE_FROM_GROUP -> showProgressDialog("Unbind node from group")
-                ConfigurationStatus.BIND_MODEL_TO_GROUP -> showProgressDialog("Bind model to group")
-                ConfigurationStatus.UNBIND_MODEL_FROM_GROUP -> showProgressDialog("Unbind model from group")
-                ConfigurationStatus.SET_PUBLICATION_SETTING -> showProgressDialog("Set publication settings")
-                ConfigurationStatus.CLEAR_PUBLICATION_SETTING -> showProgressDialog("Clear publication settings")
-                ConfigurationStatus.ADD_SUBSCRIPTION_SETTING -> showProgressDialog("Add subscription settings")
-                ConfigurationStatus.REMOVE_SUBSCRIPTION_SETTING -> showProgressDialog("Remove subscription settings")
-                ConfigurationStatus.NODE_CONFIG_FINISHED -> hideDialog()
+                ConfigurationTask.BIND_NODE_TO_GROUP -> showProgressDialog("Bind node to group")
+                ConfigurationTask.UNBIND_NODE_FROM_GROUP -> showProgressDialog("Unbind node from group")
+                ConfigurationTask.BIND_MODEL_TO_GROUP -> showProgressDialog("Bind model to group")
+                ConfigurationTask.UNBIND_MODEL_FROM_GROUP -> showProgressDialog("Unbind model from group")
+                ConfigurationTask.SET_PUBLICATION_SETTING -> showProgressDialog("Set publication settings")
+                ConfigurationTask.CLEAR_PUBLICATION_SETTING -> showProgressDialog("Clear publication settings")
+                ConfigurationTask.ADD_SUBSCRIPTION_SETTING -> showProgressDialog("Add subscription settings")
+                ConfigurationTask.REMOVE_SUBSCRIPTION_SETTING -> showProgressDialog("Remove subscription settings")
             }
         }
     }
@@ -236,6 +214,37 @@ class NodeConfigFragment : BaseFragment() {
     private val configurationErrorObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
             showFailedDialog(it.type.toString())
+        }
+    }
+
+    private val nodeConfigObserver = Observer<NodeConfig> {
+        activity?.runOnUiThread {
+            hideDialog()
+            setFeaturesOnClickListeners()
+            setupNodeFeatureConfig(it)
+            setupGroupSpinner(it.meshNode)
+            setupFunctionalitySpinner(it.meshNode)
+        }
+    }
+
+    private val proxyStatusObserver = Observer<Boolean> { isEnabled ->
+        activity?.runOnUiThread {
+            sw_proxy.isChecked = isEnabled
+            hideDialog()
+        }
+    }
+
+    private val relayStatusObserver = Observer<Boolean> { isEnabled ->
+        activity?.runOnUiThread {
+            sw_relay.isChecked = isEnabled
+            hideDialog()
+        }
+    }
+
+    private val friendStatusObserver = Observer<Boolean> { isEnabled ->
+        activity?.runOnUiThread {
+            sw_friend.isChecked = isEnabled
+            hideDialog()
         }
     }
 

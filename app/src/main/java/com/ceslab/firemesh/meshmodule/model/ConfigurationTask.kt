@@ -4,7 +4,7 @@ package com.ceslab.firemesh.meshmodule.model
  * Created by Viet Hua on 11/30/2020.
  */
 
-enum class ConfigurationStatus {
+enum class ConfigurationTask {
     BIND_NODE_TO_GROUP,
     UNBIND_NODE_FROM_GROUP,
     BIND_MODEL_TO_GROUP,
@@ -13,6 +13,4 @@ enum class ConfigurationStatus {
     CLEAR_PUBLICATION_SETTING,
     ADD_SUBSCRIPTION_SETTING,
     REMOVE_SUBSCRIPTION_SETTING,
-    NODE_CONFIG_FINISHED
-
 }

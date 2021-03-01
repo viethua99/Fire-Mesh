@@ -6,16 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConfigurationManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConnectionManager
-import com.ceslab.firemesh.meshmodule.listener.ConfigurationStatusListener
+import com.ceslab.firemesh.meshmodule.listener.ConfigurationTaskListener
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.listener.MeshLoadedListener
 import com.ceslab.firemesh.meshmodule.listener.NodeFeatureListener
-import com.ceslab.firemesh.meshmodule.model.ConfigurationStatus
-import com.ceslab.firemesh.meshmodule.model.MeshNode
-import com.ceslab.firemesh.meshmodule.model.MeshStatus
-import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
+import com.ceslab.firemesh.meshmodule.model.*
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
+import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,34 +23,39 @@ class NodeConfigViewModel @Inject constructor(
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
     private var getDeviceConfigRequested = false
+    private var isSupportedProxy: Boolean? = null
+    private var isSupportedRelay: Boolean? = null
+    private var isSupportedFriend: Boolean? = null
+    private var isSupportedLowPower: Boolean? = null
+    private var currentNodeConfig: NodeConfig? = null
 
-    private val meshNodeToConfigure = MutableLiveData<MeshNode>()
-    private val proxyStatus = MutableLiveData<Boolean>()
-    private val relayStatus = MutableLiveData<Boolean>()
-    private val friendStatus = MutableLiveData<Boolean>()
-    private val configurationStatus = MutableLiveData<ConfigurationStatus>()
+
+    private var isProxyEnabled = MutableLiveData<Boolean>()
+    private var isFriendEnabled = MutableLiveData<Boolean>()
+    private var isRelayEnabled = MutableLiveData<Boolean>()
+    private var nodeConfig = MutableLiveData<NodeConfig>()
+    private val currentConfigTask = MutableLiveData<ConfigurationTask>()
     private val configurationError = MutableLiveData<ErrorType>()
 
 
-    fun getMeshNodeToConfigure(): LiveData<MeshNode> {
-        meshConnectionManager.addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
-        return meshNodeToConfigure
+    fun getProxyStatus(): LiveData<Boolean> {
+        return isProxyEnabled
     }
 
     fun getRelayStatus(): LiveData<Boolean> {
-        return relayStatus
-    }
-
-    fun getProxyStatus(): LiveData<Boolean> {
-        return proxyStatus
+        return isRelayEnabled
     }
 
     fun getFriendStatus(): LiveData<Boolean> {
-        return friendStatus
+        return isFriendEnabled
     }
 
-    fun getConfigurationStatus(): LiveData<ConfigurationStatus> {
-        return configurationStatus
+    fun getCurrentConfigTask(): LiveData<ConfigurationTask> {
+        return currentConfigTask
+    }
+
+    fun getNodeConfig(): LiveData<NodeConfig> {
+        return nodeConfig
     }
 
     fun getConfigurationError(): LiveData<ErrorType> {
@@ -63,13 +66,13 @@ class NodeConfigViewModel @Inject constructor(
     fun setConfigListeners() {
         Timber.d("setListeners")
         meshConnectionManager.apply {
-            removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
+            addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
             addMeshConnectionListener(meshConnectionListener)
         }
 
         meshConfigurationManager.apply {
             addNodeFeatureListener(nodeFeatureListener)
-            addConfigurationStatusListener(configurationStatusListener)
+            addConfigurationTaskListener(configurationTaskListener)
         }
     }
 
@@ -81,7 +84,7 @@ class NodeConfigViewModel @Inject constructor(
         }
 
         meshConfigurationManager.apply {
-            removeConfigurationStatusListener(configurationStatusListener)
+            removeConfigurationTaskListener(configurationTaskListener)
             removeNodeFeatureListener(nodeFeatureListener)
         }
     }
@@ -110,63 +113,112 @@ class NodeConfigViewModel @Inject constructor(
     fun changeFriend(enabled: Boolean) {
         Timber.d("changeFriend: $enabled")
         meshConfigurationManager.changeFriend(enabled)
+    }
+
+    fun updateProxy() {
+        Timber.d("updateProxy")
+        meshConfigurationManager.checkProxyStatus()
+    }
+
+    fun updateFriend() {
+        Timber.d("updateFriend")
+        meshConfigurationManager.checkFriendStatus()
+    }
+
+    fun updateRelay() {
+        Timber.d("updateRelay")
+        meshConfigurationManager.checkRelayStatus()
 
     }
 
+    private fun checkFeaturesStatus() {
+        Timber.d("checkFeaturesStatus")
+        bluetoothMeshManager.meshNodeToConfigure!!.node.deviceCompositionData?.apply {
+            isSupportedLowPower = supportsLowPower()
+            isSupportedProxy = supportsProxy()
+            if (isSupportedProxy == true) {
+                updateProxy()
+            }
 
-    private val meshConfigurationLoadedListener = object : MeshLoadedListener {
-        override fun initialConfigurationLoaded() {
-            Timber.d("initialConfigurationLoaded")
-            meshNodeToConfigure.value = bluetoothMeshManager.meshNodeToConfigure!!
-            meshConfigurationManager.apply {
-                checkFriendStatus()
-                checkRelayStatus()
-                checkProxyStatus()
+            isSupportedFriend = supportsFriend()
+            if (isSupportedFriend == true) {
+                updateFriend()
+            }
+
+            isSupportedRelay = supportsRelay()
+            if (isSupportedRelay == true) {
+                updateRelay()
             }
         }
-    }
 
-    private val nodeFeatureListener = object : NodeFeatureListener {
-        override fun onRelayStatusChanged(isEnabled: Boolean) {
-            Timber.d("onRelayStatusChanged : $isEnabled")
-            relayStatus.value = isEnabled
-        }
-
-        override fun onProxyStatusChanged(isEnabled: Boolean) {
-            Timber.d("onProxyStatusChanged : $isEnabled")
-            proxyStatus.value = isEnabled
-
-        }
-
-        override fun onFriendStatusChanged(isEnabled: Boolean) {
-            Timber.d("onFriendStatusChanged : $isEnabled")
-            friendStatus.value = isEnabled
-        }
-    }
-
-    private val configurationStatusListener = object : ConfigurationStatusListener {
-        override fun onConfigurationStatusChanged(configurationStatus: ConfigurationStatus) {
-            Timber.d("onConfigurationStatusChanged : $configurationStatus")
-            this@NodeConfigViewModel.configurationStatus.value = configurationStatus
-        }
-
-        override fun onConfigurationError(errorType: ErrorType) {
-            Timber.e("onConfigurationError : ${errorType.type}")
-            configurationError.value = errorType
-        }
     }
 
     private val meshConnectionListener = object : ConnectionStatusListener {
         override fun connecting() {}
         override fun disconnected() {}
-
         override fun connected() {
             Timber.d("connected")
             if (!getDeviceConfigRequested) {
-                meshNodeToConfigure.value = bluetoothMeshManager.meshNodeToConfigure!!
+                checkFeaturesStatus()
+                meshConfigurationManager.startTasks()
                 getDeviceConfigRequested = true
             }
         }
-
     }
+
+    private val meshConfigurationLoadedListener = object : MeshLoadedListener {
+        override fun initialConfigurationLoaded() {
+            Timber.d("initialConfigurationLoaded")
+            checkFeaturesStatus()
+            meshConfigurationManager.startTasks()
+        }
+    }
+
+    private val nodeFeatureListener = object : NodeFeatureListener {
+        override fun onGetRelayStatusSucceed(isEnabled: Boolean) {
+            Timber.d("onGetRelayStatusSucceed : $isEnabled")
+            isRelayEnabled.value = isEnabled
+        }
+
+        override fun onGetProxyStatusSucceed(isEnabled: Boolean) {
+            Timber.d("onGetProxyStatusSucceed : $isEnabled")
+            isProxyEnabled.value = isEnabled
+        }
+
+        override fun onGetFriendStatusSucceed(isEnabled: Boolean) {
+            Timber.d("onGetFriendStatusSucceed : $isEnabled")
+            isFriendEnabled.value = isEnabled
+        }
+
+        override fun onSetNodeFeatureError(error: ErrorType) {
+            Timber.e("onSetNodeFeatureError: ${error.type}")
+        }
+    }
+
+    private val configurationTaskListener = object : ConfigurationTaskListener {
+        override fun onCurrentConfigTask(configurationTask: ConfigurationTask) {
+            Timber.d("onCurrentConfigTask : $configurationTask")
+            this@NodeConfigViewModel.currentConfigTask.value = configurationTask
+        }
+
+        override fun onConfigError(errorType: ErrorType) {
+            Timber.e("onConfigError : ${errorType.type}")
+            configurationError.value = errorType
+        }
+
+        override fun onConfigFinish() {
+            Timber.d("onConfigFinish")
+            currentNodeConfig = NodeConfig(
+                bluetoothMeshManager.meshNodeToConfigure!!,
+                isSupportedLowPower,
+                isSupportedRelay,
+                isSupportedProxy,
+                isSupportedFriend
+            )
+
+            nodeConfig.value = currentNodeConfig
+        }
+    }
+
+
 }

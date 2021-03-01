@@ -7,11 +7,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Node Configuration"
-        android:textStyle="bold"
         android:layout_margin="10dp"
+        android:text="Node Configuration"
         android:textColor="@color/primary_color"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,45 +36,94 @@
             android:textSize="14sp" />
     </RelativeLayout>
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:theme="@style/ColorSwitchStyle"
-        android:id="@+id/sw_proxy"
+    <LinearLayout
+        android:id="@+id/ll_proxy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="@string/fragment_node_config_proxy"
-        android:textColor="@color/primary_color"
-        android:textSize="16sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:theme="@style/ColorSwitchStyle"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_proxy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:padding="15dp"
+            android:text="@string/fragment_node_config_proxy"
+            android:textColor="@color/primary_color"
+            android:textSize="16sp"
+            android:theme="@style/ColorSwitchStyle" />
 
-        android:id="@+id/sw_relay"
+
+        <ImageButton
+            android:id="@+id/btn_get_proxy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:padding="15dp"
+            android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_relay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="@string/fragment_node_config_relay"
-        android:textColor="@color/primary_color"
-        android:textSize="16sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:theme="@style/ColorSwitchStyle"
-        android:id="@+id/sw_friend"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_relay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:enabled="false"
+            android:text="@string/fragment_node_config_relay"
+            android:textColor="@color/primary_color"
+            android:textSize="16sp"
+            android:theme="@style/ColorSwitchStyle" />
+
+
+        <ImageButton
+            android:id="@+id/btn_get_relay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:padding="15dp"
+            android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_friend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="@string/fragment_node_config_friend"
-        android:textColor="@color/primary_color"
-        android:textSize="16sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/sw_retransmission"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="@string/fragment_node_config_retransmission"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_friend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:text="@string/fragment_node_config_friend"
+            android:textColor="@color/primary_color"
+            android:textSize="16sp"
+            android:theme="@style/ColorSwitchStyle" />
+
+
+        <ImageButton
+            android:id="@+id/btn_get_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:padding="15dp"
+            android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"

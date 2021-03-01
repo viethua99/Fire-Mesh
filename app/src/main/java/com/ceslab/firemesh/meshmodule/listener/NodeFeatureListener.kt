@@ -1,8 +1,10 @@
 package com.ceslab.firemesh.meshmodule.listener
 
-interface NodeFeatureListener {
-    fun onRelayStatusChanged(isEnabled:Boolean)
-    fun onProxyStatusChanged(isEnabled:Boolean)
-    fun onFriendStatusChanged(isEnabled:Boolean)
+import com.siliconlab.bluetoothmesh.adk.ErrorType
 
+interface NodeFeatureListener {
+    fun onGetRelayStatusSucceed(isEnabled:Boolean)
+    fun onGetProxyStatusSucceed(isEnabled:Boolean)
+    fun onGetFriendStatusSucceed(isEnabled:Boolean)
+    fun onSetNodeFeatureError(error: ErrorType)
 }
