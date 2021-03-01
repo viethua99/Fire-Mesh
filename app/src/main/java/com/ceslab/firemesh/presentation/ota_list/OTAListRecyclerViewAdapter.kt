@@ -54,7 +54,12 @@ class OTAListRecyclerViewAdapter(context: Context) :
         var btnOta: Button = view.findViewById(R.id.btn_ota)
 
         fun renderUI(otaDevice: OTADevice) {
-            tvDeviceName.text = otaDevice.deviceName
+            if(otaDevice.deviceName == null){
+                tvDeviceName.text = "Unknown Device"
+            } else {
+                tvDeviceName.text = otaDevice.deviceName
+            }
+
             tvDeviceAddress.text = otaDevice.deviceAddress
             btnOta.setOnClickListener {
                 itemClickListener.onClick(adapterPosition, dataList[adapterPosition])

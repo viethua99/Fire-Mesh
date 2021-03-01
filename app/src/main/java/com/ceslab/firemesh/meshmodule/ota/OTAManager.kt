@@ -14,7 +14,7 @@ import java.io.FileInputStream
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class OTAManager(bluetoothStateReceiver: BluetoothStateReceiver) : ScanCallback(),
+class   OTAManager(bluetoothStateReceiver: BluetoothStateReceiver) : ScanCallback(),
     BluetoothStateReceiver.BluetoothStateListener {
 
     companion object {

@@ -3,13 +3,16 @@ package com.ceslab.firemesh.presentation.ota_list
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
+import android.os.ParcelUuid
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.ota.OTAConfigListener
 import com.ceslab.firemesh.meshmodule.ota.OTADevice
 import com.ceslab.firemesh.meshmodule.ota.OTAManager
+import com.siliconlab.bluetoothmesh.adk.provisioning.ProvisionerConnection
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class OTAListViewModel @Inject constructor(
@@ -28,7 +31,9 @@ class OTAListViewModel @Inject constructor(
             otaManager.stopLeScan()
             isLeScanStarted = false
         } else {
-            otaManager.startLeScan(null)
+            val proxyUUID = UUID.fromString("00001828-0000-1000-8000-00805f9b34fb")
+            val proxyService = ParcelUuid.fromString(proxyUUID.toString())
+            otaManager.startLeScan(proxyService)
             isLeScanStarted = true
         }
         scanStatus.value = isLeScanStarted
@@ -70,7 +75,8 @@ class OTAListViewModel @Inject constructor(
             ) {
                 return
             }
-                addDeviceToOTAList(OTADevice(result.device.name,result.device.address))
+            Timber.d("TEST: ${result.device.name}")
+            addDeviceToOTAList(OTADevice(result.device.name,result.device.address))
         }
     }
 
