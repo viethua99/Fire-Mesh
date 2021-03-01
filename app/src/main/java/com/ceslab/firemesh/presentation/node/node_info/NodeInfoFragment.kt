@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.ModelTableDescription
+import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.data_model.model.Model
@@ -51,11 +52,13 @@ class NodeInfoFragment : BaseFragment() {
             tv_node_uuid.text = ConverterUtil.getHexValue(meshNode.node.uuid)
 
             val network = meshNode.node.subnets.iterator().next()
-            tv_subnet_name.text = network.name
+            tv_node_subnet_name.text = network.name
 
             tv_node_network_key.text = ConverterUtil.getHexValue(network.netKey.key)
-            tv_node_app_key.text =
-                ConverterUtil.getHexValue(meshNode.node.groups.iterator().next().appKey.key)
+            if (meshNode.node.groups.size > 0) {
+                tv_node_app_key.text = ConverterUtil.getHexValue(meshNode.node.groups.iterator().next().appKey.key)
+            }
+
             tv_node_dev_key.text = ConverterUtil.getHexValue(meshNode.node.devKey.key)
             fillModelsTable(meshNode)
         }

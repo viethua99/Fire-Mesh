@@ -41,10 +41,10 @@
     <string name="fragment_node_info_node_details">Node Details</string>
     <string name="fragment_node_info_unicast_address">Unicast Address</string>
     <string name="fragment_node_info_uuid">UUID</string>
-    <string name="fragment_node_info_network_name">Network Name</string>
+    <string name="fragment_node_info_subnet_name">Subnet Name</string>
     <string name="fragment_node_info_network_key">Network Key</string>
-    <string name="fragment_node_info_app_key">App Key:</string>
-    <string name="fragment_node_info_dev_key">Dev Key:</string>
+    <string name="fragment_node_info_app_key">App Key</string>
+    <string name="fragment_node_info_dev_key">Dev Key</string>
     <string name="fragment_node_info_model_table">Model Table</string>
     <string name="fragment_node_info_cell_element">Element</string>
     <string name="fragment_node_info_cell_vendor">Vendor</string>
@@ -66,7 +66,7 @@
     <string name="item_group_group_name">Group Name</string>
     <string name="item_group_app_key">App Key</string>
 
-    <string name="item_subnet_subnet_name">Network Name</string>
+    <string name="item_subnet_subnet_name">Subnet Name</string>
     <string name="item_network_sub_key">Subnet Key</string>
 
     <string name="item_scanned_device_device_name">Device Name</string>

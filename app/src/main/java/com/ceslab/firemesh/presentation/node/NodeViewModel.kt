@@ -28,6 +28,8 @@ class NodeViewModel @Inject constructor(
 
         if(isFirstConfig){
             meshConnectionManager.connect(bluetoothMeshManager.provisionedMeshConnectableDevice!!, true)
+        } else {
+
         }
     }
 

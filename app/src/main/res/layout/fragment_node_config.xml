@@ -37,7 +37,6 @@
 
     <androidx.appcompat.widget.SwitchCompat
         android:theme="@style/ColorSwitchStyle"
-        android:checked="true"
         android:id="@+id/sw_proxy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

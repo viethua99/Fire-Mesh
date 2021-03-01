@@ -19,6 +19,7 @@ class NodeInfoViewModel @Inject constructor(
 
     fun getMeshNodeToConfigure(): LiveData<MeshNode> {
         meshConnectionManager.addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
+        meshNodeToConfigure.value = bluetoothMeshManager.meshNodeToConfigure!!
         return meshNodeToConfigure
     }
 

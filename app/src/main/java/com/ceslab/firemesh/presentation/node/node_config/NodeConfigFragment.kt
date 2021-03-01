@@ -11,6 +11,7 @@ import com.ceslab.firemesh.meshmodule.model.ConfigurationStatus
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
+import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_config.*
 import timber.log.Timber
@@ -46,6 +47,7 @@ class NodeConfigFragment : BaseFragment() {
             getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
             getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
             getConfigurationStatus().observe(this@NodeConfigFragment, configurationStatusObserver)
+            getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
         }
 
     }
@@ -60,10 +62,14 @@ class NodeConfigFragment : BaseFragment() {
                     val isSupportFriend = supportsFriend()
                     val isSupportRelay = supportsRelay()
                     val isSupportLowPower = supportsLowPower()
-                    Timber.d(String.format("supportProxy: $isSupportProxy " +
-                            "--- supportFriend:$isSupportFriend" +
-                            "--- supportRelay: $isSupportRelay" +
-                            "--- supportLpn: $isSupportLowPower"))
+                    Timber.d(
+                        String.format(
+                            "supportProxy: $isSupportProxy " +
+                                    "--- supportFriend:$isSupportFriend" +
+                                    "--- supportRelay: $isSupportRelay" +
+                                    "--- supportLpn: $isSupportLowPower"
+                        )
+                    )
 
                     if (isSupportFriend) sw_friend.visibility =
                         View.VISIBLE else sw_friend.visibility = View.GONE
@@ -160,7 +166,10 @@ class NodeConfigFragment : BaseFragment() {
                     if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
                         functionalitiesNamed.find { it.functionality == functionality }
                             ?.let { functionalityNamed ->
-                               setSelection(functionalitiesNamed.indexOf(functionalityNamed), false)
+                                setSelection(
+                                    functionalitiesNamed.indexOf(functionalityNamed),
+                                    false
+                                )
                             }
 
                     } else {
@@ -168,7 +177,12 @@ class NodeConfigFragment : BaseFragment() {
                     }
 
                     onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
                             nodeConfigViewModel.changeFunctionality(functionalitiesNamed[position].functionality)
                         }
 
@@ -180,6 +194,7 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val meshNodeToConfigureObserver = Observer<MeshNode> {
+        Timber.d("meshNodeToConfigureObserver")
         setupNodeFeatureConfig(it)
         setupGroupSpinner(it)
         setupFunctionalitySpinner(it)
@@ -202,6 +217,7 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val configurationStatusObserver = Observer<ConfigurationStatus> {
+        Timber.d("configurationStatusObserver: $it")
         activity?.runOnUiThread {
             when (it) {
                 ConfigurationStatus.BIND_NODE_TO_GROUP -> showProgressDialog("Bind node to group")
@@ -214,6 +230,12 @@ class NodeConfigFragment : BaseFragment() {
                 ConfigurationStatus.REMOVE_SUBSCRIPTION_SETTING -> showProgressDialog("Remove subscription settings")
                 ConfigurationStatus.NODE_CONFIG_FINISHED -> hideDialog()
             }
+        }
+    }
+
+    private val configurationErrorObserver = Observer<ErrorType> {
+        activity?.runOnUiThread {
+            showFailedDialog(it.type.toString())
         }
     }
 

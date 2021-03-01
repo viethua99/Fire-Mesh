@@ -41,7 +41,7 @@
                     android:id="@+id/tv_subnet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fragment_node_info_network_name"
+                    android:text="@string/item_subnet_subnet_name"
                     android:textColor="@color/primary_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />

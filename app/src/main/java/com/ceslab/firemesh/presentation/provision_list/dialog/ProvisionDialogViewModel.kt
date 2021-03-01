@@ -20,6 +20,7 @@ class ProvisionDialogViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager, private val meshNodeManager: MeshNodeManager) : ViewModel() {
     private val networkList = bluetoothMeshManager.currentNetwork?.subnets!!.sortedBy { it.name }
     private var selectedDeviceDescription: ConnectableDeviceDescription? = null
+    private var provisionedDeviceName: String = ""
 
     val isProvisioningSucceed = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<ErrorType>()
@@ -29,8 +30,9 @@ class ProvisionDialogViewModel @Inject constructor(
         return networkList.map { it.name }
     }
 
-    fun provisionDevice(meshDeviceDescription: ConnectableDeviceDescription, spinnerIndex: Int) {
+    fun provisionDevice(meshDeviceDescription: ConnectableDeviceDescription, spinnerIndex: Int,deviceName:String) {
         Timber.d("provisionDevice:${meshDeviceDescription.deviceAddress} ---$spinnerIndex")
+        provisionedDeviceName = deviceName
         selectedDeviceDescription = meshDeviceDescription
         bluetoothMeshManager.currentSubnet = networkList[spinnerIndex]
         if (networkList.isNotEmpty()) {
@@ -79,6 +81,7 @@ class ProvisionDialogViewModel @Inject constructor(
     private val onProvisioningCallback = object : ProvisioningCallback {
         override fun success(connectableDevice: ConnectableDevice?, subnet: Subnet?, node: Node) {
             Timber.d("success: node=${node.name}")
+            node.name = provisionedDeviceName
             bluetoothMeshManager.meshNodeToConfigure = meshNodeManager.getMeshNode(node)
             bluetoothMeshManager.provisionedMeshConnectableDevice =
                 selectedDeviceDescription!!.meshConnectableDevice

@@ -42,8 +42,8 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d("onCreate")
         setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogTheme)
-
         arguments?.let {
             if (it.containsKey(DEVICE_DESCRIPTION_KEY)) {
                 deviceDescription =
@@ -115,15 +115,16 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
                 }
             if (AppUtil.isNameValid(nodeName)) {
                 AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Provisioning...")
-                provisionDialogViewModel.provisionDevice(deviceDescription, networkIndex)
-                dialog?.dismiss()
+                provisionDialogViewModel.provisionDevice(deviceDescription, networkIndex,nodeName)
             }
         }
     }
 
     private val isProvisioningSucceedObserver = Observer<Boolean> {
+        Timber.d("isProvisioningSucceedObserver: $it")
         it.let {
             if (it) {
+                dialog?.dismiss()
                 AndroidDialogUtil.getInstance().hideDialog()
                 val mainActivity = activity as MainActivity
                 val args = Bundle()
@@ -136,9 +137,10 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
     }
 
     private val onProvisioningErrorObserver = Observer<ErrorType> {
+        Timber.d("onProvisioningErrorObserver: $it")
         it.let {
             AndroidDialogUtil.getInstance()
-                .showFailureDialog(activity, "Provision Failed: errorCode:${it.errorCode}")
+                .showFailureDialog(activity, "Provision Failed: errorCode:${it.type}")
 
         }
     }

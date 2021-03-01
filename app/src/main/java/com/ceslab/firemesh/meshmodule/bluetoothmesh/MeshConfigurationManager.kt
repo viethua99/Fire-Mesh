@@ -353,8 +353,11 @@ class MeshConfigurationManager(
             takeNextTask()
         }
 
-        override fun error(node: Node?, error: ErrorType?) {
+        override fun error(node: Node?, error: ErrorType) {
             Timber.e("checkNodeBehaviorCallBack error: $error")
+            configurationStatusListeners.forEach { listener ->
+                listener.onConfigurationError(error)
+            }
             clearTasks()
         }
     }
@@ -365,9 +368,11 @@ class MeshConfigurationManager(
             takeNextTask()
         }
 
-        override fun error(errorType: ErrorType?) {
+        override fun error(errorType: ErrorType) {
             Timber.e("nodeControlCallback error: $errorType")
-
+            configurationStatusListeners.forEach { listener ->
+                listener.onConfigurationError(errorType)
+            }
         }
     }
 
@@ -380,10 +385,12 @@ class MeshConfigurationManager(
         override fun error(
             failedModels: MutableList<Model>?,
             group: Group?,
-            errorType: ErrorType?
+            errorType: ErrorType
         ) {
             Timber.e("modelBinder error: $errorType")
-
+            configurationStatusListeners.forEach { listener ->
+                listener.onConfigurationError(errorType)
+            }
         }
     }
 
@@ -393,9 +400,11 @@ class MeshConfigurationManager(
             takeNextTask()
         }
 
-        override fun error(meshModel: Model?, errorType: ErrorType?) {
+        override fun error(meshModel: Model?, errorType: ErrorType) {
             Timber.e("publicationSetting error: $errorType")
-
+            configurationStatusListeners.forEach { listener ->
+                listener.onConfigurationError(errorType)
+            }
         }
     }
 
@@ -405,14 +414,19 @@ class MeshConfigurationManager(
             takeNextTask()
         }
 
-        override fun error(meshModel: Model?, errorType: ErrorType?) {
+        override fun error(meshModel: Model?, errorType: ErrorType) {
             Timber.e("subscriptionSetting error: $errorType")
-
+            configurationStatusListeners.forEach { listener ->
+                listener.onConfigurationError(errorType)
+            }
         }
     }
 
     abstract inner class SetNodeBehaviourCallbackImpl : SetNodeBehaviourCallback {
-        override fun error(node: Node?, error: ErrorType?) {
+        override fun error(node: Node?, error: ErrorType) {
+            configurationStatusListeners.forEach { listener ->
+                listener.onConfigurationError(error)
+            }
         }
     }
 }
