@@ -92,9 +92,18 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private fun setFeaturesOnClickListeners() {
-        btn_get_proxy.setOnClickListener { nodeConfigViewModel.updateProxy() }
-        btn_get_relay.setOnClickListener { nodeConfigViewModel.updateRelay() }
-        btn_get_friend.setOnClickListener { nodeConfigViewModel.updateFriend() }
+        btn_get_proxy.setOnClickListener {
+            showProgressDialog("Updating Proxy Status")
+            nodeConfigViewModel.updateProxy()
+        }
+        btn_get_relay.setOnClickListener {
+            showProgressDialog("Updating Relay Status")
+            nodeConfigViewModel.updateRelay()
+        }
+        btn_get_friend.setOnClickListener {
+            showProgressDialog("Updating Friend Status")
+            nodeConfigViewModel.updateFriend()
+        }
     }
 
     private fun setupGroupSpinner(meshNode: MeshNode) {
@@ -218,6 +227,7 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val nodeConfigObserver = Observer<NodeConfig> {
+        Timber.d("nodeConfigObserver")
         activity?.runOnUiThread {
             hideDialog()
             setFeaturesOnClickListeners()
@@ -230,21 +240,18 @@ class NodeConfigFragment : BaseFragment() {
     private val proxyStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
             sw_proxy.isChecked = isEnabled
-            hideDialog()
         }
     }
 
     private val relayStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
             sw_relay.isChecked = isEnabled
-            hideDialog()
         }
     }
 
     private val friendStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
             sw_friend.isChecked = isEnabled
-            hideDialog()
         }
     }
 

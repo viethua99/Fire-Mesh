@@ -27,7 +27,7 @@ class NodeConfigViewModel @Inject constructor(
     private var isSupportedRelay: Boolean? = null
     private var isSupportedFriend: Boolean? = null
     private var isSupportedLowPower: Boolean? = null
-    private var currentNodeConfig: NodeConfig? = null
+//    private var currentNodeConfig: NodeConfig? = null
 
 
     private var isProxyEnabled = MutableLiveData<Boolean>()
@@ -208,7 +208,7 @@ class NodeConfigViewModel @Inject constructor(
 
         override fun onConfigFinish() {
             Timber.d("onConfigFinish")
-            currentNodeConfig = NodeConfig(
+         val  currentNodeConfig = NodeConfig(
                 bluetoothMeshManager.meshNodeToConfigure!!,
                 isSupportedLowPower,
                 isSupportedRelay,
@@ -216,7 +216,7 @@ class NodeConfigViewModel @Inject constructor(
                 isSupportedFriend
             )
 
-            nodeConfig.value = currentNodeConfig
+            nodeConfig.postValue(currentNodeConfig)
         }
     }
 

@@ -81,6 +81,7 @@ class ProvisionDialogViewModel @Inject constructor(
     private val onProvisioningCallback = object : ProvisioningCallback {
         override fun success(connectableDevice: ConnectableDevice?, subnet: Subnet?, node: Node) {
             Timber.d("success: node=${node.name}")
+
             node.name = provisionedDeviceName
             bluetoothMeshManager.meshNodeToConfigure = meshNodeManager.getMeshNode(node)
             bluetoothMeshManager.provisionedMeshConnectableDevice =

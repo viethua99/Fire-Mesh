@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.meshmodule.bluetoothmesh
 
+import com.ceslab.firemesh.meshmodule.database.NodeFunctionalityDataBase
 import com.ceslab.firemesh.meshmodule.listener.ConfigurationTaskListener
 import com.ceslab.firemesh.meshmodule.listener.NodeFeatureListener
 import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
@@ -13,6 +14,7 @@ import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
 import com.siliconlab.bluetoothmesh.adk.data_model.model.Model
 import com.siliconlab.bluetoothmesh.adk.data_model.model.VendorModel
 import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
+import com.siliconlab.bluetoothmesh.adk.data_model.node.NodeChangeNameException
 import com.siliconlab.bluetoothmesh.adk.functionality_binder.FunctionalityBinder
 import com.siliconlab.bluetoothmesh.adk.functionality_binder.FunctionalityBinderCallback
 import com.siliconlab.bluetoothmesh.adk.node_control.NodeControl
@@ -26,7 +28,8 @@ import timber.log.Timber
 import java.util.concurrent.Executors
 
 class MeshConfigurationManager(
-    private val meshNodeToConfigure: MeshNode?
+    private val meshNodeToConfigure: MeshNode?,
+    private val meshNodeManager: MeshNodeManager
 ) {
     private val nodeFeatureListeners: ArrayList<NodeFeatureListener> = ArrayList()
     private val configurationTaskListeners: ArrayList<ConfigurationTaskListener> = ArrayList()
@@ -85,21 +88,27 @@ class MeshConfigurationManager(
 
     fun processChangeFunctionality(newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
         Timber.d("processChangeFunctionality: $newFunctionality")
-        val group =
-            meshNodeToConfigure!!.node.groups.first()
+
+        if (meshNodeToConfigure!!.node.groups.isEmpty()) {
+            meshNodeManager.removeNodeFunc(meshNodeToConfigure)
+            return
+        }
+        val group = meshNodeToConfigure.node.groups.iterator().next()
         group?.let {
             taskList.addAll(
-                startBindModelToGroupAndSetPublicationSettings(
+                startUnbindModelFromGroupAndClearPublicationSettings(
                     it,
-                    newFunctionality
+                    meshNodeToConfigure.functionality
                 )
             )
+            taskList.addAll(startBindModelToGroupAndSetPublicationSettings(it, newFunctionality))
         }
+        taskList.add(updateFunctionalityInSharedPreference(newFunctionality))
         startTasks()
     }
 
 
-     fun startTasks() {
+    fun startTasks() {
         Timber.d("startTasks")
         taskCount = taskList.size
         takeNextTask()
@@ -262,6 +271,18 @@ class MeshConfigurationManager(
         }
     }
 
+    private fun updateFunctionalityInSharedPreference(functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): Runnable {
+        Timber.d("updateFunctionalityInSharedPreference")
+        return Runnable {
+                try {
+                    meshNodeManager.updateNodeFunc(meshNodeToConfigure!!, functionality)
+                    takeNextTask()
+                } catch (e: NodeChangeNameException) {
+                    Timber.e(e.localizedMessage)
+                }
+        }
+    }
+
     fun checkProxyStatus() {
         Timber.d("checkProxyStatus")
         configurationControl.checkProxyStatus(object : CheckNodeBehaviourCallbackImpl() {
@@ -406,9 +427,9 @@ class MeshConfigurationManager(
 
     abstract inner class SetNodeBehaviourCallbackImpl : SetNodeBehaviourCallback {
         override fun error(node: Node?, error: ErrorType) {
-           nodeFeatureListeners.forEach { listener ->
-               listener.onSetNodeFeatureError(error)
-           }
+            nodeFeatureListeners.forEach { listener ->
+                listener.onSetNodeFeatureError(error)
+            }
         }
     }
 

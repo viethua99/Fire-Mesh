@@ -72,6 +72,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun hideDialog() {
+        Timber.d("hideDialog")
         AndroidDialogUtil.getInstance().hideDialog()
     }
 

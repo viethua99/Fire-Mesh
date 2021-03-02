@@ -82,9 +82,15 @@ class NodeFragment : BaseFragment() {
         activity?.runOnUiThread {
             when(it) {
                 MeshStatus.MESH_CONNECTING -> showProgressDialog("Connecting to node")
-                MeshStatus.MESH_CONNECTED -> hideDialog()
-                MeshStatus.MESH_DISCONNECTED -> hideDialog()
-                MeshStatus.INIT_CONFIGURATION_LOADED ->  hideDialog()
+                MeshStatus.MESH_CONNECTED -> {
+
+                }
+                MeshStatus.MESH_DISCONNECTED -> {
+
+                }
+                MeshStatus.INIT_CONFIGURATION_LOADED ->  {
+
+                }
             }
         }
     }

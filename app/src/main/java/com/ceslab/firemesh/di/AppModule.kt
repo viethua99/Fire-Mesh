@@ -8,6 +8,7 @@ import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothScanner
 import com.ceslab.firemesh.meshmodule.bluetoothle.BluetoothStateReceiver
 import com.ceslab.firemesh.meshmodule.bluetoothle.LocationStateReceiver
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.*
+import com.ceslab.firemesh.meshmodule.database.NodeFunctionalityDataBase
 import com.ceslab.firemesh.meshmodule.ota.OTAManager
 import com.ceslab.firemesh.myapp.MyApplication
 import dagger.Module
@@ -19,7 +20,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideContext(myApplication: MyApplication):Context {
+    fun provideContext(myApplication: MyApplication): Context {
         return myApplication
     }
 
@@ -67,20 +68,40 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideMeshConnectionManager(context: Context, bluetoothScanner: BluetoothScanner, bluetoothMeshManager: BluetoothMeshManager): MeshConnectionManager {
-        return MeshConnectionManager(context, bluetoothScanner, bluetoothMeshManager.bluetoothMesh.connectableDeviceHelper)
+    fun provideMeshConnectionManager(
+        context: Context,
+        bluetoothScanner: BluetoothScanner,
+        bluetoothMeshManager: BluetoothMeshManager
+    ): MeshConnectionManager {
+        return MeshConnectionManager(
+            context,
+            bluetoothScanner,
+            bluetoothMeshManager.bluetoothMesh.connectableDeviceHelper
+        )
     }
 
     @Provides
     @Singleton
-    fun provideMeshConfigurationManager(bluetoothMeshManager: BluetoothMeshManager): MeshConfigurationManager {
-        return MeshConfigurationManager(bluetoothMeshManager.meshNodeToConfigure!!)
+    fun provideMeshConfigurationManager(
+        bluetoothMeshManager: BluetoothMeshManager,
+        meshNodeManager: MeshNodeManager
+    ): MeshConfigurationManager {
+        return MeshConfigurationManager(
+            bluetoothMeshManager.meshNodeToConfigure!!,
+            meshNodeManager
+        )
     }
 
     @Provides
     @Singleton
-    fun provideMeshNodeManager(): MeshNodeManager {
-        return MeshNodeManager()
+    fun provideNodeFunctionalityDatabase(context: Context): NodeFunctionalityDataBase {
+        return NodeFunctionalityDataBase(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMeshNodeManager(nodeFunctionalityDataBase: NodeFunctionalityDataBase): MeshNodeManager {
+        return MeshNodeManager(nodeFunctionalityDataBase)
     }
 
 }

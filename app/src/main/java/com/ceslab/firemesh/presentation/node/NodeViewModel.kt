@@ -20,16 +20,15 @@ class NodeViewModel @Inject constructor(
     private val meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
 
     fun connectToNode() {
-        Timber.d("connectToNode")
+        Timber.d("connectToNode: $isFirstConfig")
         meshConnectionManager.apply {
             addMeshConnectionListener(meshConnectionListener)
             addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
         }
 
         if(isFirstConfig){
+            Timber.d("isFirstConfig: true--- ${bluetoothMeshManager.meshNodeToConfigure!!.node.name}")
             meshConnectionManager.connect(bluetoothMeshManager.provisionedMeshConnectableDevice!!, true)
-        } else {
-
         }
     }
 
