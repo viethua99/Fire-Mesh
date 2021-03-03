@@ -12,6 +12,8 @@
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
+
+
     <application
         android:hardwareAccelerated="true"
         android:name=".myapp.MyApplication"
@@ -31,7 +33,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.main.activity.MainActivity"/>
-
+        <activity android:name=".presentation.ota_list.OTAListActivity"/>
+        <activity android:name=".presentation.ota_setup.OTASetupActivity"/>
+        <service android:name=".ota.service.OTAService" />
+        <receiver android:name=".ota.service.OTAService$Receiver">
+            <intent-filter>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+                <action android:name="android.bluetooth.adapter.action.DISCOVERY_FINISHED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

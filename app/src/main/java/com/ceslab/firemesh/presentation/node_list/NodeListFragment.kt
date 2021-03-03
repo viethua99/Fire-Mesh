@@ -1,9 +1,6 @@
 package com.ceslab.firemesh.presentation.node_list
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,17 +9,12 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupDialog
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
-import com.ceslab.firemesh.presentation.node.NodeViewModel
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeCallback
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
-import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_group_list.*
 import kotlinx.android.synthetic.main.fragment_node_list.*
-import kotlinx.android.synthetic.main.fragment_subnet_list.*
 import timber.log.Timber
 
 class NodeListFragment : BaseFragment(){

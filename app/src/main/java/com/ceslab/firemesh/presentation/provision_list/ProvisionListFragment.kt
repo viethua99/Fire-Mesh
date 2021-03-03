@@ -32,6 +32,7 @@ class ProvisionListFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         Timber.d("onStop")
+        provisionViewModel.stopScan()
     }
 
     override fun onPause() {

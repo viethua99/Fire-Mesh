@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
+import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -28,6 +30,8 @@ import timber.log.Timber
 class MainActivity : BaseActivity() {
 
     companion object {
+        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
+
         const val PERMISSIONS_REQUEST_CODE: Int = 12
 
         fun startMainActivity(activity: AppCompatActivity) {
@@ -69,9 +73,24 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main,menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.item_ota) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                   WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
+                )
+            } else {
+                OTAListActivity.startOTAListActivity(this)
+            }
+        }
+
         if (supportFragmentManager.backStackEntryCount > 0) {
-            if (item?.itemId == android.R.id.home) {
+            if (item.itemId == android.R.id.home) {
                 onBackPressed()
                 return true
             }

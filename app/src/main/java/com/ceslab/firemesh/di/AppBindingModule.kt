@@ -8,12 +8,12 @@ import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.presentation.subnet_list.SubnetListFragment
 import com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet.AddSubnetDialog
 import com.ceslab.firemesh.presentation.node.NodeFragment
-import com.ceslab.firemesh.presentation.ota_list.dialog.OTAConfigDialog
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigFragment
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoFragment
 import com.ceslab.firemesh.presentation.node_list.NodeListFragment
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
-import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
+import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
+import com.ceslab.firemesh.presentation.ota_setup.OTASetupActivity
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import com.ceslab.firemesh.presentation.provision_list.ProvisionListFragment
 import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetDialog
@@ -26,6 +26,12 @@ abstract class AppBindingModule {
     //ACTIVITIES
     @ContributesAndroidInjector
     abstract fun mainActivity() : MainActivity
+
+    @ContributesAndroidInjector
+    abstract fun otaListActivity() : OTAListActivity
+
+    @ContributesAndroidInjector
+    abstract fun otaSetupActivity() : OTASetupActivity
 
     //FRAGMENTS
     @ContributesAndroidInjector
@@ -52,15 +58,9 @@ abstract class AppBindingModule {
     @ContributesAndroidInjector
     abstract fun nodeListFragment(): NodeListFragment
 
-    @ContributesAndroidInjector
-    abstract fun otaListFragment(): OTAListFragment
-
     //DIALOGS
     @ContributesAndroidInjector
     abstract fun provisionBottomDialog(): ProvisionBottomDialog
-
-    @ContributesAndroidInjector
-    abstract fun otaConfigDialog(): OTAConfigDialog
 
     @ContributesAndroidInjector
     abstract fun addGroupDialog(): AddGroupDialog

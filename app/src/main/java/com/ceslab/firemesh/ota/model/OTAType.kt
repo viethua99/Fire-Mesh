@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.meshmodule.ota
+package com.ceslab.firemesh.ota.model
 
 enum class OTAType {
     PARTIAL_OTA,

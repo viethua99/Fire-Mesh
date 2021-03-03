@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.node_list
 
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -7,15 +8,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
-import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
-import com.ceslab.firemesh.meshmodule.model.MeshNode
-import com.ceslab.firemesh.meshmodule.ota.OTADevice
+import com.ceslab.firemesh.ota.model.BluetoothDeviceInfo
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.util.ConverterUtil
 import timber.log.Timber
 
 class OTAListRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<OTADevice, OTAListRecyclerViewAdapter.ViewHolder>(context) {
+    BaseRecyclerViewAdapter<BluetoothDeviceInfo, OTAListRecyclerViewAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,27 +22,27 @@ class OTAListRecyclerViewAdapter(context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val meshNode = dataList[position]
-        holder.renderUI(meshNode)
+        val device = dataList[position]
+        holder.renderUI(device)
     }
 
-    fun replaceDeviceByIndex(otaDevice: OTADevice) {
+    fun replaceDeviceByIndex(bluetoothDevice: BluetoothDeviceInfo) {
         Timber.d("replaceDeviceByIndex")
-        val pastDeviceIndex = getDeviceIndexByAddress(otaDevice.deviceAddress)
+        val pastDeviceIndex = getDeviceIndexByAddress(bluetoothDevice.address)
         if (pastDeviceIndex >= 0) {
             val pastDevice = dataList[pastDeviceIndex]
-            dataList[pastDeviceIndex] = otaDevice
-            if (pastDevice != otaDevice) {
+            dataList[pastDeviceIndex] = bluetoothDevice
+            if (pastDevice != bluetoothDevice) {
                 notifyDataSetChanged()
             }
         } else {
-            dataList.add(otaDevice)
+            dataList.add(bluetoothDevice)
             notifyDataSetChanged()
         }
     }
 
     private fun getDeviceIndexByAddress(deviceAddress: String?): Int {
-        return dataList.indexOfFirst { deviceInfo -> deviceInfo.deviceAddress.equals(deviceAddress) }
+        return dataList.indexOfFirst { device -> device.address == deviceAddress }
     }
 
 
@@ -53,14 +51,14 @@ class OTAListRecyclerViewAdapter(context: Context) :
         var tvDeviceAddress: TextView = view.findViewById(R.id.tv_node_address)
         var btnOta: Button = view.findViewById(R.id.btn_ota)
 
-        fun renderUI(otaDevice: OTADevice) {
-            if(otaDevice.deviceName == null){
+        fun renderUI(bluetoothDevice: BluetoothDeviceInfo) {
+            if(bluetoothDevice.name == null){
                 tvDeviceName.text = "Unknown Device"
             } else {
-                tvDeviceName.text = otaDevice.deviceName
+                tvDeviceName.text = bluetoothDevice.name
             }
 
-            tvDeviceAddress.text = otaDevice.deviceAddress
+            tvDeviceAddress.text = bluetoothDevice.address
             btnOta.setOnClickListener {
                 itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
             }

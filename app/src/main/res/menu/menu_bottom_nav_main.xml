@@ -8,8 +8,4 @@
         android:id="@+id/nav_item_provision"
         android:icon="@drawable/img_provision"
         android:title="@string/nav_item_provision" />
-    <item
-        android:id="@+id/nav_item_ota_list"
-        android:icon="@drawable/img_ota"
-        android:title="@string/nav_item_ota" />
 </menu>

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
+import com.ceslab.firemesh.util.AndroidDialogUtil
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -57,6 +58,28 @@ abstract class BaseActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(containerId, fragment, tag)
             .commit()
+    }
+
+    fun showProgressDialog(message: String) {
+        AndroidDialogUtil.getInstance().showLoadingDialog(this, message)
+    }
+
+    fun showWarningDialog(message: String) {
+        AndroidDialogUtil.getInstance().showWarningDialog(this, message)
+    }
+
+    fun showSuccessDialog(message: String) {
+        AndroidDialogUtil.getInstance().showSuccessDialog(this, message)
+    }
+
+
+    fun showFailedDialog(message: String) {
+        AndroidDialogUtil.getInstance().showFailureDialog(this, message)
+    }
+
+    fun hideDialog() {
+        Timber.d("hideDialog")
+        AndroidDialogUtil.getInstance().hideDialog()
     }
 
 }
