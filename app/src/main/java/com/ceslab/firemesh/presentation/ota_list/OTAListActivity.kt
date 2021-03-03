@@ -132,13 +132,13 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
 
     private fun connectToDevice(device:BluetoothDeviceInfo?) {
         Timber.d("connectToDevice: ${device!!.address}")
+        showProgressDialog("Connecting to device")
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
             hideDialog()
             return
         }
 
         if (scanning) {
-            showProgressDialog("Connecting to device")
             discovery.stopDiscovery(false)
             scanning = false
             btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
