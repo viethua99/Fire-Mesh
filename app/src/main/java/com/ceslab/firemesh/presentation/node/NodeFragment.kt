@@ -16,7 +16,6 @@ import timber.log.Timber
 class NodeFragment : BaseFragment() {
     companion object {
         const val TAG = "NodeFragment"
-        const val IS_OTA_INIT_KEY = "IS_OTA_INIT_KEY"
     }
 
     private lateinit var nodePagerAdapter: NodePagerAdapter

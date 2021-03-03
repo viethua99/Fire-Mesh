@@ -18,36 +18,35 @@ import javax.inject.Inject
 
 class ProvisionDialogViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager, private val meshNodeManager: MeshNodeManager) : ViewModel() {
-    private val networkList = bluetoothMeshManager.currentNetwork?.subnets!!.sortedBy { it.name }
+    private val subnetList = bluetoothMeshManager.currentNetwork?.subnets!!.sortedBy { it.name }
     private var selectedDeviceDescription: ConnectableDeviceDescription? = null
     private var provisionedDeviceName: String = ""
+    private var subnetInfo : Subnet? = null
 
     val isProvisioningSucceed = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<ErrorType>()
 
     fun getNetworkNameList(): List<String> {
         Timber.d("getNetworkNameList")
-        return networkList.map { it.name }
+        return subnetList.map { it.name }
     }
 
     fun provisionDevice(meshDeviceDescription: ConnectableDeviceDescription, spinnerIndex: Int,deviceName:String) {
         Timber.d("provisionDevice:${meshDeviceDescription.deviceAddress} ---$spinnerIndex")
         provisionedDeviceName = deviceName
         selectedDeviceDescription = meshDeviceDescription
-        bluetoothMeshManager.currentSubnet = networkList[spinnerIndex]
-        if (networkList.isNotEmpty()) {
+        bluetoothMeshManager.currentSubnet = subnetList[spinnerIndex]
+        this.subnetInfo = subnetList[spinnerIndex]
+        val connectableDevice = selectedDeviceDescription!!.meshConnectableDevice!!
+        if (subnetList.isNotEmpty()) {
             if (checkIfSelectedDeviceAlreadyAdded()) {
-                val connectableDevice = selectedDeviceDescription!!.meshConnectableDevice!!
                 val node = selectedDeviceDescription!!.existedNode
                 if (node != null) {
                     node.removeOnlyFromLocalStructure()
-                    startProvision(connectableDevice, bluetoothMeshManager.currentSubnet)
+                    startProvision(connectableDevice, subnetList[spinnerIndex])
                 }
             } else {
-                startProvision(
-                    meshDeviceDescription.meshConnectableDevice,
-                    bluetoothMeshManager.currentSubnet
-                )
+                startProvision(connectableDevice, subnetList[spinnerIndex])
             }
         }
     }
@@ -83,9 +82,10 @@ class ProvisionDialogViewModel @Inject constructor(
             Timber.d("success: node=${node.name}")
 
             node.name = provisionedDeviceName
+            bluetoothMeshManager.provisionedMeshConnectableDevice = selectedDeviceDescription!!.meshConnectableDevice
             bluetoothMeshManager.meshNodeToConfigure = meshNodeManager.getMeshNode(node)
-            bluetoothMeshManager.provisionedMeshConnectableDevice =
-                selectedDeviceDescription!!.meshConnectableDevice
+            bluetoothMeshManager.currentSubnet = subnetInfo
+            bluetoothMeshManager.currentNetwork = subnetInfo!!.network
             isProvisioningSucceed.value = true
         }
 

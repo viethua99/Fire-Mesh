@@ -82,7 +82,7 @@ class AppModule {
         meshNodeManager: MeshNodeManager
     ): MeshConfigurationManager {
         return MeshConfigurationManager(
-            bluetoothMeshManager.meshNodeToConfigure!!,
+            bluetoothMeshManager,
             meshNodeManager
         )
     }

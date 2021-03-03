@@ -27,7 +27,6 @@ class NodeConfigViewModel @Inject constructor(
     private var isSupportedRelay: Boolean? = null
     private var isSupportedFriend: Boolean? = null
     private var isSupportedLowPower: Boolean? = null
-//    private var currentNodeConfig: NodeConfig? = null
 
 
     private var isProxyEnabled = MutableLiveData<Boolean>()
@@ -136,16 +135,17 @@ class NodeConfigViewModel @Inject constructor(
         bluetoothMeshManager.meshNodeToConfigure!!.node.deviceCompositionData?.apply {
             isSupportedLowPower = supportsLowPower()
             isSupportedProxy = supportsProxy()
+            isSupportedFriend = supportsFriend()
+            isSupportedRelay = supportsRelay()
+
             if (isSupportedProxy == true) {
                 updateProxy()
             }
 
-            isSupportedFriend = supportsFriend()
             if (isSupportedFriend == true) {
                 updateFriend()
             }
 
-            isSupportedRelay = supportsRelay()
             if (isSupportedRelay == true) {
                 updateRelay()
             }
