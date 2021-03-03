@@ -163,7 +163,6 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
                 Timber.d("onConnectionStateChange: $status")
                 if(newState == BluetoothGatt.STATE_DISCONNECTED && status != BluetoothGatt.GATT_SUCCESS) {
                     hideDialog()
-
                     if(status == 133) {
                         Timber.e("onConnectionStateChange: Reconnect due to 0x85 (133) error")
                         handler.postDelayed({
@@ -175,6 +174,8 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
                     }
                 } else if(newState == BluetoothGatt.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
                     Timber.d("onConnectionStateChange: GAT_SUCCESS")
+                    hideDialog()
+
                     service?.let {
                         if(it.isGattConnected) {
                             val intent = Intent(this@OTAListActivity, OTASetupActivity::class.java)
@@ -184,6 +185,8 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
                     }
                 } else if(newState == BluetoothGatt.STATE_DISCONNECTED) {
                     Timber.d("onConnectionStateChange: STATE_DISCONNECTED")
+                    hideDialog()
+
                     gatt.close()
                     service?.clearGatt()
                 }

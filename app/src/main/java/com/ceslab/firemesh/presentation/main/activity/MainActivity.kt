@@ -2,6 +2,8 @@ package com.ceslab.firemesh.presentation.main.activity
 
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -23,9 +25,11 @@ import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
+import com.ceslab.firemesh.presentation.splash.SplashActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity() {
 

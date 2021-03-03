@@ -108,9 +108,9 @@ class OTASetupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
+        handler = Handler()
         otaMode = true
         initDevice("")
-        setupViews()
     }
 
     override fun onDestroy() {
@@ -412,6 +412,7 @@ class OTASetupActivity : BaseActivity() {
         UICreated = true
         if (!boolOTAbegin) {
             initLoading()
+            setupViews()
         }
 
     }
