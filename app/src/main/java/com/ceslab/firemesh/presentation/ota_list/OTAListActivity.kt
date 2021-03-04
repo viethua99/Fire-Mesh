@@ -106,7 +106,6 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
     private val onScanButtonClickListener = View.OnClickListener {
         Timber.d("onScanButtonClickListener: clicked")
         if (scanning || btn_scanning.text == "Stop Scanning") {
-            looking_for_devices_background.visibility =View.VISIBLE
             discovery.stopDiscovery(false)
             scanning = false
             btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)

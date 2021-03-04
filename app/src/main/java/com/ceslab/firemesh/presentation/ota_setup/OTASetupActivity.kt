@@ -10,12 +10,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.OpenableColumns
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.annotation.IntegerRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -53,6 +55,8 @@ class OTASetupActivity : BaseActivity() {
     }
 
     //TEST
+    private var otaSetup: Dialog? = null
+
     private var disconnect_gatt = false
     private var kit_descriptor: BluetoothGattDescriptor? = null
     private var doubleStepUpload = false
@@ -109,21 +113,76 @@ class OTASetupActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
         handler = Handler()
-        otaMode = true
         initDevice("")
+
+        otaMode = true
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main,menu)
+        return true
+    }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
+        Timber.d("onDestroy")
         loadingdialog?.dismiss()
         bluetoothBinding?.unbind()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         if (item.itemId == android.R.id.home) {
             finish()
+        } else if(item.itemId == R.id.item_ota){
+            if (UICreated) {
+                otaMode = true
+                onOTAClick()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+    private fun onOTAClick(){
+        Timber.d("onOTAClick")
+        if (ota_mode) {
+            ota_process = true
+            boolOTAbegin = false
+        } else {
+            ota_process = true
+            boolOTAbegin = true
+        }
+        runOnUiThread {
+            loadingimage?.visibility = View.GONE
+            loadingdialog?.dismiss()
+            showOtaSetup()
+        }
+    }
+
+    private fun showOtaSetup() {
+        Timber.d("showOtaSetup")
+        if (otaSetup != null && !otaSetup?.isShowing!!) {
+            otaSetup?.show()
+            otaSetup?.setCanceledOnTouchOutside(false)
+
+            if (areFullOTAFilesCorrect() && doubleStepUpload) {
+                btn_ota_proceed.isClickable = true
+                btn_ota_proceed.setBackgroundColor(ContextCompat.getColor(this, R.color.primary_color))
+            } else if (arePartialOTAFilesCorrect() && !doubleStepUpload) {
+                btn_ota_proceed.isClickable = true
+                btn_ota_proceed.setBackgroundColor(ContextCompat.getColor(this, R.color.primary_color))
+            } else {
+                btn_ota_proceed.isClickable = false
+                btn_ota_proceed.setBackgroundColor(ContextCompat.getColor(this, R.color.primary_color))
+            }
+
+            if (isReliable) {
+                rdb_reliability?.isChecked = true
+            } else {
+
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -163,6 +222,7 @@ class OTASetupActivity : BaseActivity() {
      * INITIALIZES LOADING DIALOG
      */
     private fun initLoading() {
+        Timber.d("initLoading")
         loadingdialog = Dialog(this)
         loadingdialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         loadingdialog?.setContentView(R.layout.dialog_ota_loading)
@@ -231,6 +291,10 @@ class OTASetupActivity : BaseActivity() {
     }
 
 
+    private fun areFullOTAFilesCorrect(): Boolean {
+        return btn_select_application_gbl_file.text != "Select Application .gbl file" && btn_select_apploader_gbl_file.text != "Select Apploader .gbl file"
+    }
+
     private fun arePartialOTAFilesCorrect(): Boolean {
         Timber.d("arePartialOTAFilesCorrect")
         return btn_select_application_gbl_file.text != "Select Application .gbl file"
@@ -282,8 +346,10 @@ class OTASetupActivity : BaseActivity() {
 
 
     private val onProceedButtonClicked = View.OnClickListener {
-        Timber.d("onProceedButtonClicked")
+        Timber.d("onProceedButtonClicked: isReliable=$isReliable -- mtu=$currentMTU -- priority=$currentPriority")
         btn_ota_proceed.isClickable = false
+        ota_process = true
+
         if (ota_mode) {
             bluetoothGatt?.requestMtu(edt_mtu_value?.text.toString().toInt())
         } else dfuMode("OTABEGIN")
@@ -351,7 +417,7 @@ class OTASetupActivity : BaseActivity() {
 
     //TEST OTA ////
     private fun initDevice(deviceAddress: String?) {
-        Log.d("Test", "initDevice: $deviceAddress")
+        Timber.d("initDevice: $deviceAddress")
         bluetoothBinding = object : OTAService.Binding(this) {
             override fun onBound(service: OTAService?) {
                 serviceHasBeenSet = true
@@ -365,7 +431,7 @@ class OTASetupActivity : BaseActivity() {
                         return
                     }
 
-                    service.registerGattCallback(true, gattCallback)
+                    service.registerGattCallback(false, gattCallback)
                     if (bG.services != null && bG.services.isNotEmpty()) {
                         bluetoothGatt = bG
                         onGattFetched()
@@ -385,7 +451,7 @@ class OTASetupActivity : BaseActivity() {
      * SETS ALL THE INFO IN THE OTA PROGRESS DIALOG TO "" OR 0
      */
     fun resetOTAProgress() {
-        Log.d("Test","resetOTAProgress")
+        Timber.d("resetOTAProgress")
         boolFullOTA = false
         runOnUiThread {
 //            datasize?.text = ""
@@ -399,6 +465,8 @@ class OTASetupActivity : BaseActivity() {
 //            OTAStart?.setBackgroundColor(ContextCompat.getColor(this@DeviceServicesActivity, R.color.silabs_button_inactive))
         //    showOtaProgress()
         }
+        dfuMode("OTABEGIN") //OTAProgress
+
     }
 
 
@@ -406,27 +474,46 @@ class OTASetupActivity : BaseActivity() {
      * INITILIAZES ALL NECESSARY DIALOGS AND VIEW IN UI - ONCREATE
      */
     private fun onGattFetched() {
+        Timber.d("onGattFetched")
         var deviceName = bluetoothGatt?.device?.name
         supportActionBar?.title = deviceName
-
         UICreated = true
+        if (ota_mode) {
+            ota_process = true
+            boolOTAbegin = false
+        } else {
+            ota_process = true
+            boolOTAbegin = true
+        }
+        setupViews()
         if (!boolOTAbegin) {
+//            initOTASetup()
             initLoading()
-            setupViews()
         }
 
     }
 
+    fun initOTASetup(){
+        otaSetup = Dialog(this)
+        otaSetup?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        otaSetup?.setContentView(R.layout.dialog_ota_config)
+        otaSetup?.setCancelable(false)
+
+    }
+
     fun disconnectGatt(gatt: BluetoothGatt?) {
+        Timber.d("disconnectGatt")
         boolFullOTA = false
         boolOTAbegin = false
         ota_process = false
         disconnect_gatt = true
-//        UICreated = false
+        UICreated = false
         val disconnectTimer = Timer()
 
         if (gatt != null && gatt.device != null) {
-
+            if (loadingdialog == null) {
+                initLoading()
+            }
             val btGatt: BluetoothGatt = gatt
             disconnectTimer.schedule(object : TimerTask() {
                 override fun run() {
@@ -461,7 +548,7 @@ class OTASetupActivity : BaseActivity() {
      * WRITES BYTE TO OTA CONTROL CHARACTERISTIC
      */
     private fun writeOtaControl(ctrl: Byte): Boolean {
-        Log.d("writeOtaControl", "Called")
+        Timber.d("writeOtaControl: $ctrl")
         if (bluetoothGatt?.getService(ota_service) != null) {
             val charac = bluetoothGatt?.getService(ota_service)?.getCharacteristic(ota_control)
             if (charac != null) {
@@ -484,6 +571,7 @@ class OTASetupActivity : BaseActivity() {
 
     private val gattCallback: TimeoutGattCallback = object : TimeoutGattCallback() {
         override fun onReadRemoteRssi(gatt: BluetoothGatt, rssi: Int, status: Int) {
+            Timber.d("onReadRemoteRssi: $otaMode")
             if (!otaMode) {
                 super.onReadRemoteRssi(gatt, rssi, status)
             }
@@ -491,23 +579,24 @@ class OTASetupActivity : BaseActivity() {
 
         override fun onTimeout() {
             super.onTimeout()
-            Log.d("gattCallback", "onTimeout")
+            Timber.d("onTimeout")
         }
 
         override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
-            Log.d("Test", "onMtuChanged: $mtu - status: $status")
+            Timber.d("onMtuChanged: $mtu - status: $status")
+
             if (status == 0) { //NO ERRORS
                 currentMTU = mtu
                 bluetoothGatt?.requestConnectionPriority(currentPriority)
                  if (ota_process) {
 
                     if (ota_mode) { //Reset OTA Progress
-                        Log.d("Test", "onchangedMtu succeed : otamode=$otaMode")
+                        Timber.d("onMtuChanged succeed: otaMode=$otaMode")
                         resetOTAProgress()
                     }
                 }
             } else { //ERROR HANDLING
-                Log.d("RequestMTU", "Error: $status")
+                Timber.d("onMtuChanged error: $status")
                 handler.postDelayed({ disconnectGatt(bluetoothGatt) }, 2000)
             }
         }
@@ -520,26 +609,22 @@ class OTASetupActivity : BaseActivity() {
                 }
             }
             super.onConnectionStateChange(gatt, status, newState)
-            Log.d("onConnectionStateChange", "status = $status - newState = $newState")
+            Timber.d("onConnectionStateChange: status=$status - newState=$newState")
             when (newState) {
                 BluetoothGatt.STATE_CONNECTED -> {
                     connected = true
-                    Log.d("onConnectionStateChange", "CONNECTED")
+                    Timber.d("onConnectionStateChange: CONNECTED")
                     runOnUiThread {
-                        if (!loadingdialog?.isShowing!!) {
+//                        if (!loadingdialog?.isShowing!!) {
 //                            showMessage("DEVICE CONNECTED")
-                        }
+//                        }
                     }
                     if (ota_process) { //After OTA process started
-                        Log.d("Address", "" + gatt.device)
-                        Log.d("Name", "" + gatt.device.name)
+                        Timber.d("onConnectionStateChange: address=${gatt.device} - name=${gatt.device.name}")
                         if (gatt.services.isEmpty()) {
                             handler.postDelayed({
                                 bluetoothGatt = null //It's going to be equal gatt in Discover Services Callback...
-                                Log.d(
-                                    "onConnected",
-                                    "Start Services Discovery: " + gatt.discoverServices()
-                                )
+                                Timber.d("Start Service Discovery = ${gatt.discoverServices()}")
                             }, 250)
                             discoverTimeout = true
                             val timeout = Runnable {
@@ -555,12 +640,10 @@ class OTASetupActivity : BaseActivity() {
                     }
                 }
                 BluetoothGatt.STATE_DISCONNECTED -> {
+                    Timber.d("onConnectionStateChange: STATE_DISCONNECTED")
                     if (status == 133 && otaMode && retryAttempts < RECONNECTION_RETRIES) {
                         retryAttempts++
-                        Log.d(
-                            "onConnectionStateChange",
-                            "[DeviceServices]: Reconnect due to 0x85 (133) error"
-                        )
+                        Timber.d("onConnectionStateChange: Reconnect due to 0x85 (133) error")
                         reconnect(1000)
                         return
                     }
@@ -581,12 +664,12 @@ class OTASetupActivity : BaseActivity() {
                             exit(gatt)
                         }
                         if (ota_process || boolOTAbegin || boolFullOTA) {
-                            runOnUiThread {
-                                if (loadingdialog?.isShowing!!) {
-                                    loadingLog?.text = "Rebooting..."
-                                    handler.postDelayed({ runOnUiThread { loadingLog?.text = "Waiting..." } }, 1500)
-                                }
-                            }
+//                            runOnUiThread {
+//                                if (loadingdialog?.isShowing!!) {
+//                                    loadingLog?.text = "Rebooting..."
+//                                    handler.postDelayed({ runOnUiThread { loadingLog?.text = "Waiting..." } }, 1500)
+//                                }
+//                            }
                         }
 //                        if (otaSetup != null) if (otaSetup?.isShowing!!) {
 //                            exit(gatt)
@@ -614,14 +697,14 @@ class OTASetupActivity : BaseActivity() {
             ) {
                 val value = characteristic.value
                 if (value[2] == 0x05.toByte()) {
-                    Log.d("homekit_descriptor", "Insecure Connection")
+                    Timber.d("homekit_descriptor: Insecure Connection")
 //                    runOnUiThread { showMessage("Error: Not a Homekit Secure Connection") }
                 } else if (value[2] == 0x04.toByte()) {
-                    Log.d("homekit_descriptor", "Wrong Address")
+                    Timber.d("homekit_descriptor: Wrong Address")
                 } else if (value[2] == 0x00.toByte()) {
-                    Log.d("homekit_descriptor", "Entering in DFU_Mode...")
+                    Timber.d("homekit_descriptor: Entering in DFU_Mode")
                     if (ota_mode && ota_process) {
-                        Log.d("OTAUPLOAD", "Sent")
+                        Timber.d("OTA_UPLOAD: Sent")
 //                        runOnUiThread(checkbeginrunnable)
                         handler.removeCallbacks(DFU_OTA_UPLOAD)
                         handler.postDelayed(DFU_OTA_UPLOAD, 500)
@@ -644,9 +727,9 @@ class OTASetupActivity : BaseActivity() {
             characteristic: BluetoothGattCharacteristic,
             status: Int
         ) {
-
+            Timber.d("onCharacteristicWrite: $status")
             if (status != 0) { // Error Handling
-                Log.d("onCharWrite", "status: " + Integer.toHexString(status))
+                Timber.d("onCharWrite: status = $status")
                 if (errorDialog == null) {
                     runOnUiThread {
                         errorDialog = ErrorDialog(status, object : ErrorDialog.OtaErrorCallback {
@@ -659,10 +742,11 @@ class OTASetupActivity : BaseActivity() {
                 }
             } else {
                 if ((characteristic.uuid == ota_control)) { //OTA Control Callback Handling
+                    Timber.d("OTA Control Callback Handling")
                     if (characteristic.value.size == 1) {
                         if (characteristic.value[0] == 0x00.toByte()) {
                             if (ota_mode && ota_process) {
-                                Log.d("OTAUPLOAD", "Sent")
+                                Timber.d("OTAUPLOAD: send")
                                 //  runOnUiThread(checkbeginrunnable)
                                 handler.removeCallbacks(DFU_OTA_UPLOAD)
                                 handler.postDelayed(DFU_OTA_UPLOAD, 500)
@@ -697,12 +781,13 @@ class OTASetupActivity : BaseActivity() {
                         }
                     } else {
                         if (characteristic.value[0] == 0x00.toByte() && characteristic.value[1] == 0x02.toByte()) {
-                            Log.i("HomeKit", "Reading OTA_Control...")
+                            Timber.d("Homekit: Reading OTA Control")
                             bluetoothGatt?.readCharacteristic(characteristic)
                         }
                     }
                 }
                 if ((characteristic.uuid == ota_data)) {   //OTA Data Callback Handling
+                    Timber.d("OTA Data Callback Handling: isReliable=$isReliable")
                     if (isReliable) {
                         // if (otaProgress?.isShowing!!) {
                         pack += mtuDivisible
@@ -779,6 +864,7 @@ class OTASetupActivity : BaseActivity() {
 
         //CALLBACK ON SERVICES DISCOVERED
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+            Timber.d("onServicesDiscovered: $status")
             super.onServicesDiscovered(gatt, status)
             if (bluetoothGatt != gatt) {
                 bluetoothGatt = gatt
@@ -787,7 +873,7 @@ class OTASetupActivity : BaseActivity() {
                 discoverTimeout = false
                 /**ERROR IN SERVICE DISCOVERY */
                 if (status != 0) {
-                    Log.d("Error status", "" + Integer.toHexString(status))
+                    Timber.e("onServicesDiscovered: Error status: $status")
                     if (errorDialog == null) {
                         runOnUiThread {
                             errorDialog = ErrorDialog(status, object : ErrorDialog.OtaErrorCallback {
@@ -825,8 +911,8 @@ class OTASetupActivity : BaseActivity() {
                         }
                     }
 
-                    //REQUEST MTU
-                    if (UICreated && loadingdialog?.isShowing!!) {
+                    //REQUEST MTU && loadingdialog?.isShowing!!
+                    if (UICreated) {
                         bluetoothGatt?.requestMtu(currentMTU)
                     }
 
@@ -864,35 +950,29 @@ class OTASetupActivity : BaseActivity() {
      */
     fun getServicesInfo(gatt: BluetoothGatt) {
         val gattServices = gatt.services
-        Log.i("onServicesDiscovered", "Services count: " + gattServices.size)
+        Timber.d("getServiceInfo: Service count: ${gattServices.size}")
         for (gattService: BluetoothGattService in gattServices) {
             val serviceUUID = gattService.uuid.toString()
-            Log.i(
-                "onServicesDiscovered",
-                "Service UUID " + serviceUUID + " - Char count: " + gattService.characteristics.size
-            )
+            Timber.d("getServiceInfo: Service UUID : $serviceUUID -- Char count: ${gattService.characteristics.size}")
             val gattCharacteristics = gattService.characteristics
             for (gattCharacteristic: BluetoothGattCharacteristic in gattCharacteristics) {
                 val characteristicUUID = gattCharacteristic.uuid.toString()
-                Log.i(
-                    "onServicesDiscovered",
-                    "Characteristic UUID " + characteristicUUID + " - Properties: " + gattCharacteristic.properties
-                )
+                Timber.d("getServiceInfo: Characteristic UUID: $characteristicUUID - Props: ${gattCharacteristic.properties}")
                 if ((gattCharacteristic.uuid.toString() == ota_control.toString())) {
                     if (gattCharacteristics.contains(
                             bluetoothGatt?.getService(ota_service)?.getCharacteristic(ota_data)
                         )
                     ) {
                         if (!gattServices.contains(bluetoothGatt?.getService(homekit_service))) {
-                            Log.i("onServicesDiscovered", "Device in DFU Mode")
+                            Timber.d("getServiceInfo: Device in DFU Mode")
                         } else {
-                            Log.i("onServicesDiscovered", "OTA_Control found")
+                            Timber.d("getServiceInfo: OTA_Control_found")
                             val gattDescriptors = gattCharacteristic.descriptors
                             for (gattDescriptor: BluetoothGattDescriptor in gattDescriptors) {
                                 val descriptor = gattDescriptor.uuid.toString()
                                 if ((gattDescriptor.uuid.toString() == homekit_descriptor.toString())) {
                                     kit_descriptor = gattDescriptor
-                                    Log.i("descriptor", "UUID: $descriptor")
+                                    Timber.d("descriptor: UUID: $descriptor")
                                     //bluetoothGatt.readDescriptor(gattDescriptor);
                                     val stable = byteArrayOf(0x00.toByte(), 0x00.toByte())
                                     homeKitOTAControl(stable)
@@ -924,13 +1004,13 @@ class OTASetupActivity : BaseActivity() {
      */
     private fun refreshDeviceCache(): Boolean {
         try {
-            Log.d("refreshDevice", "Called")
+            Timber.d("refreshDeviceCache: Called")
             val localMethod: Method = bluetoothGatt?.javaClass?.getMethod("refresh")!!
             val bool: Boolean = (localMethod.invoke(bluetoothGatt, *arrayOfNulls(0)) as Boolean)
-            Log.d("refreshDevice", "bool: $bool")
+            Timber.d("refreshDeviceCache: bool: $bool")
             return bool
         } catch (localException: Exception) {
-            Log.e("refreshDevice", "An exception occured while refreshing device")
+            Timber.e("refreshDevice: An exception occured while refreshing device")
         }
         return false
     }
@@ -958,6 +1038,7 @@ class OTASetupActivity : BaseActivity() {
      * DISCONNECTS AND CONNECTS WITH THE SELECTED DELAY
      */
     fun reconnect(delaytoconnect: Long) {
+        Timber.d("reconnect: $delaytoconnect")
         val reconnectTimer = Timer()
         bluetoothDevice = bluetoothGatt?.device
         if (service?.isGattConnected!!) {
@@ -972,11 +1053,11 @@ class OTASetupActivity : BaseActivity() {
         }, 400)
         reconnectTimer.schedule(object : TimerTask() {
             override fun run() {
-                runOnUiThread {
-                    if (loadingdialog?.isShowing!!) {
-                        loadingLog?.text = "Attempting connection..."
-                    }
-                }
+//                runOnUiThread {
+//                    if (loadingdialog?.isShowing!!) {
+//                        loadingLog?.text = "Attempting connection..."
+//                    }
+//                }
                 bluetoothGatt = bluetoothDevice?.connectGatt(
                     applicationContext,
                     false,
@@ -997,18 +1078,18 @@ class OTASetupActivity : BaseActivity() {
             "INIT" -> dfuMode("OTABEGIN")
             "OTABEGIN" -> if (ota_mode) {
                 //START OTA PROCESS -> gattCallback -> OnCharacteristicWrite
-                Log.d("OTA_BEGIN", "true")
+                Timber.d("OTA_BEGIN: true")
                 handler.postDelayed(WRITE_OTA_CONTROL_ZERO, 200)
             } else {
                 if (homekit) {
                     bluetoothGatt?.readDescriptor(kit_descriptor)
                 } else {
-                    Log.d("DFU_MODE", "true")
+                    Timber.d("DFU_MODE: true")
                     handler.postDelayed(WRITE_OTA_CONTROL_ZERO, 200)
                 }
             }
             "OTAUPLOAD" -> {
-                Log.d("OTAUPLOAD", "Called")
+                Timber.d("OTA_UPLOAD: called")
                 /**Check Services */
                 val mBluetoothGattService = bluetoothGatt?.getService(ota_service)
                 if (mBluetoothGattService != null) {
@@ -1016,12 +1097,13 @@ class OTASetupActivity : BaseActivity() {
                         bluetoothGatt?.getService(ota_service)!!.getCharacteristic(ota_data)
                     if (charac != null) {
                         charac.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-                        Log.d("Instance ID", "" + charac.instanceId)
+                        Timber.d("Instance ID : ${charac.instanceId}")
                         /**Check Files */
                         var ebl: ByteArray? = null
                         try {
-                            Log.d("stackPath", "" + stackPath)
-                            Log.d("appPath", "" + applicationPath)
+                            Timber.d("stackPath $stackPath")
+                            Timber.d("appPath $applicationPath")
+
                             val file: File
                             if (stackPath != "" && doubleStepUpload) {
                                 file = File(stackPath)
@@ -1032,13 +1114,13 @@ class OTASetupActivity : BaseActivity() {
                             }
                             val fileInputStream = FileInputStream(file)
                             val size = fileInputStream.available()
-                            Log.d("size", "" + size)
+                            Timber.d("size: $size")
                             val temp = ByteArray(size)
                             fileInputStream.read(temp)
                             fileInputStream.close()
                             ebl = temp
                         } catch (e: Exception) {
-                            Log.e("InputStream", "Couldn't open file$e")
+                            Timber.e("InputStream: Couldn't open file $e")
                         }
                         val datathread = ebl
                         otafile = ebl
@@ -1047,11 +1129,11 @@ class OTASetupActivity : BaseActivity() {
                         if (stackPath != "" && doubleStepUpload) {
                             val last = stackPath.lastIndexOf(File.separator)
                             fn = stackPath.substring(last)
-                            Log.d("CurrentlyUpdating", "apploader")
+                            Timber.d("CurrentUpdating: apploader")
                         } else {
                             val last = applicationPath.lastIndexOf(File.separator)
                             fn = applicationPath.substring(last)
-                            Log.d("CurrentlyUpdating", "appliaction")
+                            Timber.d("CurrentUpdating: application")
                         }
                         pack = 0
                         /**Prepare information about current upload step */
@@ -1085,7 +1167,7 @@ class OTASetupActivity : BaseActivity() {
                 }
             }
             "OTAEND" -> {
-                Log.d("OTAEND", "Called")
+                Timber.d("OTAEND: called")
                 handler.postDelayed({ writeOtaControl(0x03.toByte()) }, 500)
             }
             "DISCONNECTION" -> {
@@ -1131,19 +1213,19 @@ class OTASetupActivity : BaseActivity() {
         if (bluetoothGatt != null) {
             val bluetoothGattCharacteristic =
                 bluetoothGatt?.getService(service)?.getCharacteristic(characteristic)
-            Log.d("characteristic", "exists")
+            Timber.d("writeGenericCharacteristic: exists")
             if (bluetoothGattCharacteristic != null) {
                 bluetoothGattCharacteristic.value = value
                 bluetoothGattCharacteristic.writeType =
                     BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                 bluetoothGatt?.writeCharacteristic(bluetoothGattCharacteristic)
-                Log.d("characteristic", "written")
+                Timber.d("writeGenericCharacteristic: written")
             } else {
-                Log.d("characteristic", "null")
+                Timber.d("writeGenericCharacteristic: null")
                 return false
             }
         } else {
-            Log.d("bluetoothGatt", "null")
+            Timber.d("bluetoothGatt: null")
             return false
         }
         return true
@@ -1154,7 +1236,7 @@ class OTASetupActivity : BaseActivity() {
      */
     @Synchronized
     fun otaWriteDataReliable() {
-        Log.d("Test", "otaWriteDataReliable")
+        Timber.d("otaWriteDataReliable")
         boolOTAdata = true
         if (pack == 0) {
             /**SET MTU_divisible by 4 */
@@ -1213,6 +1295,7 @@ class OTASetupActivity : BaseActivity() {
 
     @Synchronized
     fun writeOtaData(datathread: ByteArray?) {
+        Timber.d("writeOtaData")
         try {
             boolOTAdata = true
             val value = ByteArray(currentMTU - 3)
@@ -1247,6 +1330,8 @@ class OTASetupActivity : BaseActivity() {
                     if (bluetoothGatt?.writeCharacteristic(charac)!!) {
                         runOnUiThread {
                             val datarate = String.format(Locale.US, "%.2fkbit/s", bitrate)
+                            Timber.d("datarate: $datarate")
+
                             // dataRate?.text = datarate
                         }
                         while ((System.nanoTime() - wait) / 1000000.0 < delayNoResponse);
@@ -1256,6 +1341,7 @@ class OTASetupActivity : BaseActivity() {
                             wait = System.nanoTime()
                             runOnUiThread {
                                 val datarate = String.format(Locale.US, "%.2fkbit/s", bitrate)
+                                Timber.d("datarate: $datarate")
                                 //   dataRate?.text = datarate
                             }
                         } while (!bluetoothGatt?.writeCharacteristic(charac)!!)
@@ -1264,7 +1350,7 @@ class OTASetupActivity : BaseActivity() {
             }
             val end = System.currentTimeMillis()
             val time = (end - start) / 1000L.toFloat()
-            Log.d("OTA Time - ", "" + time + "s")
+            Timber.d("OTA Time: $time s")
             boolOTAdata = false
             runOnUiThread {
                 chrono?.stop()

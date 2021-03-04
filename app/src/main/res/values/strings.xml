@@ -105,8 +105,8 @@
     <string name="dialog_ota_priority_high">HIGH</string>
     <string name="dialog_ota_application_colon">Application:</string>
     <string name="dialog_ota_apploader_colon">Apploader:</string>
-    <string name="dialog_ota_select_application_gbl_file"> Select Application .gbl file</string>
-    <string name="dialog_ota_select_apploader_gbl_file"> Select Apploader .gbl file</string>
+    <string name="dialog_ota_select_application_gbl_file">Select Application .gbl file</string>
+    <string name="dialog_ota_select_apploader_gbl_file">Select Apploader .gbl file</string>
 
     <string name="dialog_provision_bottom_provisioning_device">Provisioning Device</string>
     <string name="dialog_provision_bottom_provision">Provision</string>
