@@ -190,9 +190,9 @@ class MeshConfigurationManager(
 
     private fun bindModelToGroup(vendorModel: VendorModel, group: Group): Runnable {
         Timber.d("bindModelToGroup")
-//        configurationTaskListeners.forEach { listener ->
-//            listener.onCurrentConfigTask(ConfigurationTask.BIND_MODEL_TO_GROUP)
-//        }
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.BIND_MODEL_TO_GROUP)
+        }
         return Runnable {
             val functionalityBinder = FunctionalityBinder(group)
             functionalityBinder.bindModel(vendorModel, FunctionalityBinderCallbackImpl())
@@ -201,9 +201,9 @@ class MeshConfigurationManager(
 
     private fun unbindModelFromGroup(vendorModel: VendorModel, group: Group): Runnable {
         Timber.d("unbindModelFromGroup")
-//        configurationTaskListeners.forEach { listener ->
-//            listener.onCurrentConfigTask(ConfigurationTask.UNBIND_MODEL_FROM_GROUP)
-//        }
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.UNBIND_MODEL_FROM_GROUP)
+        }
         return Runnable {
             val functionalityBinder = FunctionalityBinder(group)
             functionalityBinder.unbindModel(vendorModel, FunctionalityBinderCallbackImpl())
@@ -212,9 +212,9 @@ class MeshConfigurationManager(
 
     private fun setPublicationSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("setPublicationSettings")
-//        configurationTaskListeners.forEach { listener ->
-//            listener.onCurrentConfigTask(ConfigurationTask.SET_PUBLICATION_SETTING)
-//        }
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.SET_PUBLICATION_SETTING)
+        }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
             val publicationSettings = PublicationSettings(group)
@@ -226,9 +226,9 @@ class MeshConfigurationManager(
 
     private fun clearPublicationSettings(model: VendorModel): Runnable {
         Timber.d("clearPublicationSettings")
-//        configurationTaskListeners.forEach { listener ->
-//            listener.onCurrentConfigTask(ConfigurationTask.CLEAR_PUBLICATION_SETTING)
-//        }
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.CLEAR_PUBLICATION_SETTING)
+        }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
             subscriptionControl.clearPublicationSettings(PublicationSettingsGenericCallbackImpl())
@@ -238,9 +238,9 @@ class MeshConfigurationManager(
 
     private fun addSubscriptionSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("addSubscriptionSettings")
-//        configurationTaskListeners.forEach { listener ->
-//            listener.onCurrentConfigTask(ConfigurationTask.ADD_SUBSCRIPTION_SETTING)
-//        }
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.ADD_SUBSCRIPTION_SETTING)
+        }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
             val subscriptionSettings = SubscriptionSettings(group)
@@ -253,9 +253,9 @@ class MeshConfigurationManager(
 
     private fun removeSubscriptionSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("removeSubscriptionSettings")
-//        configurationTaskListeners.forEach { listener ->
-//            listener.onCurrentConfigTask(ConfigurationTask.REMOVE_SUBSCRIPTION_SETTING)
-//        }
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.REMOVE_SUBSCRIPTION_SETTING)
+        }
         return Runnable {
             val subscriptionSettings = SubscriptionSettings(group)
             val subscriptionControl = SubscriptionControl(model)

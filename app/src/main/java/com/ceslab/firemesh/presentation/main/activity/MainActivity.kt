@@ -24,6 +24,7 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
+import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import com.ceslab.firemesh.presentation.splash.SplashActivity
 import dagger.android.AndroidInjection
@@ -34,8 +35,6 @@ import kotlin.system.exitProcess
 class MainActivity : BaseActivity() {
 
     companion object {
-        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
-
         const val PERMISSIONS_REQUEST_CODE: Int = 12
 
         fun startMainActivity(activity: AppCompatActivity) {
@@ -77,22 +76,8 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main,menu)
-        return true
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.item_ota) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                   WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
-                )
-            } else {
-                OTAListActivity.startOTAListActivity(this)
-            }
-        }
-
         if (supportFragmentManager.backStackEntryCount > 0) {
             if (item.itemId == android.R.id.home) {
                 onBackPressed()
@@ -100,6 +85,13 @@ class MainActivity : BaseActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
+        if(currentFragment !is NodeFragment){
+            super.onBackPressed()
+        }
     }
 
 

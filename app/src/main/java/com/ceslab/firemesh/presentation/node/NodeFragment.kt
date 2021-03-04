@@ -2,10 +2,7 @@ package com.ceslab.firemesh.presentation.node
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
@@ -57,13 +54,13 @@ class NodeFragment : BaseFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_node,menu)
+        inflater.inflate(R.menu.menu_node, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.item_restart -> {
+        when (item.itemId) {
+            R.id.item_ok -> {
                 val packageManager = activity!!.packageManager
                 val intent = packageManager.getLaunchIntentForPackage(activity!!.packageName)
                 val componentName = intent!!.component
@@ -75,12 +72,13 @@ class NodeFragment : BaseFragment() {
         return true
     }
 
+
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         nodeViewModel = ViewModelProvider(this, viewModelFactory).get(NodeViewModel::class.java)
         nodeViewModel.isFirstConfig = isFirstConfig
-        nodeViewModel.getMeshStatus().observe(this,meshStatusObserver)
+        nodeViewModel.getMeshStatus().observe(this, meshStatusObserver)
     }
 
     private fun setupDeviceViewPager() {
@@ -90,19 +88,19 @@ class NodeFragment : BaseFragment() {
         tab_layout_node.setupWithViewPager(view_pager_node)
     }
 
-    private fun connectToNode(){
+    private fun connectToNode() {
         Timber.d("connectToNode")
         nodeViewModel.connectToNode()
     }
 
-    private fun disconnectFromNode(){
+    private fun disconnectFromNode() {
         Timber.d("disconnectFromNode")
         nodeViewModel.disconnectFromNode()
     }
 
     private val meshStatusObserver = Observer<MeshStatus> {
         activity?.runOnUiThread {
-            when(it) {
+            when (it) {
                 MeshStatus.MESH_CONNECTING -> showProgressDialog("Connecting to node")
                 MeshStatus.MESH_CONNECTED -> {
 
@@ -110,7 +108,7 @@ class NodeFragment : BaseFragment() {
                 MeshStatus.MESH_DISCONNECTED -> {
 
                 }
-                MeshStatus.INIT_CONFIGURATION_LOADED ->  {
+                MeshStatus.INIT_CONFIGURATION_LOADED -> {
 
                 }
             }
