@@ -43,10 +43,10 @@ class NodeConfigFragment : BaseFragment() {
             ViewModelProvider(this, viewModelFactory).get(NodeConfigViewModel::class.java)
         nodeConfigViewModel.apply {
             setConfigListeners()
-            getNodeConfig().observe(this@NodeConfigFragment,nodeConfigObserver)
-            getProxyStatus().observe(this@NodeConfigFragment,proxyStatusObserver)
-            getRelayStatus().observe(this@NodeConfigFragment,relayStatusObserver)
-            getFriendStatus().observe(this@NodeConfigFragment,friendStatusObserver)
+            getNodeConfig().observe(this@NodeConfigFragment, nodeConfigObserver)
+            getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
+            getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
+            getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
             getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
         }
@@ -111,10 +111,8 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             meshNode.apply {
                 val groupListInSubnet = node.subnets.first().groups.sortedBy { it.name }
-                val groupNameList = ArrayList<String>()
-                groupNameList.add("")
-                groupListInSubnet.forEach { groupInfo ->
-                    groupNameList.add(groupInfo.name)
+                val groupNameList = mutableListOf("").apply {
+                    addAll(groupListInSubnet.map { it.name })
                 }
                 val groupAdapter = ArrayAdapter<String>(
                     context!!,
@@ -126,13 +124,12 @@ class NodeConfigFragment : BaseFragment() {
                 spinner_group.onItemSelectedListener = null
                 spinner_group.adapter = groupAdapter
                 if (node.groups.isNotEmpty()) {
-                    val groupInfo = groupListInSubnet.find { group ->
-                        group == node.groups.iterator().next()
-                    }
-                    groupInfo?.apply {
-                        spinner_group.setSelection(groupNameList.indexOf(name), false)
-                    }
-                } else if (groupListInSubnet.isNotEmpty()) {
+                    val groupInfo = node.groups.first()
+                    groupListInSubnet.find { it == groupInfo }
+                        ?.let {
+                            spinner_group.setSelection(groupNameList.indexOf(it.name), false)
+                        }
+                } else {
                     spinner_group.setSelection(Adapter.NO_SELECTION, false)
                 }
                 spinner_group.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -175,12 +172,10 @@ class NodeConfigFragment : BaseFragment() {
                     onItemSelectedListener = null
                     adapter = functionalityAdapter
                     if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
-                        functionalitiesNamed.find { it.functionality == functionality }
-                            ?.let { functionalityNamed ->
-                                setSelection(
-                                    functionalitiesNamed.indexOf(functionalityNamed),
-                                    false
-                                )
+                        functionalitiesNamed.indexOfFirst { it.functionality == functionality }
+                            .takeUnless { it == -1 }
+                            ?.let { index ->
+                                setSelection(index, false)
                             }
 
                     } else {
