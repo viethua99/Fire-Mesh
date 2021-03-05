@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.ota_setup.dialog
+package com.ceslab.firemesh.presentation.ota_config.dialog
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.ota.model.ErrorCodes.getATTHTMLFormattedError
+import com.ceslab.firemesh.ota.model.ErrorCodes.getOneOctetErrorCodeHexAsString
 import com.ceslab.firemesh.presentation.base.BaseDialogFragment
 import kotlinx.android.synthetic.main.dialog_ota_error.*
 
@@ -24,8 +26,8 @@ class ErrorDialog(private val errorCode: Int, private val otaErrorCallback: OtaE
             otaErrorCallback.onDismiss()
         }
 
-     //   error_title.text = getString("Error:") + " " + Converters.getHexValue(errorCode.toByte())
-  //      error_description.text = Html.fromHtml(getATTHTMLFormattedError(errorCode))
+        error_title.text = "Error:" + " " + getOneOctetErrorCodeHexAsString(errorCode)
+        error_description.text = Html.fromHtml(getATTHTMLFormattedError(errorCode))
     }
 
     override fun onDismiss(dialog: DialogInterface) {

@@ -4,15 +4,12 @@ package com.ceslab.firemesh.presentation.ota_list
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
@@ -23,7 +20,7 @@ import com.ceslab.firemesh.ota.service.OTAService
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.node_list.OTAListRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.ota_setup.OTASetupActivity
+import com.ceslab.firemesh.presentation.ota_config.OTAConfigActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.fragment_ota_list.*
 import kotlinx.android.synthetic.main.fragment_ota_list.btn_scanning
@@ -103,32 +100,6 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
         }
     }
 
-    private val onScanButtonClickListener = View.OnClickListener {
-        Timber.d("onScanButtonClickListener: clicked")
-        if (scanning || btn_scanning.text == "Stop Scanning") {
-            discovery.stopDiscovery(false)
-            scanning = false
-            btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
-            btn_scanning.setBackgroundColor(Color.parseColor("#0288D1"))
-        } else {
-            btn_scanning.text = getString(R.string.fragment_provision_list_stop_scanning)
-            btn_scanning.setBackgroundColor(Color.parseColor("#F44336"))
-            startScanning()
-        }
-    }
-
-    private val onOTAButtonClickedListener =
-        object : BaseRecyclerViewAdapter.ItemClickListener<BluetoothDeviceInfo> {
-            override fun onClick(position: Int, item: BluetoothDeviceInfo) {
-                Timber.d("onOTAButtonClickedListener: clicked")
-               connectToDevice(item)
-            }
-
-            override fun onLongClick(position: Int, item: BluetoothDeviceInfo) {}
-        }
-
-    ////TEST////
-
     private fun connectToDevice(device:BluetoothDeviceInfo?) {
         Timber.d("connectToDevice: ${device!!.address}")
         showProgressDialog("Connecting to device")
@@ -177,7 +148,7 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
 
                     service?.let {
                         if(it.isGattConnected) {
-                            val intent = Intent(this@OTAListActivity, OTASetupActivity::class.java)
+                            val intent = Intent(this@OTAListActivity, OTAConfigActivity::class.java)
                             intent.putExtra("DEVICE_SELECTED_ADDRESS", device.address)
                             startActivity(intent)
                         }
@@ -208,7 +179,6 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
     private fun startScanning() {
         Timber.d("startScanning")
         scanning = true
-
         // Connected devices are not deleted from list
         reDiscover(false)
     }
@@ -232,15 +202,6 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
         Timber.d("flushContainer")
     }
 
-    override fun onAdapterDisabled() {
-        Timber.d("onAdapterDisabled")
-    }
-
-    override fun onAdapterEnabled() {
-        Timber.d("onAdapterEnabled")
-
-    }
-
     override fun updateWithDevices(devices: List<BluetoothDeviceInfo>) {
         for(device in devices) {
             Timber.d("updateWithDevices: ${device.name} ---- ${device.address}")
@@ -248,5 +209,32 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
         looking_for_devices_background.visibility =View.GONE
         otaListRecyclerViewAdapter.setDataList(devices)
     }
+
+    private val onScanButtonClickListener = View.OnClickListener {
+        Timber.d("onScanButtonClickListener: clicked")
+        if (scanning || btn_scanning.text == "Stop Scanning") {
+            discovery.stopDiscovery(false)
+            scanning = false
+            btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
+            btn_scanning.setBackgroundColor(Color.parseColor("#0288D1"))
+        } else {
+            btn_scanning.text = getString(R.string.fragment_provision_list_stop_scanning)
+            btn_scanning.setBackgroundColor(Color.parseColor("#F44336"))
+            startScanning()
+        }
+    }
+
+    private val onOTAButtonClickedListener =
+        object : BaseRecyclerViewAdapter.ItemClickListener<BluetoothDeviceInfo> {
+            override fun onClick(position: Int, item: BluetoothDeviceInfo) {
+                Timber.d("onOTAButtonClickedListener: clicked")
+               connectToDevice(item)
+            }
+
+            override fun onLongClick(position: Int, item: BluetoothDeviceInfo) {}
+        }
+
+
+
 
 }

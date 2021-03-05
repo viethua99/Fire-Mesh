@@ -338,7 +338,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:gravity="center"
-                            android:text="application.gbl"
+                            android:text="----"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -363,7 +363,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="99999 bytes"
+                            android:text="----"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -388,7 +388,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="999"
+                            android:text="----"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -494,17 +494,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:orientation="horizontal">
+            <Button
+                android:layout_marginRight="5dp"
+                android:id="@+id/btn_ota_end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:clickable="false"
+                android:padding="10dp"
+                android:backgroundTint="@color/red_500"
+                android:text="End"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/btn_ota_proceed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:clickable="false"
                 android:padding="10dp"
                 android:text="@string/dialog_start_ota"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
+
+
         </LinearLayout>
 
 

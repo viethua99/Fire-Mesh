@@ -13,8 +13,6 @@ class Discovery(private val container: DeviceContainer<BluetoothDeviceInfo>, pri
     interface BluetoothDiscoveryHost {
         fun isReady(): Boolean
         fun reDiscover()
-        fun onAdapterDisabled()
-        fun onAdapterEnabled()
     }
 
     interface DeviceContainer<T : BluetoothDeviceInfo> {
@@ -130,15 +128,10 @@ class Discovery(private val container: DeviceContainer<BluetoothDeviceInfo>, pri
 
             if (isBluetoothEnabled) {
                 isBluetoothEnabled = false
-                host.onAdapterDisabled()
-                // Adapter was off, but became turned on:
-                // Allow restarting the adapter (askForEnablingBluetoothAdapter will be called at some point)
             }
         } else if (bluetoothAdapterState == BluetoothAdapter.STATE_ON) {
             if (!isBluetoothEnabled) {
                 isBluetoothEnabled = true
-                // The adapter was off and now turned on again. Re-start discovery to recover.
-                host.onAdapterEnabled()
             }
         }
     }

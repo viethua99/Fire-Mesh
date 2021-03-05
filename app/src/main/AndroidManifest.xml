@@ -34,7 +34,7 @@
         </activity>
         <activity android:name=".presentation.main.activity.MainActivity"/>
         <activity android:name=".presentation.ota_list.OTAListActivity"/>
-        <activity android:name=".presentation.ota_setup.OTASetupActivity"/>
+        <activity android:name=".presentation.ota_config.OTAConfigActivity"/>
         <service android:name=".ota.service.OTAService" />
         <receiver android:name=".ota.service.OTAService$Receiver">
             <intent-filter>
