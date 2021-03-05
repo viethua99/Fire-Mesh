@@ -44,8 +44,6 @@ dependencies {
 
 
     //BLE MESH Modules
-    implementation project(path: ':ble_mesh-android_api-v2_low-release')
-    implementation project(path: ':ble_mesh-android_api-v2_high-release')
     implementation 'com.google.code.gson:gson:2.8.6'
 
     //Dialog module
@@ -57,6 +55,8 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.27'
     implementation 'com.google.dagger:dagger-android:2.27'
     implementation 'com.google.dagger:dagger-android-support:2.27'
+    implementation project(path: ':ble_mesh-android_api-v2_low-debug')
+    implementation project(path: ':ble_mesh-android_api-v2_high-debug')
     // if you use the support libraries
     kapt 'com.google.dagger:dagger-compiler:2.27'
     kapt 'com.google.dagger:dagger-android-processor:2.27'

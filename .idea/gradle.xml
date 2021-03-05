@@ -11,7 +11,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/ble_mesh-android_api-v2_high-debug" />
             <option value="$PROJECT_DIR$/ble_mesh-android_api-v2_high-release" />
+            <option value="$PROJECT_DIR$/ble_mesh-android_api-v2_low-debug" />
             <option value="$PROJECT_DIR$/ble_mesh-android_api-v2_low-release" />
             <option value="$PROJECT_DIR$/sweetDialog" />
           </set>

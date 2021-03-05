@@ -1,3 +1,5 @@
+include ':ble_mesh-android_api-v2_low-debug'
+include ':ble_mesh-android_api-v2_high-debug'
 include ':sweetDialog'
 include ':ble_mesh-android_api-v2_low-release'
 include ':ble_mesh-android_api-v2_high-release'
