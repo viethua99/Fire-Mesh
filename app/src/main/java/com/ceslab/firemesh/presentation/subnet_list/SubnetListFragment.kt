@@ -81,7 +81,7 @@ class SubnetListFragment : BaseFragment(){
                 Runnable {
                     subnetListViewModel.setCurrentSubnet(item)
                     val mainActivity = activity as MainActivity
-                    mainActivity.replaceFragment(SubnetFragment(item.name),SubnetFragment.TAG,R.id.container_main)
+                    mainActivity.addFragment(SubnetFragment(item.name),SubnetFragment.TAG,R.id.container_main)
                 }
                 ,50)
         }

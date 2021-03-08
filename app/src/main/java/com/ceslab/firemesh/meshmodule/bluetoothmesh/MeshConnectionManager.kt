@@ -175,6 +175,9 @@ class MeshConnectionManager(
         }
     }
 
+    fun getCurrentlyConnectedNode(): Node? {
+        return connectableDeviceHelper.findNode(meshConnectableDevice)
+    }
 
 
     fun setupInitialNodeConfiguration(node: Node) {
@@ -325,4 +328,5 @@ class MeshConnectionManager(
             connect(bluetoothConnectableDevice, refreshBluetoothDevice = false)
         }
     }
+
 }

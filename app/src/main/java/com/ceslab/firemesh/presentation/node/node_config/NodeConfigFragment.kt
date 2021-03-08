@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.node.node_config
 
+import android.app.AlertDialog
 import android.view.View
 import android.widget.Adapter
 import android.widget.AdapterView
@@ -49,6 +50,7 @@ class NodeConfigFragment : BaseFragment() {
             getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
             getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
+            getProxyAttention().observe(this@NodeConfigFragment,proxyAttentionObserver)
         }
 
     }
@@ -247,6 +249,28 @@ class NodeConfigFragment : BaseFragment() {
     private val friendStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
             sw_friend.isChecked = isEnabled
+        }
+    }
+
+    private val proxyAttentionObserver = Observer<Boolean> {
+        Timber.d("proxyAttentionObsever = $it")
+        activity?.runOnUiThread {
+            if(it == true) {
+                val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                builder.apply {
+                    setTitle("Attention")
+                    setMessage("Disabling this proxy will cause you to lose access to the network. Continue anyways?")
+                    setPositiveButton("OK") { dialog, _ ->
+                      nodeConfigViewModel.changeProxy(false)
+                        dialog.dismiss()
+                    }
+
+                    setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                }
+                builder.create().show()
+            }
         }
     }
 

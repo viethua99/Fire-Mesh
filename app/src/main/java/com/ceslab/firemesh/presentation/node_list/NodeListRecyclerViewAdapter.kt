@@ -30,6 +30,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
         var tvNodeAddress: TextView = view.findViewById(R.id.tv_node_address)
         var tvNodeStatus : TextView = view.findViewById(R.id.tv_node_status)
         var tvNodeBattery: TextView = view.findViewById(R.id.tv_node_battery)
+        var tvNodeProxy : TextView = view.findViewById(R.id.tv_node_proxy)
         init {
             view.setOnClickListener(this)
             view.setOnLongClickListener(this)
@@ -48,6 +49,11 @@ class NodeListRecyclerViewAdapter(context: Context) :
         fun renderUI(meshNode: MeshNode) {
             val node = meshNode.node
             tvNodeName.text = node.name
+            if(node.isConnectedAsProxy){
+                tvNodeProxy.visibility = View.VISIBLE
+            } else {
+                tvNodeProxy.visibility = View.GONE
+            }
             tvNodeAddress.text = node.primaryElementAddress?.toString()
             tvNodeStatus.text = "Disconnected"
             tvNodeBattery.text = "999%"

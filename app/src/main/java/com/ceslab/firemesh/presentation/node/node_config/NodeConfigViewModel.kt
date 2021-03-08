@@ -35,7 +35,7 @@ class NodeConfigViewModel @Inject constructor(
     private var nodeConfig = MutableLiveData<NodeConfig>()
     private val currentConfigTask = MutableLiveData<ConfigurationTask>()
     private val configurationError = MutableLiveData<ErrorType>()
-
+    private val isProxyAttention = MutableLiveData<Boolean>()
 
     fun getProxyStatus(): LiveData<Boolean> {
         return isProxyEnabled
@@ -59,6 +59,10 @@ class NodeConfigViewModel @Inject constructor(
 
     fun getConfigurationError(): LiveData<ErrorType> {
         return configurationError
+    }
+
+    fun getProxyAttention() : LiveData<Boolean> {
+        return isProxyAttention
     }
 
 
@@ -105,7 +109,11 @@ class NodeConfigViewModel @Inject constructor(
 
     fun changeProxy(enabled: Boolean) {
         Timber.d("changeProxy: $enabled")
-        meshConfigurationManager.changeProxy(enabled)
+        if(!enabled && isConnectedToProxyDevice()) {
+            isProxyAttention.value = true
+        } else {
+            meshConfigurationManager.changeProxy(enabled)
+        }
 
     }
 
@@ -151,6 +159,18 @@ class NodeConfigViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private fun isConnectedToProxyDevice(): Boolean {
+        val currentlyConnectedNode = meshConnectionManager.getCurrentlyConnectedNode()
+        currentlyConnectedNode?.apply {
+            if( currentlyConnectedNode == bluetoothMeshManager.meshNodeToConfigure!!.node) {
+                Timber.d("isConnectedToProxyDevice: true")
+                return true
+            }
+        }
+        Timber.d("isConnectedToProxyDevice: false")
+        return false
     }
 
     private val meshConnectionListener = object : ConnectionStatusListener {
