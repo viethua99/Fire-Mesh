@@ -119,7 +119,7 @@ class OTAConfigActivity : BaseActivity() {
     private var applicationPath = ""
     private var appLoaderPath = ""
     private var currentMTU = 247
-    private var currentPriority = 2
+    private var currentPriority = 1
     private var isReliable = true
 
 
@@ -136,11 +136,6 @@ class OTAConfigActivity : BaseActivity() {
         initLoading()
         initDevice("")
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main,menu)
-        return true
     }
 
     override fun onDestroy() {
@@ -374,8 +369,12 @@ class OTAConfigActivity : BaseActivity() {
         otaProcessing = true
 
         if (isInsideOTAMode) {
+            Timber.d("isInsideOTAMode = true")
             bluetoothGatt?.requestMtu(edt_mtu_value?.text.toString().toInt())
-        } else dfuMode(DFUStep.BEGIN)
+        } else  {
+            Timber.d("isInsideOTAMode = false")
+            dfuMode(DFUStep.BEGIN)
+        }
     }
 
     private val onEndOTAButtonClicked = View.OnClickListener {
@@ -686,6 +685,7 @@ class OTAConfigActivity : BaseActivity() {
                     discoverTimeout = false
                     disconnectionTimeout = false
                     if ((status != 0)  && (errorDialog == null)) {
+                        Timber.d("errorDialog null - failed")
                         runOnUiThread {
                             errorDialog = ErrorDialog(status, object : ErrorDialog.OtaErrorCallback {
                                 override fun onDismiss() {
@@ -801,7 +801,7 @@ class OTAConfigActivity : BaseActivity() {
                             if (otaProcessing) {
                                 runOnUiThread {
                                     btn_ota_end.setBackgroundColor(ContextCompat.getColor(this@OTAConfigActivity, R.color.red_500))
-                                    btn_ota_proceed.isClickable = true
+                                    btn_ota_end.isClickable = true
                                 }
                                 boolOTAFirstStep = false
                                 if (boolFullOTA) {

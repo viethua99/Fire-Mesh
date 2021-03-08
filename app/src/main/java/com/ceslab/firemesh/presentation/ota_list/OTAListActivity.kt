@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.ota.ble.Discovery
+import com.ceslab.firemesh.ota.ble.GattService
 import com.ceslab.firemesh.ota.callbacks.TimeoutGattCallback
 import com.ceslab.firemesh.ota.model.BluetoothDeviceInfo
 import com.ceslab.firemesh.ota.service.OTAService
@@ -185,6 +186,8 @@ class OTAListActivity : BaseActivity(), Discovery.BluetoothDiscoveryHost,
 
     private fun reDiscover(clearCachedDiscoveries: Boolean) {
         Timber.d("reDiscover: $clearCachedDiscoveries")
+        discovery.addFilter(GattService.MeshProxyService)
+        discovery.addFilter(GattService.MeshProvisioningService)
         discovery.startDiscovery(clearCachedDiscoveries)
     }
 

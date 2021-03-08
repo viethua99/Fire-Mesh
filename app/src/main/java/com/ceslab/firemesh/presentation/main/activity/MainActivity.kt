@@ -87,12 +87,12 @@ class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed() {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
-        if(currentFragment !is NodeFragment){
-            super.onBackPressed()
-        }
-    }
+//    override fun onBackPressed() {
+//        val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
+//        if(currentFragment !is NodeFragment){
+//            super.onBackPressed()
+//        }
+//    }
 
 
     private fun setupViewModel() {

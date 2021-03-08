@@ -48,15 +48,15 @@ class NodeFragment : BaseFragment() {
         Timber.d("onMyViewCreated")
         setHasOptionsMenu(true)
         setupViewModel()
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+       // (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setupDeviceViewPager()
         connectToNode()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_node, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.menu_node, menu)
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
