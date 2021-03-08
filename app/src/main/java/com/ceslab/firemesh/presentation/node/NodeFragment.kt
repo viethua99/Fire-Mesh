@@ -12,6 +12,7 @@ import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node.*
+import org.w3c.dom.Node
 import timber.log.Timber
 
 class NodeFragment : BaseFragment() {
@@ -46,31 +47,16 @@ class NodeFragment : BaseFragment() {
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
-        setHasOptionsMenu(true)
         setupViewModel()
-       // (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as MainActivity).supportActionBar?.title = "Node"
         setupDeviceViewPager()
         connectToNode()
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.menu_node, menu)
-//        super.onCreateOptionsMenu(menu, inflater)
-//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.item_ok -> {
-                val packageManager = activity!!.packageManager
-                val intent = packageManager.getLaunchIntentForPackage(activity!!.packageName)
-                val componentName = intent!!.component
-                val mainIntent = Intent.makeRestartActivityTask(componentName)
-                startActivity(mainIntent)
-                Runtime.getRuntime().exit(0)
-            }
-        }
-        return true
-    }
+
+
 
 
     private fun setupViewModel() {

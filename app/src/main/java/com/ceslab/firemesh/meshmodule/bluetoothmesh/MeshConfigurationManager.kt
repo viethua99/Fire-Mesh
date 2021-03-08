@@ -34,17 +34,23 @@ class MeshConfigurationManager(
     private val nodeFeatureListeners: ArrayList<NodeFeatureListener> = ArrayList()
     private val configurationTaskListeners: ArrayList<ConfigurationTaskListener> = ArrayList()
 
-    private val meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
-
-    private val configurationControl: ConfigurationControl =
-        ConfigurationControl(meshNodeToConfigure.node)
-    private val nodeControl: NodeControl =
-        NodeControl((meshNodeToConfigure.node))
-
-    private val taskExecutor = Executors.newSingleThreadScheduledExecutor()
-    private val taskList = mutableListOf<Runnable>()
+    private var meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
+    private var configurationControl: ConfigurationControl = ConfigurationControl(meshNodeToConfigure.node)
+    private var nodeControl: NodeControl = NodeControl((meshNodeToConfigure.node))
+    private var taskExecutor = Executors.newSingleThreadScheduledExecutor()
+    private var taskList = mutableListOf<Runnable>()
     private var taskCount = 0
     private var currentTask = Runnable { }
+
+    fun initMeshConfiguration() {
+        meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
+        nodeControl  = NodeControl((meshNodeToConfigure.node))
+        configurationControl = ConfigurationControl(meshNodeToConfigure.node)
+        taskExecutor = Executors.newSingleThreadScheduledExecutor()
+        taskList = mutableListOf<Runnable>()
+        taskCount = 0
+        currentTask = Runnable { }
+    }
 
     fun addNodeFeatureListener(nodeFeatureListener: NodeFeatureListener) {
         synchronized(nodeFeatureListeners) {
@@ -73,6 +79,7 @@ class MeshConfigurationManager(
     fun processChangeGroup(newGroup: Group?) {
         Timber.d("processChangeGroup: $newGroup")
         if (meshNodeToConfigure.node.groups.isNotEmpty()) {
+            Timber.d("processChangeGroup: isNotEmpty")
             val oldGroup = meshNodeToConfigure.node.groups.first()
             taskList.addAll(
                 unsubscribeModelFromGroup(oldGroup,meshNodeToConfigure.functionality)
@@ -133,7 +140,7 @@ class MeshConfigurationManager(
             listener.onCurrentConfigTask(ConfigurationTask.BIND_NODE_TO_GROUP)
         }
         return Runnable {
-            nodeControl.bind(group, NodeControlCallbackImpl())
+             nodeControl.bind(group, NodeControlCallbackImpl())
         }
     }
 

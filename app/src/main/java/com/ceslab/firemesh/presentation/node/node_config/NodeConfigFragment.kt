@@ -12,6 +12,7 @@ import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeConfig
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_config.*
@@ -124,12 +125,14 @@ class NodeConfigFragment : BaseFragment() {
                 spinner_group.onItemSelectedListener = null
                 spinner_group.adapter = groupAdapter
                 if (node.groups.isNotEmpty()) {
+                    Timber.d("Node group is not empty")
                     val groupInfo = node.groups.first()
                     groupListInSubnet.find { it == groupInfo }
                         ?.let {
                             spinner_group.setSelection(groupNameList.indexOf(it.name), false)
                         }
                 } else {
+                    Timber.d("Node group is empty")
                     spinner_group.setSelection(Adapter.NO_SELECTION, false)
                 }
                 spinner_group.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

@@ -64,6 +64,7 @@ class NodeConfigViewModel @Inject constructor(
 
     fun setConfigListeners() {
         Timber.d("setListeners")
+        meshConfigurationManager.initMeshConfiguration()
         meshConnectionManager.apply {
             addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
             addMeshConnectionListener(meshConnectionListener)
