@@ -9,6 +9,7 @@ import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.ModelTableDescription
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.data_model.model.Model
 import dagger.android.support.AndroidSupportInjection

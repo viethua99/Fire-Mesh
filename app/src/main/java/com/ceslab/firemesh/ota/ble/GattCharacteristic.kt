@@ -32,7 +32,10 @@ enum class GattCharacteristic {
     Light("76e137ac-b15f-49d7-9c4c-e278e6492ad9", "custom.type", BluetoothGattCharacteristic.FORMAT_UINT8),
     TriggerSource("2f16ee52-0bfd-4597-85d4-a5141fdbae15", "custom.type", BluetoothGattCharacteristic.FORMAT_UINT8),
     SourceAddress("82a1cb54-3921-4c9c-ba34-34f78bab9a1b", "custom.type", BluetoothGattCharacteristic.FORMAT_UINT32),
-
+    MeshProvisioningDataIn(0x00002adb,"com.silabs.service.mesh_provisioning"),
+    MeshProvisioningDataOut(0x00002adc,"com.silabs.service.mesh_provisioning"),
+    MeshProxyDataIn(0x00002add,"com.silabs.service.mesh_proxy"),
+    MeshProxyDataOut(0x00002ade,"com.silabs.service.mesh_proxy"),
     RangeTestDestinationId("41ded549-4298-4911-8c16-3088a7e41d5f", "custom.type", BluetoothGattCharacteristic.FORMAT_UINT8),
     RangeTestSourceId("9438acdf-42f5-463d-9c73-c5a3427fa731", "custom.type", BluetoothGattCharacteristic.FORMAT_UINT8),
     RangeTestPacketsReceived("6c19509b-f0d1-4f0e-84ce-464dba7c573a", "custom.type", BluetoothGattCharacteristic.FORMAT_UINT16),
