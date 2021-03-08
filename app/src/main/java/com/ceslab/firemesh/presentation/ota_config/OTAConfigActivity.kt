@@ -517,7 +517,14 @@ class OTAConfigActivity : BaseActivity() {
     private fun onGattFetched() {
         Timber.d("onGattFetched: isInsideOTAMode = $isInsideOTAMode - otaFirstStep=$boolOTAFirstStep")
         var deviceName = bluetoothGatt?.device?.name
-        supportActionBar?.title = deviceName
+        if(deviceName == null) {
+            tv_node_name.text = "Unknown Device"
+            supportActionBar?.title = "Unknown Device"
+        } else {
+            tv_node_name.text = deviceName
+            supportActionBar?.title = deviceName
+
+        }
         hideDialog()
         UICreated = true
 
