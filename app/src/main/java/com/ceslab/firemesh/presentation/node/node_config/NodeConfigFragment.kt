@@ -264,7 +264,7 @@ class NodeConfigFragment : BaseFragment() {
                     setTitle("Attention")
                     setMessage("Disabling this proxy will cause you to lose access to the network. Continue anyways?")
                     setPositiveButton("OK") { dialog, _ ->
-                      nodeConfigViewModel.changeProxy(false)
+                      nodeConfigViewModel.processChangeProxy(false)
                         dialog.dismiss()
                     }
 

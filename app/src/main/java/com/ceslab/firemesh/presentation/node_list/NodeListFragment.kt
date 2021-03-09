@@ -36,10 +36,18 @@ class NodeListFragment : BaseFragment(){
         setupRecyclerView()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("onDestroy")
+        nodeListViewModel.removeListener()
+    }
+
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         nodeListViewModel = ViewModelProvider(this, viewModelFactory).get(NodeListViewModel::class.java)
+        nodeListViewModel.setListeners()
+
         nodeListViewModel.getMeshNodeList().observe(this,meshNodeListObserver)
     }
 
@@ -62,7 +70,7 @@ class NodeListFragment : BaseFragment(){
                 Runnable {
                     nodeListViewModel.setDeviceToConfigure(item)
                     val mainActivity = activity as MainActivity
-                    mainActivity.replaceFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+                    mainActivity.addFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
                 }
                 ,50)
         }

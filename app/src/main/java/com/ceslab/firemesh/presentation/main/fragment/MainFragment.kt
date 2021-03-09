@@ -31,10 +31,15 @@ class MainFragment : BaseFragment() {
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setHasOptionsMenu(true)
         setupBottomNavigationView()
         setupViewPager()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

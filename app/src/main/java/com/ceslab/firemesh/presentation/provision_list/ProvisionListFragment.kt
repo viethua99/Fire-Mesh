@@ -10,6 +10,7 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_provision_list.*
@@ -20,13 +21,19 @@ class ProvisionListFragment : BaseFragment() {
         const val TAG = "ProvisionListFragment"
     }
 
-
     private lateinit var scannerRecyclerViewAdapter: ProvisionRecyclerViewAdapter
     private lateinit var provisionViewModel: ProvisionViewModel
     private  var isViewCreated = false
 
     override fun getResLayoutId(): Int {
         return R.layout.fragment_provision_list
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+
+
     }
 
     override fun onStop() {

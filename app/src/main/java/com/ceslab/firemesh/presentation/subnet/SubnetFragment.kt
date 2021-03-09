@@ -43,6 +43,12 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
         disconnectFromSubnet()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+
+    }
+
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
@@ -58,7 +64,6 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
 
     private fun setupViewPager() {
         Timber.d("setupViewPager")
-        (activity as MainActivity).supportActionBar?.title = subnetName
         val subnetViewPagerAdapter = SubnetViewPagerAdapter(childFragmentManager)
         subnet_view_pager.apply {
             adapter = subnetViewPagerAdapter

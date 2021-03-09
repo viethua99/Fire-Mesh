@@ -113,8 +113,12 @@ class NodeConfigViewModel @Inject constructor(
         if(!enabled && isConnectedToProxyDevice()) {
             isProxyAttention.value = true
         } else {
-            meshConfigurationManager.changeProxy(enabled)
+            processChangeProxy(enabled)
         }
+    }
+
+    fun processChangeProxy(enabled: Boolean){
+        meshConfigurationManager.changeProxy(enabled)
 
     }
 

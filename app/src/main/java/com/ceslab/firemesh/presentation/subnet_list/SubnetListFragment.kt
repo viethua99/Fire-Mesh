@@ -40,6 +40,11 @@ class SubnetListFragment : BaseFragment(){
         setupAddGroupFab()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+    }
+
 
     private fun setupRecyclerView(){
         Timber.d("setupRecyclerView")
