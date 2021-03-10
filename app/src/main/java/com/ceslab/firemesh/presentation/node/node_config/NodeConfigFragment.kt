@@ -14,6 +14,8 @@ import com.ceslab.firemesh.meshmodule.model.NodeConfig
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigDialog
+import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_config.*
@@ -194,7 +196,8 @@ class NodeConfigFragment : BaseFragment() {
                             position: Int,
                             id: Long
                         ) {
-                            nodeConfigViewModel.changeFunctionality(functionalitiesNamed[position].functionality)
+                            val modelConfigDialog = ModelConfigDialog(functionalitiesNamed[position].functionality)
+                            modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {}

@@ -35,7 +35,8 @@ class MeshConfigurationManager(
     private val configurationTaskListeners: ArrayList<ConfigurationTaskListener> = ArrayList()
 
     private var meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
-    private var configurationControl: ConfigurationControl = ConfigurationControl(meshNodeToConfigure.node)
+    private var configurationControl: ConfigurationControl =
+        ConfigurationControl(meshNodeToConfigure.node)
     private var nodeControl: NodeControl = NodeControl((meshNodeToConfigure.node))
     private var taskExecutor = Executors.newSingleThreadScheduledExecutor()
     private var taskList = mutableListOf<Runnable>()
@@ -44,7 +45,7 @@ class MeshConfigurationManager(
 
     fun initMeshConfiguration() {
         meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
-        nodeControl  = NodeControl((meshNodeToConfigure.node))
+        nodeControl = NodeControl((meshNodeToConfigure.node))
         configurationControl = ConfigurationControl(meshNodeToConfigure.node)
         taskExecutor = Executors.newSingleThreadScheduledExecutor()
         taskList = mutableListOf<Runnable>()
@@ -82,7 +83,7 @@ class MeshConfigurationManager(
             Timber.d("processChangeGroup: isNotEmpty")
             val oldGroup = meshNodeToConfigure.node.groups.first()
             taskList.addAll(
-                unsubscribeModelFromGroup(oldGroup,meshNodeToConfigure.functionality)
+                unsubscribeModelFromGroup(oldGroup, meshNodeToConfigure.functionality)
             )
             taskList.add(unbindNodeFromGroup(oldGroup))
         }
@@ -93,8 +94,12 @@ class MeshConfigurationManager(
         startTasks()
     }
 
-    fun processChangeFunctionality(newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
-        Timber.d("processChangeFunctionality: $newFunctionality")
+    fun processChangeFunctionality(
+        newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
+        isSetPublication: Boolean,
+        isAddSubscription: Boolean
+    ) {
+        Timber.d("changeFunctionality: functionality=$newFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
         if (meshNodeToConfigure.node.groups.isEmpty()) {
             meshNodeManager.removeNodeFunc(meshNodeToConfigure)
             return
@@ -102,8 +107,21 @@ class MeshConfigurationManager(
         val group = meshNodeToConfigure.node.groups.first()
         group?.let {
             taskList.addAll(
-                startUnbindModelFromGroupAndClearPublicationSettings(it, meshNodeToConfigure.functionality))
-            taskList.addAll(startBindModelToGroupAndSetPublicationSettings(it, newFunctionality))
+                startUnbindModelFromGroupAndClearPublicationSettings(
+                    it,
+                    meshNodeToConfigure.functionality,
+                    isSetPublication,
+                    isAddSubscription
+                )
+            )
+            taskList.addAll(
+                startBindModelToGroupAndSetPublicationSettings(
+                    it,
+                    newFunctionality,
+                    isSetPublication,
+                    isAddSubscription
+                )
+            )
         }
         taskList.add(updateFunctionalityInSharedPreference(newFunctionality))
         startTasks()
@@ -140,7 +158,7 @@ class MeshConfigurationManager(
             listener.onCurrentConfigTask(ConfigurationTask.BIND_NODE_TO_GROUP)
         }
         return Runnable {
-             nodeControl.bind(group, NodeControlCallbackImpl())
+            nodeControl.bind(group, NodeControlCallbackImpl())
         }
     }
 
@@ -156,7 +174,9 @@ class MeshConfigurationManager(
 
     private fun startBindModelToGroupAndSetPublicationSettings(
         group: Group,
-        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
+        isSetPublication: Boolean,
+        isAddSubscription: Boolean
     ): List<Runnable> {
         Timber.d("startBindModelToGroupAndSetPublicationSettings")
         val taskList = mutableListOf<Runnable>()
@@ -165,24 +185,41 @@ class MeshConfigurationManager(
             meshNodeToConfigure.node,
             functionality
         ).forEach { model ->
-            taskList.add(bindModelToGroup(model,group))
-            taskList.add(setPublicationSettings(model,group))
-            taskList.add(addSubscriptionSettings(model,group))
+            taskList.add(bindModelToGroup(model, group))
+            if(isSetPublication){
+                taskList.add(setPublicationSettings(model, group))
+            }
+            if(isAddSubscription){
+                taskList.add(addSubscriptionSettings(model, group))
+            }
         }
         return taskList
     }
 
-    private fun startUnbindModelFromGroupAndClearPublicationSettings(group: Group,functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): List<Runnable> {
+    private fun startUnbindModelFromGroupAndClearPublicationSettings(
+        group: Group,
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
+        isSetPublication: Boolean,
+        isAddSubscription: Boolean
+    ): List<Runnable> {
         val tasks = mutableListOf<Runnable>()
-        NodeFunctionality.getVendorModels(meshNodeToConfigure.node,functionality).forEach { model ->
-            tasks.add(removeSubscriptionSettings(model,group))
-            tasks.add(clearPublicationSettings(model))
-            tasks.add(unbindModelFromGroup(model,group))
-        }
+        NodeFunctionality.getVendorModels(meshNodeToConfigure.node, functionality)
+            .forEach { model ->
+                if (isAddSubscription) {
+                    tasks.add(removeSubscriptionSettings(model, group))
+                }
+                if (isSetPublication) {
+                    tasks.add(clearPublicationSettings(model))
+                }
+                tasks.add(unbindModelFromGroup(model, group))
+            }
         return tasks
     }
 
-    private fun unsubscribeModelFromGroup(group: Group, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): List<Runnable> {
+    private fun unsubscribeModelFromGroup(
+        group: Group,
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY
+    ): List<Runnable> {
         val tasks = mutableListOf<Runnable>()
         NodeFunctionality.getVendorModels(
             meshNodeToConfigure.node,
@@ -192,7 +229,6 @@ class MeshConfigurationManager(
         }
         return tasks
     }
-
 
 
     private fun bindModelToGroup(vendorModel: VendorModel, group: Group): Runnable {
@@ -226,7 +262,8 @@ class MeshConfigurationManager(
             val subscriptionControl = SubscriptionControl(model)
             val publicationSettings = PublicationSettings(group)
             publicationSettings.ttl = 5
-            subscriptionControl.setPublicationSettings(publicationSettings, PublicationSettingsGenericCallbackImpl()
+            subscriptionControl.setPublicationSettings(
+                publicationSettings, PublicationSettingsGenericCallbackImpl()
             )
         }
     }
@@ -277,12 +314,12 @@ class MeshConfigurationManager(
     private fun updateFunctionalityInSharedPreference(functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): Runnable {
         Timber.d("updateFunctionalityInSharedPreference")
         return Runnable {
-                try {
-                    meshNodeManager.updateNodeFunc(meshNodeToConfigure, functionality)
-                    takeNextTask()
-                } catch (e: NodeChangeNameException) {
-                    Timber.e(e.localizedMessage)
-                }
+            try {
+                meshNodeManager.updateNodeFunc(meshNodeToConfigure, functionality)
+                takeNextTask()
+            } catch (e: NodeChangeNameException) {
+                Timber.e(e.localizedMessage)
+            }
         }
     }
 

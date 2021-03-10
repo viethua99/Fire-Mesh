@@ -98,10 +98,6 @@ class NodeConfigViewModel @Inject constructor(
         meshConfigurationManager.processChangeGroup(newGroup)
     }
 
-    fun changeFunctionality(newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
-        Timber.d("changeFunctionality: $newFunctionality")
-        meshConfigurationManager.processChangeFunctionality(newFunctionality)
-    }
 
     fun changeRelay(enabled: Boolean) {
         Timber.d("changeRelay: $enabled")
@@ -217,6 +213,7 @@ class NodeConfigViewModel @Inject constructor(
 
         override fun onSetNodeFeatureError(error: ErrorType) {
             Timber.e("onSetNodeFeatureError: ${error.type}")
+            configurationError.value = error
         }
     }
 

@@ -13,6 +13,7 @@ import com.ceslab.firemesh.presentation.subnet_list.SubnetListViewModel
 import com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet.AddSubnetViewModel
 import com.ceslab.firemesh.presentation.node.NodeViewModel
 import com.ceslab.firemesh.presentation.node.node_config.NodeConfigViewModel
+import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigViewModel
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoViewModel
 import com.ceslab.firemesh.presentation.node_list.NodeListViewModel
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialogViewModel
@@ -100,6 +101,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AddSubnetViewModel::class)
     abstract fun bindAddSubnetDialogViewModel(addSubnetViewModel: AddSubnetViewModel):ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ModelConfigViewModel::class)
+    abstract fun bindModelConfigViewModel(modelConfigViewModel: ModelConfigViewModel):ViewModel
 
     @Binds
     @IntoMap
