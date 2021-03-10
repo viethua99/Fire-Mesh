@@ -31,7 +31,6 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
         setupViewModel()
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupBottomNavigationView()
         setupViewPager()
         connectToSubnet()
@@ -46,7 +45,8 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
     override fun onResume() {
         super.onResume()
         Timber.d("onResume")
-
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as MainActivity).supportActionBar?.title = subnetName
     }
 
     private fun setupViewModel() {

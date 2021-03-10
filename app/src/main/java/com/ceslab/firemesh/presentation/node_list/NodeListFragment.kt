@@ -70,7 +70,7 @@ class NodeListFragment : BaseFragment(){
                 Runnable {
                     nodeListViewModel.setDeviceToConfigure(item)
                     val mainActivity = activity as MainActivity
-                    mainActivity.addFragment(NodeFragment(), NodeFragment.TAG,R.id.container_main)
+                    mainActivity.addFragment(NodeFragment(item.node.name), NodeFragment.TAG,R.id.container_main)
                 }
                 ,50)
         }

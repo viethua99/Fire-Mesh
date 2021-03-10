@@ -27,6 +27,7 @@ import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import com.ceslab.firemesh.presentation.splash.SplashActivity
+import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -53,6 +54,12 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
+        supportFragmentManager.addOnBackStackChangedListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
+            if(currentFragment is SubnetFragment){
+                currentFragment.onResume()
+            }
+        }
         setupViewModel()
         setupViews()
         checkPermissions()
@@ -87,12 +94,8 @@ class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-//    override fun onBackPressed() {
-//        val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
-//        if(currentFragment !is NodeFragment){
-//            super.onBackPressed()
-//        }
-//    }
+
+
 
 
     private fun setupViewModel() {

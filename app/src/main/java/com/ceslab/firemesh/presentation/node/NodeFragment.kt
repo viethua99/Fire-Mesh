@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_node.*
 import org.w3c.dom.Node
 import timber.log.Timber
 
-class NodeFragment : BaseFragment() {
+class NodeFragment(private val nodeName: String) : BaseFragment() {
     companion object {
         const val TAG = "NodeFragment"
     }
@@ -49,9 +49,9 @@ class NodeFragment : BaseFragment() {
         Timber.d("onMyViewCreated")
         setupViewModel()
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = "Node"
+        (activity as MainActivity).supportActionBar?.title = nodeName
         setupDeviceViewPager()
-        connectToNode()
+       connectToNode()
     }
 
 

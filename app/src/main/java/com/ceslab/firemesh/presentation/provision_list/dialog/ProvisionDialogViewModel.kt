@@ -23,7 +23,7 @@ class ProvisionDialogViewModel @Inject constructor(
     private var provisionedDeviceName: String = ""
     private var subnetInfo : Subnet? = null
 
-    val isProvisioningSucceed = MutableLiveData<Boolean>()
+    val isProvisioningSucceed = MutableLiveData<String>()
     val errorMessage = MutableLiveData<ErrorType>()
 
     fun getNetworkNameList(): List<String> {
@@ -86,7 +86,7 @@ class ProvisionDialogViewModel @Inject constructor(
             bluetoothMeshManager.meshNodeToConfigure = meshNodeManager.getMeshNode(node)
             bluetoothMeshManager.currentSubnet = subnetInfo
             bluetoothMeshManager.currentNetwork = subnetInfo!!.network
-            isProvisioningSucceed.value = true
+            isProvisioningSucceed.value = node.name
         }
 
         override fun error(connectableDevice: ConnectableDevice?, subnet: Subnet?, error: ErrorType){

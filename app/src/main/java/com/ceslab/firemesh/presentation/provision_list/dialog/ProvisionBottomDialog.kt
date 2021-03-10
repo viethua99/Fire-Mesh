@@ -120,19 +120,17 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
         }
     }
 
-    private val isProvisioningSucceedObserver = Observer<Boolean> {
-        Timber.d("isProvisioningSucceedObserver: $it")
-        it.let {
-            if (it) {
+    private val isProvisioningSucceedObserver = Observer<String> {nodeName ->
+        Timber.d("isProvisioningSucceedObserver: $nodeName")
+        nodeName.let {
                 dialog?.dismiss()
                 AndroidDialogUtil.getInstance().hideDialog()
                 val mainActivity = activity as MainActivity
                 val args = Bundle()
                 args.putBoolean(IS_FIRST_CONFIG_KEY, true)
-                val nodeFragment = NodeFragment()
+                val nodeFragment = NodeFragment(it)
                 nodeFragment.arguments = args
                 mainActivity.replaceFragment(nodeFragment, NodeFragment.TAG, R.id.container_main)
-            }
         }
     }
 

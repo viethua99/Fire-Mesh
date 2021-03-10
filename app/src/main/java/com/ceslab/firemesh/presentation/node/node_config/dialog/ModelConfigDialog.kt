@@ -45,7 +45,7 @@ class ModelConfigDialog(private val meshNode: MeshNode) : BottomSheetDialogFragm
     ): View? {
         Timber.d("onCreateView")
         val view = inflater.inflate(R.layout.dialog_model_config_bottom_sheet, container, false)
-        view.btn_start_config.setOnClickListener(onDeleteNodeButtonClicked)
+        view.btn_start_config.setOnClickListener(onStartConfigButtonClicked)
         return view
     }
 
@@ -71,50 +71,14 @@ class ModelConfigDialog(private val meshNode: MeshNode) : BottomSheetDialogFragm
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        deleteNodeViewModel =
-            ViewModelProvider(this, viewModelFactory).get(DeleteNodeDialogViewModel::class.java)
-        deleteNodeViewModel.getDeleteNodeStatus().observe(this, isNodeDeletedSucceedObserver)
+
 
     }
 
-    private fun showDeleteDeviceLocallyDialog() {
-        activity?.runOnUiThread {
-            val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
-            builder.apply {
-                setTitle("Delete Locally")
-                setMessage("Delete failed , ¬Do you want to delete locally")
-                setPositiveButton("Delete") { dialog, _ ->
-                    deleteNodeViewModel.deleteDeviceLocally(meshNode.node)
-                    deleteNodeCallback.onChanged()
-                    dialog.dismiss()
-                }
-
-                setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
-            }
-
-            builder.create().show()
-        }
-    }
 
 
     private val onStartConfigButtonClicked = View.OnClickListener {
-        AndroidDialogUtil.getInstance().showLoadingDialog(activity, "")
-        deleteNodeViewModel.deleteNode(meshNode)
     }
 
-    private val isNodeDeletedSucceedObserver = Observer<Boolean> {
-        activity?.runOnUiThread {
-            AndroidDialogUtil.getInstance().hideDialog()
-            if (it == true) {
-                dialog!!.dismiss()
-                Toast.makeText(activity!!, "Delete Node Succeed", Toast.LENGTH_SHORT).show()
-                deleteNodeCallback.onChanged()
-            } else {
-                showDeleteDeviceLocallyDialog()
-            }
-        }
-    }
 
 }
