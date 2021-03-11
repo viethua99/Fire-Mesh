@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Active Proxy Connection"
-                    android:textColor="#2FD058"
+                    android:textColor="#4CAF50"
                     android:textSize="14sp" />
             </RelativeLayout>
 

@@ -1,6 +1,7 @@
 package com.ceslab.firemesh.presentation.node.node_config
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.view.View
 import android.widget.Adapter
 import android.widget.AdapterView
@@ -74,8 +75,14 @@ class NodeConfigFragment : BaseFragment() {
                 }
 
                 isSupportLowPower?.let {
-                    if (it) tv_low_power_support.text =
-                        "Is Supported" else "No Supported"
+                    if (it)  {
+                        tv_low_power_support.text = "Is Supported"
+                        tv_low_power_support.setTextColor(Color.parseColor("#4CAF50"))
+                    } else {
+                        tv_low_power_support.text = "No Supported"
+                        tv_low_power_support.setTextColor(Color.parseColor("#F44336"))
+
+                    }
                 }
             }
 
