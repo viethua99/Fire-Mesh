@@ -88,7 +88,6 @@ class NodeConfigFragment : BaseFragment() {
 
             //SETUP CHANGE SWITCH STATUS
             sw_proxy.setOnCheckedChangeListener { _, isChecked ->
-                showProgressDialog("Proxy Feature Changing")
                 nodeConfigViewModel.changeProxy(isChecked)
             }
             sw_relay.setOnCheckedChangeListener { _, isChecked ->
@@ -275,10 +274,12 @@ class NodeConfigFragment : BaseFragment() {
                     setMessage("Disabling this proxy will cause you to lose access to the network. Continue anyways?")
                     setPositiveButton("OK") { dialog, _ ->
                       nodeConfigViewModel.processChangeProxy(false)
+                        showProgressDialog("Proxy Feature Changing")
                         dialog.dismiss()
                     }
 
                     setNegativeButton("Cancel") { dialog, _ ->
+                        sw_proxy.isChecked = true
                         dialog.dismiss()
                     }
                 }
