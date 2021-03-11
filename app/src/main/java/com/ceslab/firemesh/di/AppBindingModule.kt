@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.di
 
+import com.ceslab.firemesh.presentation.group.GroupFragment
 import com.ceslab.firemesh.presentation.group_list.GroupListFragment
 import com.ceslab.firemesh.presentation.group_list.dialog.add_group.AddGroupDialog
 import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupDialog
@@ -46,6 +47,9 @@ abstract class AppBindingModule {
 
     @ContributesAndroidInjector
     abstract fun groupListFragment(): GroupListFragment
+
+    @ContributesAndroidInjector
+    abstract fun groupFragment(): GroupFragment
 
     @ContributesAndroidInjector
     abstract fun nodeConfigFragment(): NodeConfigFragment

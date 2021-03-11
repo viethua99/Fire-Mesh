@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.factory.ViewModelKey
+import com.ceslab.firemesh.presentation.group.GroupViewModel
 import com.ceslab.firemesh.presentation.group_list.GroupListViewModel
 import com.ceslab.firemesh.presentation.group_list.dialog.add_group.AddGroupViewModel
 import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupViewModel
@@ -59,6 +60,13 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(GroupListViewModel::class)
     abstract fun bindGroupListViewModel(groupListViewModel: GroupListViewModel):ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(GroupViewModel::class)
+    abstract fun bindGroupViewModel(groupViewModel: GroupViewModel):ViewModel
+
 
     @Binds
     @IntoMap

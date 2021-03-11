@@ -25,13 +25,19 @@ class GroupListRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnLongClickListener {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnClickListener,View.OnLongClickListener {
         var tvGroupName: TextView = view.findViewById(R.id.tv_group_name)
         var tvNodeCount: TextView = view.findViewById(R.id.tv_group_nodes_count)
         var tvAppKeyIndex: TextView = view.findViewById(R.id.tv_group_app_key_index)
 
         init {
             view.setOnLongClickListener(this)
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            itemClickListener.onClick(adapterPosition,dataList[adapterPosition])
+
         }
 
         override fun onLongClick(p0: View?): Boolean {

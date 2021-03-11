@@ -58,8 +58,9 @@
     <string name="fragment_subnet_list_no_subnet_message">No subnet in mesh\nPlease add a new subnet</string>
     <string name="fragment_subnet_list_add_subnet_fab">Add Subnet</string>
 
-    <string name="fragment_node_list_no_node_message">No node in group\nPlease Provision some devices</string>
+    <string name="fragment_node_list_no_node_message">No node in subnet\nPlease Provision some devices</string>
 
+    <string name="fragment_group_list_no_node_message">No node in group\nPlease Provision some devices</string>
 
 
     <!-- LIST ITEMS -->

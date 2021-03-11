@@ -3,6 +3,7 @@ package com.ceslab.firemesh.meshmodule.bluetoothmesh
 import com.ceslab.firemesh.meshmodule.database.NodeFunctionalityDataBase
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
+import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
 import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import timber.log.Timber
@@ -20,6 +21,10 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
 
     fun getMeshNodeList(subnet: Subnet):Set<MeshNode>{
         return wrapNodeList(subnet.nodes)
+    }
+
+    fun getMeshNodeList(group: Group): Set<MeshNode> {
+        return wrapNodeList(group.nodes)
     }
 
     private fun wrapNode(node: Node): MeshNode {

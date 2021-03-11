@@ -37,6 +37,7 @@ abstract class BaseActivity : AppCompatActivity() {
         Timber.d("addFragment: name=${fragment.javaClass.name}")
         generateFragmentManager()
         val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,0,0,android.R.anim.slide_out_right)
         fragmentTransaction.add(containerId, fragment, tag)
             .addToBackStack(tag)
             .commit()

@@ -21,6 +21,12 @@ class GroupListViewModel @Inject constructor(
         return groupList
     }
 
+    fun setCurrentGroup(group: Group){
+        Timber.d("setCurrentGroup")
+        bluetoothMeshManager.currentGroup = group
+    }
+
+
 
 
 
