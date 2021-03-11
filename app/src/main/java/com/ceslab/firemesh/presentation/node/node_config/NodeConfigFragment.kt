@@ -88,6 +88,7 @@ class NodeConfigFragment : BaseFragment() {
 
             //SETUP CHANGE SWITCH STATUS
             sw_proxy.setOnCheckedChangeListener { _, isChecked ->
+                showProgressDialog("Proxy Feature Changing")
                 nodeConfigViewModel.changeProxy(isChecked)
             }
             sw_relay.setOnCheckedChangeListener { _, isChecked ->
@@ -248,18 +249,21 @@ class NodeConfigFragment : BaseFragment() {
 
     private val proxyStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
+            hideDialog()
             sw_proxy.isChecked = isEnabled
         }
     }
 
     private val relayStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
+            hideDialog()
             sw_relay.isChecked = isEnabled
         }
     }
 
     private val friendStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
+            hideDialog()
             sw_friend.isChecked = isEnabled
         }
     }
@@ -274,12 +278,12 @@ class NodeConfigFragment : BaseFragment() {
                     setMessage("Disabling this proxy will cause you to lose access to the network. Continue anyways?")
                     setPositiveButton("OK") { dialog, _ ->
                       nodeConfigViewModel.processChangeProxy(false)
-                        showProgressDialog("Proxy Feature Changing")
                         dialog.dismiss()
                     }
 
                     setNegativeButton("Cancel") { dialog, _ ->
                         sw_proxy.isChecked = true
+                        hideDialog()
                         dialog.dismiss()
                     }
                 }
