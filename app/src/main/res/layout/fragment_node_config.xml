@@ -123,6 +123,34 @@
             android:src="@drawable/ic_refresh" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_retransmission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_retransmission"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:text="@string/fragment_node_config_retransmission"
+            android:textColor="@color/primary_color"
+            android:textSize="16sp"
+            android:theme="@style/ColorSwitchStyle" />
+
+
+        <ImageButton
+            android:id="@+id/btn_get_retransmission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:padding="15dp"
+            android:src="@drawable/ic_refresh" />
+    </LinearLayout>
 
 
     <LinearLayout

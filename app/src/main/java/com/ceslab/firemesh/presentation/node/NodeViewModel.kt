@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConnectionManager
+import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.listener.MeshLoadedListener
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
+import com.siliconlab.bluetoothmesh.adk.ErrorType
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,11 +19,15 @@ class NodeViewModel @Inject constructor(
 ) : ViewModel() {
     var isFirstConfig = false
     private val meshStatus = MutableLiveData<MeshStatus>()
+    private val connectionMessage = MutableLiveData<ConnectionMessageListener.MessageType>()
+    private val errorMessage = MutableLiveData<ErrorType>()
+
     private val meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
 
     fun connectToNode() {
         Timber.d("connectToNode: $isFirstConfig")
         meshConnectionManager.apply {
+            addMeshMessageListener(connectionMessageListener)
             addMeshConnectionListener(meshConnectionListener)
             addMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
         }
@@ -35,6 +41,7 @@ class NodeViewModel @Inject constructor(
     fun disconnectFromNode(){
         Timber.d("disconnectFromNode")
         meshConnectionManager.apply {
+            removeMeshMessageListener(connectionMessageListener)
             removeMeshConnectionListener(meshConnectionListener)
             removeMeshConfigurationLoadedListener(meshConfigurationLoadedListener)
         }
@@ -42,6 +49,14 @@ class NodeViewModel @Inject constructor(
         if(isFirstConfig){
             meshConnectionManager.disconnect()
         }
+    }
+
+    fun getConnectionMessage(): LiveData<ConnectionMessageListener.MessageType> {
+        return connectionMessage
+    }
+
+    fun getErrorMessage(): LiveData<ErrorType> {
+        return errorMessage
     }
 
     fun getMeshStatus(): LiveData<MeshStatus> {
@@ -73,6 +88,19 @@ class NodeViewModel @Inject constructor(
         override fun initialConfigurationLoaded() {
             Timber.d("initialConfigurationLoaded")
             meshStatus.value = MeshStatus.INIT_CONFIGURATION_LOADED
+        }
+    }
+
+    private val connectionMessageListener = object : ConnectionMessageListener {
+        override fun connectionMessage(messageType: ConnectionMessageListener.MessageType) {
+            Timber.d("connectionMessage: ${messageType.name}")
+            connectionMessage.value = messageType
+
+        }
+
+        override fun connectionErrorMessage(error: ErrorType) {
+            Timber.e("connectionErrorMessage: ${error.type}")
+            errorMessage.value = error
         }
     }
 

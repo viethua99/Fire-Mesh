@@ -6,10 +6,12 @@ import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
+import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node.*
 import org.w3c.dom.Node
@@ -51,7 +53,7 @@ class NodeFragment(private val nodeName: String) : BaseFragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as MainActivity).supportActionBar?.title = nodeName
         setupDeviceViewPager()
-       connectToNode()
+        connectToNode()
     }
 
 
@@ -63,8 +65,12 @@ class NodeFragment(private val nodeName: String) : BaseFragment() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         nodeViewModel = ViewModelProvider(this, viewModelFactory).get(NodeViewModel::class.java)
-        nodeViewModel.isFirstConfig = isFirstConfig
-        nodeViewModel.getMeshStatus().observe(this, meshStatusObserver)
+        nodeViewModel.apply {
+            isFirstConfig = this@NodeFragment.isFirstConfig
+            getMeshStatus().observe(this@NodeFragment, meshStatusObserver)
+            getConnectionMessage().observe(this@NodeFragment,connectionMessageObserver)
+            getErrorMessage().observe(this@NodeFragment,errorMessageObserver)
+        }
     }
 
     private fun setupDeviceViewPager() {
@@ -89,15 +95,25 @@ class NodeFragment(private val nodeName: String) : BaseFragment() {
             when (it) {
                 MeshStatus.MESH_CONNECTING -> showProgressDialog("Connecting to node")
                 MeshStatus.MESH_CONNECTED -> {
-
+                    hideDialog()
                 }
                 MeshStatus.MESH_DISCONNECTED -> {
-
-                }
-                MeshStatus.INIT_CONFIGURATION_LOADED -> {
-
+                    showWarningDialog("Disconnected From Subnet")
                 }
             }
         }
     }
+
+    private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {
+        activity?.runOnUiThread {
+            showWarningDialog(it.name)
+        }
+    }
+    private val errorMessageObserver = Observer<ErrorType> {
+        activity?.runOnUiThread {
+            showFailedDialog(it.type.name)
+            activity?.supportFragmentManager!!.popBackStack()
+        }
+    }
+
 }

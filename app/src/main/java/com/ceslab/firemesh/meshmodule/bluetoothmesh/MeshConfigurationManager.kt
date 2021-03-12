@@ -3,12 +3,14 @@ package com.ceslab.firemesh.meshmodule.bluetoothmesh
 import com.ceslab.firemesh.meshmodule.database.NodeFunctionalityDataBase
 import com.ceslab.firemesh.meshmodule.listener.ConfigurationTaskListener
 import com.ceslab.firemesh.meshmodule.listener.NodeFeatureListener
+import com.ceslab.firemesh.meshmodule.listener.NodeRetransmissionListener
 import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.configuration_control.CheckNodeBehaviourCallback
 import com.siliconlab.bluetoothmesh.adk.configuration_control.ConfigurationControl
+import com.siliconlab.bluetoothmesh.adk.configuration_control.NodeRetransmissionConfigurationCallback
 import com.siliconlab.bluetoothmesh.adk.configuration_control.SetNodeBehaviourCallback
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
 import com.siliconlab.bluetoothmesh.adk.data_model.model.Model
@@ -31,7 +33,16 @@ class MeshConfigurationManager(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshNodeManager: MeshNodeManager
 ) {
+
+    companion object {
+        private const val PUBLICATION_TIME_TO_LIVE = 3
+        private const val RETRANSMISSION_COUNT = 3
+        private const val RETRANSMISSION_INTERVAL = 20
+
+    }
     private val nodeFeatureListeners: ArrayList<NodeFeatureListener> = ArrayList()
+    private val nodeRetransmissionListeners: ArrayList<NodeRetransmissionListener> = ArrayList()
+
     private val configurationTaskListeners: ArrayList<ConfigurationTaskListener> = ArrayList()
 
     private var meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
@@ -51,6 +62,18 @@ class MeshConfigurationManager(
         taskList = mutableListOf<Runnable>()
         taskCount = 0
         currentTask = Runnable { }
+    }
+
+    fun addNodeRetransmissionListener(nodeRetransmissionListener: NodeRetransmissionListener) {
+        synchronized(nodeRetransmissionListeners) {
+            nodeRetransmissionListeners.add(nodeRetransmissionListener)
+        }
+    }
+
+    fun removeNodeRetransmissionListener(nodeRetransmissionListener: NodeRetransmissionListener) {
+        synchronized(nodeRetransmissionListeners) {
+            nodeRetransmissionListeners.remove(nodeRetransmissionListener)
+        }
     }
 
     fun addNodeFeatureListener(nodeFeatureListener: NodeFeatureListener) {
@@ -261,7 +284,7 @@ class MeshConfigurationManager(
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
             val publicationSettings = PublicationSettings(group)
-            publicationSettings.ttl = 5
+            publicationSettings.ttl = PUBLICATION_TIME_TO_LIVE
             subscriptionControl.setPublicationSettings(
                 publicationSettings, PublicationSettingsGenericCallbackImpl()
             )
@@ -356,6 +379,23 @@ class MeshConfigurationManager(
         })
     }
 
+    fun checkRetransmissionStatus(){
+        Timber.d("checkRetransmissionStatus")
+        configurationControl.checkRetransmissionConfigurationStatus(object :NodeRetransmissionConfigurationCallback {
+            override fun success(node: Node?, retransmissionCount: Int, retransmissionIntervalSteps: Int) {
+                nodeRetransmissionListeners.forEach { listener -> listener.success(retransmissionCount != 0) }
+                takeNextTask()
+            }
+
+            override fun error(node: Node?, error: ErrorType?) {
+                nodeRetransmissionListeners.forEach { listener -> listener.error(node,error) }
+                clearTasks()
+            }
+
+        })
+
+    }
+
     fun changeProxy(enabled: Boolean) {
         Timber.d("changeProxy: $enabled")
         configurationControl.setProxy(enabled, object : SetNodeBehaviourCallbackImpl() {
@@ -369,7 +409,7 @@ class MeshConfigurationManager(
 
     fun changeRelay(enabled: Boolean) {
         Timber.d("changeRelay: $enabled")
-        configurationControl.setRelay(enabled, 3, 20, object : SetNodeBehaviourCallbackImpl() {
+        configurationControl.setRelay(enabled, RETRANSMISSION_COUNT, RETRANSMISSION_INTERVAL, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeRelay success: $enabled")
                 nodeFeatureListeners.forEach { listener -> listener.onGetRelayStatusSucceed(enabled) }
@@ -385,6 +425,23 @@ class MeshConfigurationManager(
                 Timber.d("changeFriend success: $enabled")
                 nodeFeatureListeners.forEach { listener -> listener.onGetFriendStatusSucceed(enabled) }
                 takeNextTask()
+            }
+        })
+    }
+
+    fun changeRetransmission(enabled:Boolean) {
+        Timber.d("changeRetransmission: $enabled")
+        val count = if(enabled) RETRANSMISSION_COUNT else 0
+        val interval = if(enabled) RETRANSMISSION_INTERVAL else 0
+        configurationControl.setRetransmissionConfiguration(count,interval,object :NodeRetransmissionConfigurationCallback{
+            override fun success(node: Node?, retransmissionCount: Int, retransmissionIntervalSteps: Int) {
+                nodeRetransmissionListeners.forEach { listener -> listener.success(retransmissionCount != 0) }
+                takeNextTask()
+            }
+
+            override fun error(node: Node?, error: ErrorType?) {
+                nodeRetransmissionListeners.forEach { listener -> listener.error(node,error) }
+
             }
         })
     }

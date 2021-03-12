@@ -52,9 +52,10 @@ class NodeConfigFragment : BaseFragment() {
             getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
             getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
             getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
+            getRetransmissionStatus().observe(this@NodeConfigFragment,retransmissionStatusObserver)
             getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
-            getProxyAttention().observe(this@NodeConfigFragment,proxyAttentionObserver)
+            getProxyAttention().observe(this@NodeConfigFragment, proxyAttentionObserver)
         }
 
     }
@@ -64,18 +65,17 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             nodeConfig.apply {
                 isSupportProxy?.let { isSupportProxy ->
-                    sw_proxy.isEnabled = isSupportProxy
+                    if (isSupportProxy) ll_proxy.visibility = View.VISIBLE else View.GONE
                 }
                 isSupportFriend?.let { isSupportFriend ->
-                    sw_friend.isEnabled = isSupportFriend
+                    if (isSupportFriend) ll_friend.visibility = View.VISIBLE else View.GONE
                 }
-
                 isSupportRelay?.let { isSupportRelay ->
-                    sw_relay.isEnabled = isSupportRelay
+                    if (isSupportRelay) ll_relay.visibility = View.VISIBLE else View.GONE
                 }
 
                 isSupportLowPower?.let {
-                    if (it)  {
+                    if (it) {
                         tv_low_power_support.text = "Is Supported"
                         tv_low_power_support.setTextColor(Color.parseColor("#4CAF50"))
                     } else {
@@ -99,6 +99,10 @@ class NodeConfigFragment : BaseFragment() {
                 showProgressDialog("Friend Feature Changing")
                 nodeConfigViewModel.changeFriend(isChecked)
             }
+            sw_retransmission.setOnCheckedChangeListener { _, isChecked ->
+                showProgressDialog("Retransmission Changing")
+                nodeConfigViewModel.changeRetransmission(isChecked)
+            }
         }
 
     }
@@ -115,6 +119,10 @@ class NodeConfigFragment : BaseFragment() {
         btn_get_friend.setOnClickListener {
             showProgressDialog("Updating Friend Status")
             nodeConfigViewModel.updateFriend()
+        }
+        btn_get_retransmission.setOnClickListener {
+            showProgressDialog("Updating Retransmission Status")
+            nodeConfigViewModel.updateRetransmission()
         }
     }
 
@@ -203,7 +211,8 @@ class NodeConfigFragment : BaseFragment() {
                             position: Int,
                             id: Long
                         ) {
-                            val modelConfigDialog = ModelConfigDialog(functionalitiesNamed[position].functionality)
+                            val modelConfigDialog =
+                                ModelConfigDialog(functionalitiesNamed[position].functionality)
                             modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
                         }
 
@@ -268,16 +277,24 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
+    private val retransmissionStatusObserver = Observer<Boolean> { isEnabled ->
+        activity?.runOnUiThread {
+            hideDialog()
+            sw_retransmission.isChecked = isEnabled
+        }
+    }
+
     private val proxyAttentionObserver = Observer<Boolean> {
         Timber.d("proxyAttentionObsever = $it")
         activity?.runOnUiThread {
-            if(it == true) {
-                val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+            if (it == true) {
+                val builder =
+                    AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
                 builder.apply {
                     setTitle("Attention")
                     setMessage("Disabling this proxy will cause you to lose access to the network. Continue anyways?")
                     setPositiveButton("OK") { dialog, _ ->
-                      nodeConfigViewModel.processChangeProxy(false)
+                        nodeConfigViewModel.processChangeProxy(false)
                         dialog.dismiss()
                     }
 

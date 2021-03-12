@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConfigurationManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConnectionManager
-import com.ceslab.firemesh.meshmodule.listener.ConfigurationTaskListener
-import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
-import com.ceslab.firemesh.meshmodule.listener.MeshLoadedListener
-import com.ceslab.firemesh.meshmodule.listener.NodeFeatureListener
+import com.ceslab.firemesh.meshmodule.listener.*
 import com.ceslab.firemesh.meshmodule.model.*
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
@@ -32,6 +29,8 @@ class NodeConfigViewModel @Inject constructor(
     private var isProxyEnabled = MutableLiveData<Boolean>()
     private var isFriendEnabled = MutableLiveData<Boolean>()
     private var isRelayEnabled = MutableLiveData<Boolean>()
+    private var isRetransmissionEnabled = MutableLiveData<Boolean>()
+
     private var nodeConfig = MutableLiveData<NodeConfig>()
     private val currentConfigTask = MutableLiveData<ConfigurationTask>()
     private val configurationError = MutableLiveData<ErrorType>()
@@ -47,6 +46,10 @@ class NodeConfigViewModel @Inject constructor(
 
     fun getFriendStatus(): LiveData<Boolean> {
         return isFriendEnabled
+    }
+
+    fun getRetransmissionStatus(): LiveData<Boolean> {
+        return isRetransmissionEnabled
     }
 
     fun getCurrentConfigTask(): LiveData<ConfigurationTask> {
@@ -76,6 +79,7 @@ class NodeConfigViewModel @Inject constructor(
 
         meshConfigurationManager.apply {
             addNodeFeatureListener(nodeFeatureListener)
+            addNodeRetransmissionListener(nodeRetransmissionListener)
             addConfigurationTaskListener(configurationTaskListener)
         }
     }
@@ -90,6 +94,7 @@ class NodeConfigViewModel @Inject constructor(
         meshConfigurationManager.apply {
             removeConfigurationTaskListener(configurationTaskListener)
             removeNodeFeatureListener(nodeFeatureListener)
+            removeNodeRetransmissionListener(nodeRetransmissionListener)
         }
     }
 
@@ -123,6 +128,11 @@ class NodeConfigViewModel @Inject constructor(
         meshConfigurationManager.changeFriend(enabled)
     }
 
+    fun changeRetransmission(enabled: Boolean) {
+        Timber.d("changeRetransmission: $enabled")
+        meshConfigurationManager.changeRetransmission(enabled)
+    }
+
     fun updateProxy() {
         Timber.d("updateProxy")
         meshConfigurationManager.checkProxyStatus()
@@ -136,7 +146,11 @@ class NodeConfigViewModel @Inject constructor(
     fun updateRelay() {
         Timber.d("updateRelay")
         meshConfigurationManager.checkRelayStatus()
+    }
 
+    fun updateRetransmission() {
+        Timber.d("updateRetransmission")
+        meshConfigurationManager.checkRetransmissionStatus()
     }
 
     private fun checkFeaturesStatus() {
@@ -213,6 +227,18 @@ class NodeConfigViewModel @Inject constructor(
 
         override fun onSetNodeFeatureError(error: ErrorType) {
             Timber.e("onSetNodeFeatureError: ${error.type}")
+            configurationError.value = error
+        }
+    }
+
+    private val nodeRetransmissionListener = object :NodeRetransmissionListener {
+        override fun success(isEnabled: Boolean) {
+            Timber.d("nodeRetransmissionListener: success= $isEnabled")
+            isRetransmissionEnabled.value = isEnabled
+        }
+
+        override fun error(node: Node?, error: ErrorType?) {
+            Timber.e("nodeRetransmissionListener: error= ${error?.type}")
             configurationError.value = error
         }
     }

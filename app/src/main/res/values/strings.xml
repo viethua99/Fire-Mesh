@@ -33,6 +33,7 @@
     <string name="fragment_node_config_proxy">Proxy Feature</string>
     <string name="fragment_node_config_relay">Relay Feature</string>
     <string name="fragment_node_config_friend">Friend Feature</string>
+
     <string name="fragment_node_config_retransmission">Retransmission</string>
     <string name="fragment_node_config_group">Group</string>
     <string name="fragment_node_config_functionality">Functionality</string>

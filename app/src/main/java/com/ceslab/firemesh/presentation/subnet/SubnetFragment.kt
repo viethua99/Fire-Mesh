@@ -172,7 +172,6 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
     private val errorMessageObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
             showFailedDialog(it.type.name)
-
         }
     }
 
