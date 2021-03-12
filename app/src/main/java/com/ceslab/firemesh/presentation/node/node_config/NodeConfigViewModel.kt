@@ -31,10 +31,31 @@ class NodeConfigViewModel @Inject constructor(
     private var isRelayEnabled = MutableLiveData<Boolean>()
     private var isRetransmissionEnabled = MutableLiveData<Boolean>()
 
+    private var isCheckingProxy = MutableLiveData<Boolean>()
+    private var isCheckingFriend = MutableLiveData<Boolean>()
+    private var isCheckingRelay = MutableLiveData<Boolean>()
+    private var isCheckingRetransmission = MutableLiveData<Boolean>()
+
     private var nodeConfig = MutableLiveData<NodeConfig>()
     private val currentConfigTask = MutableLiveData<ConfigurationTask>()
     private val configurationError = MutableLiveData<ErrorType>()
     private val isProxyAttention = MutableLiveData<Boolean>()
+
+    fun getIsCheckingProxy(): LiveData<Boolean> {
+        return isCheckingProxy
+    }
+
+    fun getIsCheckingFriend(): LiveData<Boolean> {
+        return isCheckingFriend
+    }
+
+    fun getIsCheckingRelay(): LiveData<Boolean> {
+        return isCheckingRelay
+    }
+
+    fun getIsCheckingRetransmission(): LiveData<Boolean> {
+        return isCheckingRetransmission
+    }
 
     fun getProxyStatus(): LiveData<Boolean> {
         return isProxyEnabled
@@ -120,7 +141,6 @@ class NodeConfigViewModel @Inject constructor(
 
     fun processChangeProxy(enabled: Boolean){
         meshConfigurationManager.changeProxy(enabled)
-
     }
 
     fun changeFriend(enabled: Boolean) {
@@ -135,21 +155,25 @@ class NodeConfigViewModel @Inject constructor(
 
     fun updateProxy() {
         Timber.d("updateProxy")
+        isCheckingProxy.value = true
         meshConfigurationManager.checkProxyStatus()
     }
 
     fun updateFriend() {
         Timber.d("updateFriend")
+        isCheckingFriend.value = true
         meshConfigurationManager.checkFriendStatus()
     }
 
     fun updateRelay() {
         Timber.d("updateRelay")
+        isCheckingRelay.value = true
         meshConfigurationManager.checkRelayStatus()
     }
 
     fun updateRetransmission() {
         Timber.d("updateRetransmission")
+        isCheckingRetransmission.value = true
         meshConfigurationManager.checkRetransmissionStatus()
     }
 
@@ -172,6 +196,8 @@ class NodeConfigViewModel @Inject constructor(
             if (isSupportedRelay == true) {
                 updateRelay()
             }
+
+            updateRetransmission()
         }
 
     }
@@ -256,7 +282,12 @@ class NodeConfigViewModel @Inject constructor(
 
         override fun onConfigFinish() {
             Timber.d("onConfigFinish")
-         val  currentNodeConfig = NodeConfig(
+            isCheckingProxy.value = false
+            isCheckingFriend.value = false
+            isCheckingRelay.value = false
+            isCheckingRetransmission.value = false
+
+            val  currentNodeConfig = NodeConfig(
                 bluetoothMeshManager.meshNodeToConfigure!!,
                 isSupportedLowPower,
                 isSupportedRelay,

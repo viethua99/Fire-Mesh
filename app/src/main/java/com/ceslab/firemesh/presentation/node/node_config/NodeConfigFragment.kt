@@ -53,6 +53,10 @@ class NodeConfigFragment : BaseFragment() {
             getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
             getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
             getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
+            getIsCheckingProxy().observe(this@NodeConfigFragment,isCheckingProxyObserver)
+            getIsCheckingFriend().observe(this@NodeConfigFragment,isCheckingFriendObserver)
+            getIsCheckingRelay().observe(this@NodeConfigFragment,isCheckingRelayObserver)
+            getIsCheckingRetransmission().observe(this@NodeConfigFragment,isCheckingRetransmissionObserver)
             getRetransmissionStatus().observe(this@NodeConfigFragment,retransmissionStatusObserver)
             getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
@@ -110,19 +114,15 @@ class NodeConfigFragment : BaseFragment() {
 
     private fun setFeaturesOnClickListeners() {
         btn_get_proxy.setOnClickListener {
-            showProgressDialog("Updating Proxy Status")
             nodeConfigViewModel.updateProxy()
         }
         btn_get_relay.setOnClickListener {
-            showProgressDialog("Updating Relay Status")
             nodeConfigViewModel.updateRelay()
         }
         btn_get_friend.setOnClickListener {
-            showProgressDialog("Updating Friend Status")
             nodeConfigViewModel.updateFriend()
         }
         btn_get_retransmission.setOnClickListener {
-            showProgressDialog("Updating Retransmission Status")
             nodeConfigViewModel.updateRetransmission()
         }
     }
@@ -257,10 +257,30 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
+    private val isCheckingProxyObserver = Observer<Boolean> { isChecking ->
+        activity?.runOnUiThread {
+           if(isChecking){
+               showProgressDialog("Updating Proxy Status")
+           } else {
+               hideDialog()
+           }
+        }
+    }
+
     private val proxyStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
             hideDialog()
             sw_proxy.isChecked = isEnabled
+        }
+    }
+
+    private val isCheckingRelayObserver = Observer<Boolean> { isChecking ->
+        activity?.runOnUiThread {
+            if(isChecking){
+                showProgressDialog("Updating Relay Status")
+            } else {
+                hideDialog()
+            }
         }
     }
 
@@ -271,10 +291,30 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
+    private val isCheckingFriendObserver = Observer<Boolean> { isChecking ->
+        activity?.runOnUiThread {
+            if(isChecking){
+                showProgressDialog("Updating Friend Status")
+            } else {
+                hideDialog()
+            }
+        }
+    }
+
     private val friendStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
             hideDialog()
             sw_friend.isChecked = isEnabled
+        }
+    }
+
+    private val isCheckingRetransmissionObserver = Observer<Boolean> { isChecking ->
+        activity?.runOnUiThread {
+            if(isChecking){
+                showProgressDialog("Updating Retransmission Status")
+            } else {
+                hideDialog()
+            }
         }
     }
 

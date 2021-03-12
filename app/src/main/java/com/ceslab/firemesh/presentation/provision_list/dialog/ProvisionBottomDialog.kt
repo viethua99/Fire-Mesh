@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.provision_list.dialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,6 +76,11 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
                 sheet.parent.parent.requestLayout()
             }
         }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        Timber.d("onCancel")
     }
 
     private fun setupViewModel() {
