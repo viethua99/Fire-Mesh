@@ -44,8 +44,7 @@
         android:id="@+id/container_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/connecting_bar_container"
-        android:paddingTop="10dp">
+        android:layout_below="@id/connecting_bar_container">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_node_list"

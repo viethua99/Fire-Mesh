@@ -14,6 +14,7 @@ import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node_list.NodeListRecyclerViewAdapter
+import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group.*
@@ -155,7 +156,7 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
     }
     private val errorMessageObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
-            showFailedDialog(it.type.name)
+            showFailedDialog(AppUtil.convertErrorMessage(activity!!,it))
         }
     }
 

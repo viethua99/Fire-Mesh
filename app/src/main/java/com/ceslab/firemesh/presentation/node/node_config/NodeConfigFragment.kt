@@ -17,6 +17,7 @@ import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigDialog
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
+import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_config.*
@@ -241,7 +242,7 @@ class NodeConfigFragment : BaseFragment() {
 
     private val configurationErrorObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
-            showFailedDialog(it.type.toString())
+            showFailedDialog(AppUtil.convertErrorMessage(activity!!,it))
         }
     }
 

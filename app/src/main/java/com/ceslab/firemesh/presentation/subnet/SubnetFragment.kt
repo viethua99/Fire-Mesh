@@ -11,6 +11,7 @@ import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_provision_list.*
@@ -171,7 +172,7 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
     }
     private val errorMessageObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
-            showFailedDialog(it.type.name)
+            showFailedDialog(AppUtil.convertErrorMessage(activity!!,it))
         }
     }
 

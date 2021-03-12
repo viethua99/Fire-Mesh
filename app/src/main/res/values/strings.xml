@@ -136,6 +136,21 @@
     <string name="dialog_delete_node_bottom_deleting_node">Deleting Node</string>
     <string name="dialog_delete_node_bottom_delete">Delete</string>
 
+    <string name="error_message_timeout">Request timeout</string>
+    <string name="error_message_unknown">Unknown error</string>
+    <string name="error_message_api_error">Bluetooth mesh error</string>
+    <string name="error_message_could_not_connect_to_device">Connecting to the device failed</string>
+    <string name="error_message_could_not_subscribe_to_characteristic">Subscribing to the device characteristic failed</string>
+    <string name="error_message_could_write_to_characteristic">Writing to the device characteristic failed</string>
+    <string name="error_message_could_not_disconnect_from_device">Disconnecting from the device failed</string>
+    <string name="error_message_could_not_read_service_data">Reading service data failed</string>
+    <string name="error_message_disconnected_from_device">Disconnected from the device</string>
+    <string name="error_message_provisioning_already_pending">A provisioning session is already pending</string>
+    <string name="error_message_max_connections_active">Attempt to exceed the maximum number of connections</string>
+    <string name="error_message_could_not_provision">Provisioning failed</string>
+    <string name="error_message_cannot_save_to_database">Saving to local storage failed</string>
+    <string name="error_message_code">Error %1$d</string>
+    <string name="error_message_code_and_content">Error %1$d: %2$s</string>
 
 
 
