@@ -15,6 +15,7 @@ import com.ceslab.firemesh.meshmodule.model.NodeConfig
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigCallback
 import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigDialog
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
 import com.ceslab.firemesh.util.AppUtil
@@ -212,8 +213,13 @@ class NodeConfigFragment : BaseFragment() {
                             position: Int,
                             id: Long
                         ) {
-                            val modelConfigDialog =
-                                ModelConfigDialog(functionalitiesNamed[position].functionality)
+                            val modelConfigDialog = ModelConfigDialog(functionalitiesNamed[position].functionality)
+                            modelConfigDialog.setModelConfigCallback(object :ModelConfigCallback {
+                                override fun onCancel() {
+                                    Timber.d("onCancel")
+                                    setSelection(Adapter.NO_SELECTION, false)
+                                }
+                            })
                             modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
                         }
 

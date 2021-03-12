@@ -1,26 +1,22 @@
 package com.ceslab.firemesh.presentation.node.node_config.dialog
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
-import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeCallback
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialogViewModel
 import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.dialog_delete_node_bottom_sheet.view.*
 import kotlinx.android.synthetic.main.dialog_model_config_bottom_sheet.*
 import kotlinx.android.synthetic.main.dialog_model_config_bottom_sheet.view.*
 import timber.log.Timber
@@ -36,7 +32,7 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.VENDO
 
     private lateinit var modelConfigViewModel: ModelConfigViewModel
 
-    private lateinit var deleteNodeCallback: DeleteNodeCallback
+    private lateinit var modelConfigCallback: ModelConfigCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +66,14 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.VENDO
         }
     }
 
-    fun setDeleteNodeCallback(deleteNodeCallback: DeleteNodeCallback) {
-        this.deleteNodeCallback = deleteNodeCallback
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        Timber.d("onCancel")
+        modelConfigCallback.onCancel()
+    }
+
+    fun setModelConfigCallback(modelConfigCallback: ModelConfigCallback) {
+        this.modelConfigCallback = modelConfigCallback
     }
 
     private fun setupViewModel() {
@@ -88,11 +90,13 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.VENDO
         val isSetPublication = cb_set_publication.isChecked
         val isAddSubscription = cb_add_subscription.isChecked
         Timber.d("onStartConfigButtonClicked: functionality=$vendorFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
+        AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Starting Config Model")
         modelConfigViewModel.changeFunctionality(vendorFunctionality,isSetPublication,isAddSubscription)
     }
 
     private val onConfigFinishedObserver = Observer<Boolean> {
         Timber.d("onConfigFinished")
+        AndroidDialogUtil.getInstance().hideDialog()
         dialog!!.dismiss()
     }
 

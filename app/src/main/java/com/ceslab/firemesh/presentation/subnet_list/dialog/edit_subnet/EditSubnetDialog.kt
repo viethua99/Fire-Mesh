@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
+import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -86,6 +88,7 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
     }
 
     private val onDeleteSubnetButtonClicked = View.OnClickListener {
+        AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Removing Subnet")
         editSubnetViewModel.removeSubnet(subnet)
     }
 
@@ -101,9 +104,10 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
         activity?.runOnUiThread {
             dialog!!.dismiss()
             if(it == true) {
-                Toast.makeText(activity!!,"Remove Subnet Succeed",Toast.LENGTH_SHORT).show()
+                AndroidDialogUtil.getInstance().showSuccessDialog(activity, "Remove subnet succeed")
             } else {
-                Toast.makeText(activity!!,"Remove Subnet Failed",Toast.LENGTH_SHORT).show()
+                AndroidDialogUtil.getInstance().showFailureDialog(activity, "Remove subnet failed")
+
             }
         }
 

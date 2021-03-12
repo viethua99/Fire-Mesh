@@ -78,10 +78,6 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Timber.d("onCancel")
-    }
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")

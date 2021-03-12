@@ -111,7 +111,7 @@ class DeleteNodeDialog(private val meshNode: MeshNode) : BottomSheetDialogFragme
             AndroidDialogUtil.getInstance().hideDialog()
             if (it == true) {
                 dialog!!.dismiss()
-                Toast.makeText(activity!!, "Delete Node Succeed", Toast.LENGTH_SHORT).show()
+                AndroidDialogUtil.getInstance().showSuccessDialog(activity, "Delete Node Succeed")
                 deleteNodeCallback.onChanged()
             } else {
                 showDeleteDeviceLocallyDialog()

@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetViewModel
+import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -84,6 +85,7 @@ class EditGroupDialog(private val group: Group) : BottomSheetDialogFragment() {
     }
 
     private val onDeleteGroupButtonClicked = View.OnClickListener {
+        AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Removing Group")
         editGroupViewModel.removeGroup(group)
     }
 
@@ -99,9 +101,10 @@ class EditGroupDialog(private val group: Group) : BottomSheetDialogFragment() {
         activity?.runOnUiThread {
             dialog!!.dismiss()
             if(it == true) {
-                Toast.makeText(activity!!,"Remove Subnet Succeed", Toast.LENGTH_SHORT).show()
+                AndroidDialogUtil.getInstance().showSuccessDialog(activity, "Remove group succeed")
             } else {
-                Toast.makeText(activity!!,"Remove Subnet Failed", Toast.LENGTH_SHORT).show()
+                AndroidDialogUtil.getInstance().showFailureDialog(activity, "Remove group failed")
+
             }
         }
 
