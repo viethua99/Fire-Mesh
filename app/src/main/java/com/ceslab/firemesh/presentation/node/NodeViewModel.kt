@@ -1,5 +1,9 @@
 package com.ceslab.firemesh.presentation.node
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.le.AdvertiseCallback
+import android.bluetooth.le.AdvertiseData
+import android.bluetooth.le.AdvertiseSettings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +13,7 @@ import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.listener.MeshLoadedListener
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
+import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,12 +22,12 @@ class NodeViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
+    private val advertise = BluetoothAdapter.getDefaultAdapter().bluetoothLeAdvertiser
+
     var isFirstConfig = false
     private val meshStatus = MutableLiveData<MeshStatus>()
     private val connectionMessage = MutableLiveData<ConnectionMessageListener.MessageType>()
     private val errorMessage = MutableLiveData<ErrorType>()
-
-    private val meshNodeToConfigure = bluetoothMeshManager.meshNodeToConfigure!!
 
     fun connectToNode() {
         Timber.d("connectToNode: $isFirstConfig")
@@ -48,6 +53,7 @@ class NodeViewModel @Inject constructor(
 
         if(isFirstConfig){
             meshConnectionManager.disconnect()
+            stopAdvertise()
         }
     }
 
@@ -63,6 +69,34 @@ class NodeViewModel @Inject constructor(
         return meshStatus
     }
 
+    fun stopAdvertise() {
+        Timber.d("stopAdvertise")
+        advertise.stopAdvertising(advertiseCallback)
+    }
+
+    private fun startAdvertiseNodeUUID() {
+        Timber.d("startAdvertiseNodeUUID")
+        //TEST ADVERTISING
+        val nodeUUID = bluetoothMeshManager.meshNodeToConfigure!!.node.uuid
+
+        //Settings
+        val advertiseSettingParams = AdvertiseSettings.Builder()
+        advertiseSettingParams.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
+            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+            .setConnectable(false)
+        val settings = advertiseSettingParams.build()
+        //DATA
+        val advertiseDataParam = AdvertiseData.Builder()
+        advertiseDataParam.setIncludeDeviceName(true)
+            .addManufacturerData(767,nodeUUID)
+
+        val data = advertiseDataParam.build()
+
+        advertise.startAdvertising(settings,data,advertiseCallback)
+    }
+
+
+
     private val meshConnectionListener = object : ConnectionStatusListener {
         override fun connecting() {
             Timber.d("connecting")
@@ -72,7 +106,7 @@ class NodeViewModel @Inject constructor(
         override fun connected() {
             Timber.d("connected")
             if(isFirstConfig){
-                meshConnectionManager.setupInitialNodeConfiguration(meshNodeToConfigure.node)
+                meshConnectionManager.setupInitialNodeConfiguration(bluetoothMeshManager.meshNodeToConfigure!!.node)
             }
             meshStatus.value = MeshStatus.MESH_CONNECTED
 
@@ -88,6 +122,7 @@ class NodeViewModel @Inject constructor(
         override fun initialConfigurationLoaded() {
             Timber.d("initialConfigurationLoaded")
             meshStatus.value = MeshStatus.INIT_CONFIGURATION_LOADED
+            startAdvertiseNodeUUID()
         }
     }
 
@@ -101,6 +136,19 @@ class NodeViewModel @Inject constructor(
         override fun connectionErrorMessage(error: ErrorType) {
             Timber.e("connectionErrorMessage: ${error.type}")
             errorMessage.value = error
+        }
+    }
+
+    private val advertiseCallback = object : AdvertiseCallback() {
+        override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
+            super.onStartSuccess(settingsInEffect)
+            Timber.d("onStartSuccess")
+        }
+
+        override fun onStartFailure(errorCode: Int) {
+            super.onStartFailure(errorCode)
+            Timber.e("onStartFailure: $errorCode")
+
         }
     }
 
