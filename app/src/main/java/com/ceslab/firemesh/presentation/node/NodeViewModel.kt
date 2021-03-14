@@ -13,7 +13,6 @@ import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.listener.MeshLoadedListener
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
-import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,6 +21,9 @@ class NodeViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
+    companion object {
+        const val SILAB_COMPANY_IDENTIFIER = 767
+    }
     private val advertise = BluetoothAdapter.getDefaultAdapter().bluetoothLeAdvertiser
 
     var isFirstConfig = false
@@ -74,11 +76,17 @@ class NodeViewModel @Inject constructor(
         advertise.stopAdvertising(advertiseCallback)
     }
 
-    private fun startAdvertiseNodeUUID() {
-        Timber.d("startAdvertiseNodeUUID")
+    private fun startAdvertiseUnicastAddress() {
+        Timber.d("startAdvertiseUnicastAddress")
         //TEST ADVERTISING
-        val nodeUUID = bluetoothMeshManager.meshNodeToConfigure!!.node.uuid
+        val unicastAddress = bluetoothMeshManager.meshNodeToConfigure!!.node.primaryElementAddress
 
+        val convertedUnicastAddress = byteArrayOf(
+            (((unicastAddress shr 24)) and 0xFF).toByte(),
+            (((unicastAddress shr 16)) and 0xFF).toByte(),
+            (((unicastAddress shr 8)) and 0xFF).toByte(),
+            (((unicastAddress shr 0)) and 0xFF).toByte()
+        )
         //Settings
         val advertiseSettingParams = AdvertiseSettings.Builder()
         advertiseSettingParams.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
@@ -87,8 +95,9 @@ class NodeViewModel @Inject constructor(
         val settings = advertiseSettingParams.build()
         //DATA
         val advertiseDataParam = AdvertiseData.Builder()
-        advertiseDataParam.setIncludeDeviceName(true)
-            .addManufacturerData(767,nodeUUID)
+        advertiseDataParam.setIncludeDeviceName(false)
+            .setIncludeTxPowerLevel(false)
+            .addManufacturerData(SILAB_COMPANY_IDENTIFIER,convertedUnicastAddress)
 
         val data = advertiseDataParam.build()
 
@@ -122,7 +131,7 @@ class NodeViewModel @Inject constructor(
         override fun initialConfigurationLoaded() {
             Timber.d("initialConfigurationLoaded")
             meshStatus.value = MeshStatus.INIT_CONFIGURATION_LOADED
-            startAdvertiseNodeUUID()
+            startAdvertiseUnicastAddress()
         }
     }
 
