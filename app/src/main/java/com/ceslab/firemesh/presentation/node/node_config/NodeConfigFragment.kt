@@ -71,16 +71,32 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             nodeConfig.apply {
                 isSupportProxy?.let { isSupportProxy ->
-                    if (isSupportProxy) ll_proxy.visibility = View.VISIBLE else View.GONE
+                    Timber.d("isSupportProxy = $isSupportProxy")
+                    if (isSupportProxy) {
+                        ll_proxy.visibility = View.VISIBLE
+                    } else {
+                        ll_proxy.visibility = View.GONE
+                    }
                 }
                 isSupportFriend?.let { isSupportFriend ->
-                    if (isSupportFriend) ll_friend.visibility = View.VISIBLE else View.GONE
+                    Timber.d("isSupportFriend = $isSupportFriend")
+                    if (isSupportFriend) {
+                        ll_friend.visibility = View.VISIBLE
+                    } else {
+                        ll_friend.visibility =   View.GONE
+                    }
                 }
                 isSupportRelay?.let { isSupportRelay ->
-                    if (isSupportRelay) ll_relay.visibility = View.VISIBLE else View.GONE
+                    Timber.d("isSupportRelay = $isSupportRelay")
+                    if (isSupportRelay) {
+                        ll_relay.visibility = View.VISIBLE
+                    } else {
+                        ll_relay.visibility = View.GONE
+                    }
                 }
 
                 isSupportLowPower?.let {
+                    Timber.d("isSupportLowPower = $it")
                     if (it) {
                         tv_low_power_support.text = "Is Supported"
                         tv_low_power_support.setTextColor(Color.parseColor("#4CAF50"))
@@ -178,7 +194,7 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private fun setupFunctionalitySpinner(meshNode: MeshNode) {
-        Timber.d("setupFunctionalitySpinner")
+        Timber.d("setupFunctionalitySpinner: $")
         activity?.runOnUiThread {
             meshNode.apply {
                 val functionalitiesNamed =
@@ -213,14 +229,18 @@ class NodeConfigFragment : BaseFragment() {
                             position: Int,
                             id: Long
                         ) {
-                            val modelConfigDialog = ModelConfigDialog(functionalitiesNamed[position].functionality)
-                            modelConfigDialog.setModelConfigCallback(object :ModelConfigCallback {
-                                override fun onCancel() {
-                                    Timber.d("onCancel")
-                                    setSelection(Adapter.NO_SELECTION, false)
-                                }
-                            })
-                            modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+                            Timber.d("onItemSelected: $position")
+                            if(position != 0){
+                                val modelConfigDialog = ModelConfigDialog(functionalitiesNamed[position].functionality)
+                                modelConfigDialog.setModelConfigCallback(object :ModelConfigCallback {
+                                    override fun onCancel() {
+                                        Timber.d("onCancel")
+                                        setSelection(0, false)
+                                    }
+                                })
+                                modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+                            }
+
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -264,11 +284,10 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val isCheckingProxyObserver = Observer<Boolean> { isChecking ->
+        Timber.d("isCheckingProxyObserver: $isChecking")
         activity?.runOnUiThread {
            if(isChecking){
                showProgressDialog("Updating Proxy Status")
-           } else {
-               hideDialog()
            }
         }
     }
@@ -281,11 +300,10 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val isCheckingRelayObserver = Observer<Boolean> { isChecking ->
+        Timber.d("isCheckingRelayObserver: $isChecking")
         activity?.runOnUiThread {
             if(isChecking){
                 showProgressDialog("Updating Relay Status")
-            } else {
-                hideDialog()
             }
         }
     }
@@ -298,11 +316,10 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val isCheckingFriendObserver = Observer<Boolean> { isChecking ->
+        Timber.d("isCheckingFriendObserver: $isChecking")
         activity?.runOnUiThread {
             if(isChecking){
                 showProgressDialog("Updating Friend Status")
-            } else {
-                hideDialog()
             }
         }
     }
@@ -315,11 +332,10 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val isCheckingRetransmissionObserver = Observer<Boolean> { isChecking ->
+        Timber.d("isCheckingRetransmissionObserver: $isChecking")
         activity?.runOnUiThread {
             if(isChecking){
                 showProgressDialog("Updating Retransmission Status")
-            } else {
-                hideDialog()
             }
         }
     }

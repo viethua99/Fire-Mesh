@@ -186,14 +186,17 @@ class NodeConfigViewModel @Inject constructor(
             isSupportedRelay = supportsRelay()
 
             if (isSupportedProxy == true) {
+                Timber.d("support proxy true")
                 updateProxy()
             }
 
             if (isSupportedFriend == true) {
+                Timber.d("support friend true")
                 updateFriend()
             }
 
             if (isSupportedRelay == true) {
+                Timber.d("support relay true")
                 updateRelay()
             }
 
@@ -282,11 +285,6 @@ class NodeConfigViewModel @Inject constructor(
 
         override fun onConfigFinish() {
             Timber.d("onConfigFinish")
-            isCheckingProxy.value = false
-            isCheckingFriend.value = false
-            isCheckingRelay.value = false
-            isCheckingRetransmission.value = false
-
             val  currentNodeConfig = NodeConfig(
                 bluetoothMeshManager.meshNodeToConfigure!!,
                 isSupportedLowPower,
