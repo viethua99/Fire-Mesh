@@ -35,6 +35,8 @@ class NodeConfigFragment : BaseFragment() {
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
         setupViewModel()
+        setFeaturesOnClickListeners()
+
     }
 
     override fun onDestroy() {
@@ -275,11 +277,10 @@ class NodeConfigFragment : BaseFragment() {
     private val nodeConfigObserver = Observer<NodeConfig> {
         Timber.d("nodeConfigObserver")
         activity?.runOnUiThread {
-            hideDialog()
-            setFeaturesOnClickListeners()
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
             setupFunctionalitySpinner(it.meshNode)
+            hideDialog()
         }
     }
 
