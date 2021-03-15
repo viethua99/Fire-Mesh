@@ -178,7 +178,7 @@ class MeshConfigurationManager(
     private fun bindNodeToGroup(group: Group): Runnable {
         Timber.d("bindNodeToGroup")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.BIND_NODE_TO_GROUP)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_BIND_NODE_TO_GROUP)
         }
         return Runnable {
             nodeControl.bind(group, NodeControlCallbackImpl())
@@ -188,7 +188,7 @@ class MeshConfigurationManager(
     private fun unbindNodeFromGroup(group: Group): Runnable {
         Timber.d("unbindNodeToGroup")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.UNBIND_NODE_FROM_GROUP)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_UNBIND_NODE_FROM_GROUP)
         }
         return Runnable {
             nodeControl.unbind(group, NodeControlCallbackImpl())
@@ -257,7 +257,7 @@ class MeshConfigurationManager(
     private fun bindModelToGroup(vendorModel: VendorModel, group: Group): Runnable {
         Timber.d("bindModelToGroup")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.BIND_MODEL_TO_GROUP)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_BIND_MODEL_TO_GROUP)
         }
         return Runnable {
             val functionalityBinder = FunctionalityBinder(group)
@@ -268,7 +268,7 @@ class MeshConfigurationManager(
     private fun unbindModelFromGroup(vendorModel: VendorModel, group: Group): Runnable {
         Timber.d("unbindModelFromGroup")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.UNBIND_MODEL_FROM_GROUP)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_UNBIND_MODEL_FROM_GROUP)
         }
         return Runnable {
             val functionalityBinder = FunctionalityBinder(group)
@@ -279,7 +279,7 @@ class MeshConfigurationManager(
     private fun setPublicationSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("setPublicationSettings")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.SET_PUBLICATION_SETTING)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_PUBLICATION_SETTING)
         }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
@@ -294,7 +294,7 @@ class MeshConfigurationManager(
     private fun clearPublicationSettings(model: VendorModel): Runnable {
         Timber.d("clearPublicationSettings")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.CLEAR_PUBLICATION_SETTING)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_PUBLICATION_CLEARING)
         }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
@@ -306,7 +306,7 @@ class MeshConfigurationManager(
     private fun addSubscriptionSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("addSubscriptionSettings")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.ADD_SUBSCRIPTION_SETTING)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_SUBSCRIPTION_ADDING)
         }
         return Runnable {
             val subscriptionControl = SubscriptionControl(model)
@@ -321,7 +321,7 @@ class MeshConfigurationManager(
     private fun removeSubscriptionSettings(model: VendorModel, group: Group): Runnable {
         Timber.d("removeSubscriptionSettings")
         configurationTaskListeners.forEach { listener ->
-            listener.onCurrentConfigTask(ConfigurationTask.REMOVE_SUBSCRIPTION_SETTING)
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_SUBSCRIPTION_REMOVING)
         }
         return Runnable {
             val subscriptionSettings = SubscriptionSettings(group)
@@ -348,6 +348,9 @@ class MeshConfigurationManager(
 
     fun checkProxyStatus() {
         Timber.d("checkProxyStatus")
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_PROXY_CHECKING)
+        }
         configurationControl.checkProxyStatus(object : CheckNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 nodeFeatureListeners.forEach { listener -> listener.onGetProxyStatusSucceed(enabled) }
@@ -358,8 +361,10 @@ class MeshConfigurationManager(
 
     fun checkRelayStatus() {
         Timber.d("checkRelayStatus")
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_RELAY_CHECKING)
+        }
         configurationControl.checkRelayStatus(object : CheckNodeBehaviourCallbackImpl() {
-
             override fun success(node: Node?, enabled: Boolean) {
                 nodeFeatureListeners.forEach { listener -> listener.onGetRelayStatusSucceed(enabled) }
                 super.success(node, enabled)
@@ -370,8 +375,11 @@ class MeshConfigurationManager(
 
     fun checkFriendStatus() {
         Timber.d("checkFriendStatus")
-        configurationControl.checkFriendStatus(object : CheckNodeBehaviourCallbackImpl() {
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_FRIEND_CHECKING)
+        }
 
+        configurationControl.checkFriendStatus(object : CheckNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 nodeFeatureListeners.forEach { listener -> listener.onGetFriendStatusSucceed(enabled) }
                 super.success(node, enabled)
@@ -381,6 +389,9 @@ class MeshConfigurationManager(
 
     fun checkRetransmissionStatus(){
         Timber.d("checkRetransmissionStatus")
+        configurationTaskListeners.forEach { listener ->
+            listener.onCurrentConfigTask(ConfigurationTask.CONFIG_RETRANSMISSION_CHECKING)
+        }
         configurationControl.checkRetransmissionConfigurationStatus(object :NodeRetransmissionConfigurationCallback {
             override fun success(node: Node?, retransmissionCount: Int, retransmissionIntervalSteps: Int) {
                 nodeRetransmissionListeners.forEach { listener -> listener.success(retransmissionCount != 0) }
@@ -398,6 +409,15 @@ class MeshConfigurationManager(
 
     fun changeProxy(enabled: Boolean) {
         Timber.d("changeProxy: $enabled")
+        if(enabled){
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_PROXY_ENABLING)
+            }
+        } else {
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_PROXY_DISABLING)
+            }
+        }
         configurationControl.setProxy(enabled, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeProxy success: $enabled")
@@ -409,6 +429,15 @@ class MeshConfigurationManager(
 
     fun changeRelay(enabled: Boolean) {
         Timber.d("changeRelay: $enabled")
+        if(enabled){
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_RELAY_ENABLING)
+            }
+        } else {
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_RELAY_DISABLING)
+            }
+        }
         configurationControl.setRelay(enabled, RETRANSMISSION_COUNT, RETRANSMISSION_INTERVAL, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeRelay success: $enabled")
@@ -420,6 +449,15 @@ class MeshConfigurationManager(
 
     fun changeFriend(enabled: Boolean) {
         Timber.d("changeFriend: $enabled")
+        if(enabled){
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_FRIEND_ENABLING)
+            }
+        } else {
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_FRIEND_DISABLING)
+            }
+        }
         configurationControl.setFriend(enabled, object : SetNodeBehaviourCallbackImpl() {
             override fun success(node: Node?, enabled: Boolean) {
                 Timber.d("changeFriend success: $enabled")
@@ -431,6 +469,15 @@ class MeshConfigurationManager(
 
     fun changeRetransmission(enabled:Boolean) {
         Timber.d("changeRetransmission: $enabled")
+        if(enabled){
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_RETRANSMISSION_ENABLING)
+            }
+        } else {
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_RETRANSMISSION_DISABLING)
+            }
+        }
         val count = if(enabled) RETRANSMISSION_COUNT else 0
         val interval = if(enabled) RETRANSMISSION_INTERVAL else 0
         configurationControl.setRetransmissionConfiguration(count,interval,object :NodeRetransmissionConfigurationCallback{

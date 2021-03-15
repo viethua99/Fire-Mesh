@@ -14,7 +14,6 @@ import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_provision_list.*
 import kotlinx.android.synthetic.main.fragment_subnet.*
 import timber.log.Timber
 
@@ -167,7 +166,15 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
     }
     private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {
         activity?.runOnUiThread {
-            showWarningDialog(it.name)
+            when(it){
+                ConnectionMessageListener.MessageType.NO_NODE_IN_SUBNET -> showWarningDialog("No node in this subnet")
+                ConnectionMessageListener.MessageType.GATT_NOT_CONNECTED -> showWarningDialog("Bluetooth Gatt is not connected")
+                ConnectionMessageListener.MessageType.GATT_PROXY_DISCONNECTED -> showWarningDialog("Remote proxy disconnected")
+                ConnectionMessageListener.MessageType.GATT_ERROR_DISCOVERING_SERVICES -> showWarningDialog("Error discovering services")
+                ConnectionMessageListener.MessageType.PROXY_SERVICE_NOT_FOUND -> showWarningDialog("Mesh GATT Service is not found")
+                ConnectionMessageListener.MessageType.PROXY_CHARACTERISTIC_NOT_FOUND -> showWarningDialog("Mesh GATT Characteristic is not found")
+                ConnectionMessageListener.MessageType.PROXY_DESCRIPTOR_NOT_FOUND -> showWarningDialog("Mesh GATT Descriptor is not found")
+            }
         }
     }
     private val errorMessageObserver = Observer<ErrorType> {

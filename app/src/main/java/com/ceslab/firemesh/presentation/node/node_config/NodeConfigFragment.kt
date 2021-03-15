@@ -56,10 +56,6 @@ class NodeConfigFragment : BaseFragment() {
             getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
             getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
             getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
-            getIsCheckingProxy().observe(this@NodeConfigFragment,isCheckingProxyObserver)
-            getIsCheckingFriend().observe(this@NodeConfigFragment,isCheckingFriendObserver)
-            getIsCheckingRelay().observe(this@NodeConfigFragment,isCheckingRelayObserver)
-            getIsCheckingRetransmission().observe(this@NodeConfigFragment,isCheckingRetransmissionObserver)
             getRetransmissionStatus().observe(this@NodeConfigFragment,retransmissionStatusObserver)
             getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
@@ -112,19 +108,15 @@ class NodeConfigFragment : BaseFragment() {
 
             //SETUP CHANGE SWITCH STATUS
             sw_proxy.setOnCheckedChangeListener { _, isChecked ->
-                showProgressDialog("Proxy Feature Changing")
                 nodeConfigViewModel.changeProxy(isChecked)
             }
             sw_relay.setOnCheckedChangeListener { _, isChecked ->
-                showProgressDialog("Relay Feature Changing")
                 nodeConfigViewModel.changeRelay(isChecked)
             }
             sw_friend.setOnCheckedChangeListener { _, isChecked ->
-                showProgressDialog("Friend Feature Changing")
                 nodeConfigViewModel.changeFriend(isChecked)
             }
             sw_retransmission.setOnCheckedChangeListener { _, isChecked ->
-                showProgressDialog("Retransmission Changing")
                 nodeConfigViewModel.changeRetransmission(isChecked)
             }
         }
@@ -256,14 +248,26 @@ class NodeConfigFragment : BaseFragment() {
         Timber.d("configurationStatusObserver: $it")
         activity?.runOnUiThread {
             when (it) {
-                ConfigurationTask.BIND_NODE_TO_GROUP -> showProgressDialog("Bind node to group")
-                ConfigurationTask.UNBIND_NODE_FROM_GROUP -> showProgressDialog("Unbind node from group")
-                ConfigurationTask.BIND_MODEL_TO_GROUP -> showProgressDialog("Bind model to group")
-                ConfigurationTask.UNBIND_MODEL_FROM_GROUP -> showProgressDialog("Unbind model from group")
-                ConfigurationTask.SET_PUBLICATION_SETTING -> showProgressDialog("Set publication settings")
-                ConfigurationTask.CLEAR_PUBLICATION_SETTING -> showProgressDialog("Clear publication settings")
-                ConfigurationTask.ADD_SUBSCRIPTION_SETTING -> showProgressDialog("Add subscription settings")
-                ConfigurationTask.REMOVE_SUBSCRIPTION_SETTING -> showProgressDialog("Remove subscription settings")
+                ConfigurationTask.CONFIG_BIND_NODE_TO_GROUP -> showProgressDialog("Binding node to group")
+                ConfigurationTask.CONFIG_UNBIND_NODE_FROM_GROUP -> showProgressDialog("Unbinding node from group")
+                ConfigurationTask.CONFIG_BIND_MODEL_TO_GROUP -> showProgressDialog("Binding model to group")
+                ConfigurationTask.CONFIG_UNBIND_MODEL_FROM_GROUP -> showProgressDialog("Unbinding model from group")
+                ConfigurationTask.CONFIG_PUBLICATION_SETTING -> showProgressDialog("Setting publications")
+                ConfigurationTask.CONFIG_PUBLICATION_CLEARING -> showProgressDialog("Clearing publications")
+                ConfigurationTask.CONFIG_SUBSCRIPTION_ADDING -> showProgressDialog("Adding subscriptions")
+                ConfigurationTask.CONFIG_SUBSCRIPTION_REMOVING -> showProgressDialog("Removing subscriptions")
+                ConfigurationTask.CONFIG_PROXY_CHECKING -> showProgressDialog("Checking proxy status")
+                ConfigurationTask.CONFIG_PROXY_ENABLING -> showProgressDialog("Enabling proxy")
+                ConfigurationTask.CONFIG_PROXY_DISABLING -> showProgressDialog("Disabling proxy")
+                ConfigurationTask.CONFIG_RELAY_CHECKING -> showProgressDialog("Checking relay status")
+                ConfigurationTask.CONFIG_RELAY_ENABLING -> showProgressDialog("Enabling relay")
+                ConfigurationTask.CONFIG_RELAY_DISABLING -> showProgressDialog("Disabling relay")
+                ConfigurationTask.CONFIG_FRIEND_CHECKING -> showProgressDialog("Checking friend status")
+                ConfigurationTask.CONFIG_FRIEND_ENABLING -> showProgressDialog("Enabling friend")
+                ConfigurationTask.CONFIG_FRIEND_DISABLING -> showProgressDialog("Disabling friend")
+                ConfigurationTask.CONFIG_RETRANSMISSION_CHECKING -> showProgressDialog("Checking retransmission status")
+                ConfigurationTask.CONFIG_RETRANSMISSION_ENABLING -> showProgressDialog("Enabling retransmission")
+                ConfigurationTask.CONFIG_RETRANSMISSION_DISABLING -> showProgressDialog("Disabling retransmission")
             }
         }
     }
@@ -284,14 +288,7 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
-    private val isCheckingProxyObserver = Observer<Boolean> { isChecking ->
-        Timber.d("isCheckingProxyObserver: $isChecking")
-        activity?.runOnUiThread {
-           if(isChecking){
-               showProgressDialog("Updating Proxy Status")
-           }
-        }
-    }
+
 
     private val proxyStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
@@ -300,14 +297,6 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
-    private val isCheckingRelayObserver = Observer<Boolean> { isChecking ->
-        Timber.d("isCheckingRelayObserver: $isChecking")
-        activity?.runOnUiThread {
-            if(isChecking){
-                showProgressDialog("Updating Relay Status")
-            }
-        }
-    }
 
     private val relayStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
@@ -316,14 +305,7 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
-    private val isCheckingFriendObserver = Observer<Boolean> { isChecking ->
-        Timber.d("isCheckingFriendObserver: $isChecking")
-        activity?.runOnUiThread {
-            if(isChecking){
-                showProgressDialog("Updating Friend Status")
-            }
-        }
-    }
+
 
     private val friendStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {
@@ -332,14 +314,6 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
-    private val isCheckingRetransmissionObserver = Observer<Boolean> { isChecking ->
-        Timber.d("isCheckingRetransmissionObserver: $isChecking")
-        activity?.runOnUiThread {
-            if(isChecking){
-                showProgressDialog("Updating Retransmission Status")
-            }
-        }
-    }
 
     private val retransmissionStatusObserver = Observer<Boolean> { isEnabled ->
         activity?.runOnUiThread {

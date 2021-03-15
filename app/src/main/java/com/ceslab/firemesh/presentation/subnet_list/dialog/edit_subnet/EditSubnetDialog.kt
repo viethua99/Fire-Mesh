@@ -1,6 +1,8 @@
 package com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet
 
+import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,13 +18,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
+import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
+import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.util.AndroidDialogUtil
+import com.ceslab.firemesh.util.AppUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_edit_subnet_bottom_sheet.view.*
+import kotlinx.android.synthetic.main.fragment_subnet.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -38,7 +45,11 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
         setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogTheme)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         Timber.d("onCreateView")
         val view = inflater.inflate(R.layout.dialog_edit_subnet_bottom_sheet, container, false)
         view.btn_delete_subnet.setOnClickListener(onDeleteSubnetButtonClicked)
@@ -52,16 +63,31 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
         setupViewModel()
 
         view.btn_save_changes_subnet.isClickable = false
-        view.btn_save_changes_subnet.setBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.gray_7))
+        view.btn_save_changes_subnet.setBackgroundColor(
+            ContextCompat.getColor(
+                activity!!.applicationContext,
+                R.color.gray_7
+            )
+        )
 
         view.edt_subnet_name.setText(subnet.name)
         view.edt_subnet_name.doOnTextChanged { text, _, _, _ ->
-            if(text!!.isEmpty() || text.toString() == subnet.name) {
+            if (text!!.isEmpty() || text.toString() == subnet.name) {
                 view.btn_save_changes_subnet.isClickable = false
-                view.btn_save_changes_subnet.setBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.gray_7))
+                view.btn_save_changes_subnet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        activity!!.applicationContext,
+                        R.color.gray_7
+                    )
+                )
             } else {
                 view.btn_save_changes_subnet.isClickable = true
-                view.btn_save_changes_subnet.setBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.primary_color))
+                view.btn_save_changes_subnet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        activity!!.applicationContext,
+                        R.color.primary_color
+                    )
+                )
             }
         }
 
@@ -75,42 +101,95 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
         }
     }
 
-    fun setEditSubnetCallback(editSubnetCallback: EditSubnetCallback){
+    fun setEditSubnetCallback(editSubnetCallback: EditSubnetCallback) {
         this.editSubnetCallback = editSubnetCallback
     }
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        editSubnetViewModel = ViewModelProvider(this, viewModelFactory).get(EditSubnetViewModel::class.java)
-        editSubnetViewModel.getRemoveSubnetStatus().observe(this,removeSubnetObserver)
+        editSubnetViewModel =
+            ViewModelProvider(this, viewModelFactory).get(EditSubnetViewModel::class.java)
+        editSubnetViewModel.apply {
+            getRemoveSubnetStatus().observe(this@EditSubnetDialog, removeSubnetObserver)
+            getMeshStatus().observe(this@EditSubnetDialog, meshStatusObserver)
+            getConnectionMessage().observe(this@EditSubnetDialog, connectionMessageObserver)
+        }
+    }
 
+      private fun showDeleteSubnetLocallyDialog() {
+        activity?.runOnUiThread {
+            val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+            builder.apply {
+                setTitle("Delete Locally")
+                setMessage("Delete failed,Do you want to delete subnet from the app?")
+                setPositiveButton("Delete") { dialog, _ ->
+                    editSubnetViewModel.deleteSubnetLocally(subnet)
+                    editSubnetCallback.onChanged()
+                    dialog.dismiss()
+                    dismiss()
+                }
+
+                setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                    dismiss()
+                }
+            }
+
+            builder.create().show()
+        }
     }
 
     private val onDeleteSubnetButtonClicked = View.OnClickListener {
-        AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Removing Subnet")
-        editSubnetViewModel.removeSubnet(subnet)
+        activity?.runOnUiThread {
+            AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Removing Subnet")
+            editSubnetViewModel.removeSubnet(subnet)
+
+        }
     }
 
     private val onSaveChangesSubnetButtonClicked = View.OnClickListener {
-            val newSubnetName = view!!.edt_subnet_name.text.toString()
-            editSubnetViewModel.updateSubnet(subnet,newSubnetName)
-            editSubnetCallback.onChanged()
-            dialog!!.dismiss()
+        val newSubnetName = view!!.edt_subnet_name.text.toString()
+        editSubnetViewModel.updateSubnet(subnet, newSubnetName)
+        editSubnetCallback.onChanged()
+        dialog!!.dismiss()
     }
 
     private val removeSubnetObserver = Observer<Boolean> {
         editSubnetCallback.onChanged()
         activity?.runOnUiThread {
             dialog!!.dismiss()
-            if(it == true) {
+            if (it == true) {
                 AndroidDialogUtil.getInstance().showSuccessDialog(activity, "Remove subnet succeed")
             } else {
-                AndroidDialogUtil.getInstance().showFailureDialog(activity, "Remove subnet failed")
-
+                showDeleteSubnetLocallyDialog()
             }
         }
-
     }
+    private val meshStatusObserver = Observer<MeshStatus> { meshStatus ->
+        Timber.d("meshStatusObserver = $meshStatus")
+        activity?.runOnUiThread {
+            tv_subnet_connection.apply {
+                when (meshStatus) {
+                    MeshStatus.MESH_CONNECTING -> {
+                        AndroidDialogUtil.getInstance()
+                            .showLoadingDialog(activity!!, "Connecting to subnet")
+                    }
+
+                }
+            }
+
+        }
+    }
+    private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {
+        activity?.runOnUiThread {
+            when (it) {
+                ConnectionMessageListener.MessageType.CONNECTING_TO_SUBNET_ERROR -> AndroidDialogUtil.getInstance().showWarningDialog(activity!!,"Connecting to subnet error")
+                ConnectionMessageListener.MessageType.REMOVING_SUBNET -> AndroidDialogUtil.getInstance().showLoadingDialog(activity!!,"Removing")
+            }
+        }
+    }
+
+
 
 }

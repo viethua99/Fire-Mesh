@@ -12,13 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.meshmodule.model.MeshNode
-import com.ceslab.firemesh.presentation.group_list.dialog.edit_group.EditGroupCallback
 import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.siliconlab.bluetoothmesh.adk.ErrorType
-import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_delete_node_bottom_sheet.view.*
 import timber.log.Timber
@@ -84,7 +81,7 @@ class DeleteNodeDialog(private val meshNode: MeshNode) : BottomSheetDialogFragme
             val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
             builder.apply {
                 setTitle("Delete Locally")
-                setMessage("Delete failed , ¬Do you want to delete locally")
+                setMessage("Delete failed , Do you want to delete node locally?")
                 setPositiveButton("Delete") { dialog, _ ->
                     deleteNodeViewModel.deleteDeviceLocally(meshNode.node)
                     deleteNodeCallback.onChanged()

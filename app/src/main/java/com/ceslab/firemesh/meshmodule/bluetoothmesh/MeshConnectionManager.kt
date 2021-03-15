@@ -238,7 +238,7 @@ class MeshConnectionManager(
         Timber.d("startScan")
         networkInfo?.apply {
             if (nodes.isEmpty()) {
-                connectionMessage(ConnectionMessageListener.MessageType.NO_NODE_IN_NETWORK)
+                connectionMessage(ConnectionMessageListener.MessageType.NO_NODE_IN_SUBNET)
                 return
             }
 
