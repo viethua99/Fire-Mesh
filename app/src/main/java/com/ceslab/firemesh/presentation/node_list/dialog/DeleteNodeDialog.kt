@@ -89,10 +89,12 @@ class DeleteNodeDialog(private val meshNode: MeshNode) : BottomSheetDialogFragme
                     deleteNodeViewModel.deleteDeviceLocally(meshNode.node)
                     deleteNodeCallback.onChanged()
                     dialog.dismiss()
+                    dismiss()
                 }
 
                 setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
+                    dismiss()
                 }
             }
 
