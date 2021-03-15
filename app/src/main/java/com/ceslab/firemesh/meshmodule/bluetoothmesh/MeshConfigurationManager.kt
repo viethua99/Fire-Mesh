@@ -37,7 +37,7 @@ class MeshConfigurationManager(
     companion object {
         private const val PUBLICATION_TIME_TO_LIVE = 3
         private const val RETRANSMISSION_COUNT = 3
-        private const val RETRANSMISSION_INTERVAL = 20
+        private const val RETRANSMISSION_INTERVAL = 200
 
     }
     private val nodeFeatureListeners: ArrayList<NodeFeatureListener> = ArrayList()
