@@ -37,11 +37,13 @@ class EditGroupViewModel @Inject constructor(
         }
     }
 
-
-
     fun removeGroup(groupToRemove: Group){
         Timber.d("groupToRemove")
         meshNetworkManager.removeGroup(groupToRemove,removeGroupCallback)
+    }
+
+    fun removeGroupLocally(group: Group) {
+        group.removeOnlyFromLocalStructure()
     }
 
     private val removeGroupCallback  = object : MeshNetworkManager.RemoveGroupCallback {

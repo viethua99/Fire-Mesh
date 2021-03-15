@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.group_list.dialog.edit_group
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +85,29 @@ class EditGroupDialog(private val group: Group) : BottomSheetDialogFragment() {
 
     }
 
+    private fun showDeleteGroupLocallyDialog() {
+        activity?.runOnUiThread {
+            val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+            builder.apply {
+                setTitle("Delete Locally")
+                setMessage("Delete failed,Do you want to delete group from the app?")
+                setPositiveButton("Delete") { dialog, _ ->
+                    editGroupViewModel.removeGroupLocally(group)
+                    editGroupCallback.onChanged()
+                    dialog.dismiss()
+                    dismiss()
+                }
+
+                setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                    dismiss()
+                }
+            }
+
+            builder.create().show()
+        }
+    }
+
     private val onDeleteGroupButtonClicked = View.OnClickListener {
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Removing Group")
         editGroupViewModel.removeGroup(group)
@@ -103,8 +127,7 @@ class EditGroupDialog(private val group: Group) : BottomSheetDialogFragment() {
             if(it == true) {
                 AndroidDialogUtil.getInstance().showSuccessDialog(activity, "Remove group succeed")
             } else {
-                AndroidDialogUtil.getInstance().showFailureDialog(activity, "Remove group failed")
-
+                showDeleteGroupLocallyDialog()
             }
         }
 
