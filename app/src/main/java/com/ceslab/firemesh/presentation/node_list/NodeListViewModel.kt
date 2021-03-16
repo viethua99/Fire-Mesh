@@ -1,5 +1,10 @@
 package com.ceslab.firemesh.presentation.node_list
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.le.BluetoothLeScanner
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +14,7 @@ import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
+import com.ceslab.firemesh.ota.utils.Converters
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,17 +22,19 @@ class NodeListViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshNodeManager: MeshNodeManager,
     private val meshConnectionManager: MeshConnectionManager
-) : ViewModel(){
+) : ViewModel() {
     private val meshNodeList = MutableLiveData<Set<MeshNode>>()
 
-    fun setListeners(){
+    fun setListeners() {
         Timber.d("setListeners")
         meshConnectionManager.addMeshConnectionListener(connectionStatusListener)
     }
-    fun removeListener(){
+
+    fun removeListener() {
         meshConnectionManager.removeMeshConnectionListener(connectionStatusListener)
     }
-    fun setDeviceToConfigure(meshNode: MeshNode){
+
+    fun setDeviceToConfigure(meshNode: MeshNode) {
         Timber.d("setDeviceToConfigure: ${meshNode.node.name}")
         bluetoothMeshManager.meshNodeToConfigure = meshNode
     }
@@ -36,13 +44,52 @@ class NodeListViewModel @Inject constructor(
         return meshNodeList
     }
 
+    private val bluetoothLeScanner: BluetoothLeScanner
+        get() {
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            return bluetoothAdapter.bluetoothLeScanner
+        }
+
+    fun scanNodeStatus() {
+        Timber.d("scanNodeStatus")
+        bluetoothLeScanner.startScan(scanCallback)
+    }
+
+    fun stopScan(){
+        Timber.d("stopScan")
+        bluetoothLeScanner.stopScan(scanCallback)
+    }
+
+
+
+    private val scanCallback = object : ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+            val dataList = result?.scanRecord?.getManufacturerSpecificData(767)
+            if(dataList == null){
+                return
+            } else {
+                val unicastAddress = Converters.bytesToHex(dataList)
+                Timber.d("onScanResult: unicastAddress: $unicastAddress")
+                val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
+                for(node in nodeList){
+                    if(Integer.toHexString(node.node.primaryElementAddress!!)  == unicastAddress ) {
+                        node.fireSignal = 1
+                    }
+                }
+                getMeshNodeList()
+            }
+
+
+        }
+    }
+
     private val connectionStatusListener = object : ConnectionStatusListener {
         override fun connecting() {}
         override fun disconnected() {}
         override fun connected() {
             Timber.d("connected")
             getMeshNodeList()
-
+            scanNodeStatus()
         }
 
 

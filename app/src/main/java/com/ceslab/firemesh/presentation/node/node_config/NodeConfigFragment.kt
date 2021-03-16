@@ -330,7 +330,7 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             if (it == true) {
                 val builder =
-                    AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                    AlertDialog.Builder(activity, R.style.AlertDialogTheme)
                 builder.apply {
                     setTitle("Attention")
                     setMessage("Disabling this proxy will cause you to lose access to the network. Continue anyways?")

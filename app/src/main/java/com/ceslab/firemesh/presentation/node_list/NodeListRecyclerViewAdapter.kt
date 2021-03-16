@@ -3,6 +3,7 @@ package com.ceslab.firemesh.presentation.node_list
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
@@ -31,6 +32,8 @@ class NodeListRecyclerViewAdapter(context: Context) :
         var tvNodeStatus : TextView = view.findViewById(R.id.tv_node_status)
         var tvNodeBattery: TextView = view.findViewById(R.id.tv_node_battery)
         var tvNodeProxy : TextView = view.findViewById(R.id.tv_node_proxy)
+        var imgFireSignal : ImageView = view.findViewById(R.id.img_flame_signal)
+
         init {
             view.setOnClickListener(this)
             view.setOnLongClickListener(this)
@@ -49,6 +52,12 @@ class NodeListRecyclerViewAdapter(context: Context) :
         fun renderUI(meshNode: MeshNode) {
             val node = meshNode.node
             tvNodeName.text = node.name
+            if(meshNode.fireSignal == 1) {
+                imgFireSignal.setImageResource(R.drawable.img_flame)
+            } else {
+                imgFireSignal.setImageResource(R.drawable.img_flame_background)
+            }
+
             if(node.isConnectedAsProxy){
                 tvNodeProxy.visibility = View.VISIBLE
             } else {

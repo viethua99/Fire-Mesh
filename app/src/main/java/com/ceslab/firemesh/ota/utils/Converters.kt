@@ -423,6 +423,16 @@ object Converters {
         return returnVal
     }
 
+     fun byteToInt(bytes: ByteArray): Int {
+        var result = 0
+        var shift = 0
+        for (byte in bytes) {
+            result = result or (byte.toInt() shl shift)
+            shift += 8
+        }
+        return result
+    }
+
     private fun isValueInRange(min: Int, max: Int, value: Int): Boolean {
         return if (max > min) value in min..max else value in max..min
     }

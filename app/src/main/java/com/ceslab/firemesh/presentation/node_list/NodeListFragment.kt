@@ -39,6 +39,7 @@ class NodeListFragment : BaseFragment(){
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
+        nodeListViewModel.stopScan()
         nodeListViewModel.removeListener()
     }
 

@@ -78,7 +78,7 @@ class DeleteNodeDialog(private val meshNode: MeshNode) : BottomSheetDialogFragme
 
    private fun showDeleteDeviceLocallyDialog() {
         activity?.runOnUiThread {
-            val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+            val builder = AlertDialog.Builder(activity, R.style.AlertDialogTheme)
             builder.apply {
                 setTitle("Delete Locally")
                 setMessage("Delete failed , Do you want to delete node locally?")
