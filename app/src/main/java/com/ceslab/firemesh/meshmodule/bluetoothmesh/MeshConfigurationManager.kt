@@ -509,9 +509,21 @@ class MeshConfigurationManager(
         }
     }
 
+    abstract inner class SetNodeBehaviourCallbackImpl : SetNodeBehaviourCallback {
+        override fun error(node: Node?, error: ErrorType) {
+            nodeFeatureListeners.forEach { listener ->
+                listener.onSetNodeFeatureError(error)
+            }
+        }
+    }
+
+
     inner class NodeControlCallbackImpl : NodeControlCallback {
         override fun succeed() {
             Timber.d("nodeControlCallback succeed")
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_CONTROL_NODE_SUCCEED)
+            }
             takeNextTask()
         }
 
@@ -526,6 +538,9 @@ class MeshConfigurationManager(
     inner class FunctionalityBinderCallbackImpl : FunctionalityBinderCallback {
         override fun succeed(succeededModels: MutableList<Model>?, group: Group?) {
             Timber.d("modelBinder succeed")
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_CONTROL_MODEL_SUCCEED)
+            }
             takeNextTask()
         }
 
@@ -544,6 +559,9 @@ class MeshConfigurationManager(
     inner class PublicationSettingsGenericCallbackImpl : PublicationSettingsGenericCallback {
         override fun success(meshModel: Model?, publicationSettings: PublicationSettings?) {
             Timber.d("publicationSetting succeed")
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_CONTROL_PUBLICATION_SUCCEED)
+            }
             takeNextTask()
         }
 
@@ -558,6 +576,9 @@ class MeshConfigurationManager(
     inner class SubscriptionSettingsGenericCallbackImpl : SubscriptionSettingsGenericCallback {
         override fun success(meshModel: Model?, subscriptionSettings: SubscriptionSettings?) {
             Timber.d("subscriptionSetting succeed")
+            configurationTaskListeners.forEach { listener ->
+                listener.onCurrentConfigTask(ConfigurationTask.CONFIG_CONTROL_SUBSCRIPTION_SUCCEED)
+            }
             takeNextTask()
         }
 
@@ -569,13 +590,6 @@ class MeshConfigurationManager(
         }
     }
 
-    abstract inner class SetNodeBehaviourCallbackImpl : SetNodeBehaviourCallback {
-        override fun error(node: Node?, error: ErrorType) {
-            nodeFeatureListeners.forEach { listener ->
-                listener.onSetNodeFeatureError(error)
-            }
-        }
-    }
 
 
 }

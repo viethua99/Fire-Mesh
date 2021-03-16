@@ -133,7 +133,7 @@
     <string name="dialog_edit_group_bottom_delete_group_button">Delete Group</string>
     <string name="dialog_edit_group_bottom_save_changes_button">Save Changes</string>
 
-    <string name="dialog_delete_node_bottom_deleting_node">Deleting Node</string>
+    <string name="dialog_delete_node_bottom_deleting_node">Deleting node</string>
     <string name="dialog_delete_node_bottom_delete">Delete</string>
 
     <string name="error_message_timeout">Request timeout</string>

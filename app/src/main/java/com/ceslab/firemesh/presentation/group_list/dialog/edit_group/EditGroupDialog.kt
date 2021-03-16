@@ -87,6 +87,7 @@ class EditGroupDialog(private val group: Group) : BottomSheetDialogFragment() {
 
     private fun showDeleteGroupLocallyDialog() {
         activity?.runOnUiThread {
+            AndroidDialogUtil.getInstance().hideDialog()
             val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
             builder.apply {
                 setTitle("Delete Locally")

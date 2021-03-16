@@ -268,6 +268,10 @@ class NodeConfigFragment : BaseFragment() {
                 ConfigurationTask.CONFIG_RETRANSMISSION_CHECKING -> showProgressDialog("Checking retransmission status")
                 ConfigurationTask.CONFIG_RETRANSMISSION_ENABLING -> showProgressDialog("Enabling retransmission")
                 ConfigurationTask.CONFIG_RETRANSMISSION_DISABLING -> showProgressDialog("Disabling retransmission")
+                ConfigurationTask.CONFIG_CONTROL_NODE_SUCCEED -> hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_MODEL_SUCCEED ->  hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_PUBLICATION_SUCCEED ->  hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_SUBSCRIPTION_SUCCEED ->  hideDialog()
             }
         }
     }
@@ -284,7 +288,6 @@ class NodeConfigFragment : BaseFragment() {
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
             setupFunctionalitySpinner(it.meshNode)
-            hideDialog()
         }
     }
 

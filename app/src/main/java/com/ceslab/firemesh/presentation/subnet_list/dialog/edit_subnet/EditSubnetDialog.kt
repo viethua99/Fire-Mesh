@@ -119,6 +119,7 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
 
       private fun showDeleteSubnetLocallyDialog() {
         activity?.runOnUiThread {
+            AndroidDialogUtil.getInstance().hideDialog()
             val builder = AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog_Alert)
             builder.apply {
                 setTitle("Delete Locally")
@@ -185,7 +186,7 @@ class EditSubnetDialog(private val subnet: Subnet) : BottomSheetDialogFragment()
         activity?.runOnUiThread {
             when (it) {
                 ConnectionMessageListener.MessageType.CONNECTING_TO_SUBNET_ERROR -> AndroidDialogUtil.getInstance().showWarningDialog(activity!!,"Connecting to subnet error")
-                ConnectionMessageListener.MessageType.REMOVING_SUBNET -> AndroidDialogUtil.getInstance().showLoadingDialog(activity!!,"Removing")
+                ConnectionMessageListener.MessageType.REMOVING_SUBNET -> AndroidDialogUtil.getInstance().showLoadingDialog(activity!!,"Removing subnet")
             }
         }
     }
