@@ -17,11 +17,13 @@ import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.util.AndroidDialogUtil
 import com.ceslab.firemesh.util.AppUtil
+import com.ceslab.firemesh.util.ConverterUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.dialog_provision_bottom_sheet.*
 import kotlinx.android.synthetic.main.dialog_provision_bottom_sheet.view.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -92,7 +94,12 @@ class ProvisionBottomDialog : BottomSheetDialogFragment() {
     private fun setupNetworkSpinner(view: View) {
         Timber.d("setupNetworkSpinner")
         activity?.runOnUiThread {
-            view.edt_node_name.setText(deviceDescription.deviceName)
+            if(deviceDescription.deviceName != null){
+                view.edt_node_name.setText(deviceDescription.deviceName)
+            } else {
+                view.edt_node_name.setText(deviceDescription.deviceAddress?.takeLast(5))
+            }
+
             val adapter = ArrayAdapter(
                 context!!,
                 android.R.layout.simple_spinner_item,
