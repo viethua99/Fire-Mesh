@@ -101,7 +101,7 @@
                         android:layout_marginTop="6dp"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        img_<ImageView
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
@@ -130,14 +130,13 @@
                     <ImageView
                         android:id="@+id/img_flame_signal"
                         android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/img_flame_background" />
+                        android:layout_height="40dp" />
 
                     <ImageView
-                        android:layout_width="40dp"
+                        android:id="@+id/img_node_feature"
+                        android:layout_width="36dp"
                         android:layout_height="40dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/img_group_2" />
+                        android:layout_marginTop="6dp" />
                 </LinearLayout>
             </LinearLayout>
 

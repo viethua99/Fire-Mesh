@@ -9,4 +9,8 @@ import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
 data class MeshNode(val node: Node) {
     var fireSignal = 0
     var functionality = NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown
+
+    fun refresh(){
+        fireSignal = 0
+    }
 }

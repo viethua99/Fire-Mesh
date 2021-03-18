@@ -9,6 +9,7 @@
     <string name="nav_item_nodes">Nodes</string>
 
     <string name="options_menu_item_ota">OTA</string>
+    <string name="options_menu_item_refresh">Refresh</string>
 
     <string name="main_activity_enable_button">Enable</string>
     <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
@@ -79,7 +80,7 @@
 
     <string name="item_node_node_name">Node Name</string>
     <string name="item_node_node_address">00:00:00:00:00</string>
-    <string name="item_node_node_status">Connected</string>
+    <string name="item_node_node_status">Alive</string>
     <string name="item_node_node_battery_percent">100%</string>
 
 

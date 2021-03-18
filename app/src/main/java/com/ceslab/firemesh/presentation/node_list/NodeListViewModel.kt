@@ -50,36 +50,48 @@ class NodeListViewModel @Inject constructor(
             return bluetoothAdapter.bluetoothLeScanner
         }
 
+    fun refreshNodeListStatus() {
+        Timber.d("refreshNodeListStatus")
+        val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
+        for (node in nodeList) {
+            node.refresh()
+        }
+        getMeshNodeList()
+    }
+
     fun scanNodeStatus() {
         Timber.d("scanNodeStatus")
         bluetoothLeScanner.startScan(scanCallback)
     }
 
-    fun stopScan(){
+    fun stopScan() {
         Timber.d("stopScan")
         bluetoothLeScanner.stopScan(scanCallback)
     }
 
-
+    private fun checkFireAlarmSignalFromUnicastAddress(unicastAddress: ByteArray) {
+        val hexUnicastAddress = Converters.bytesToHex(unicastAddress)
+        Timber.d("checkFireAlarmSignalFromUnicastAddress: $hexUnicastAddress")
+        val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
+        for (node in nodeList) {
+            if (Integer.toHexString(node.node.primaryElementAddress!!) == hexUnicastAddress) {
+                node.fireSignal = 1
+            }
+        }
+        getMeshNodeList()
+    }
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            val dataList = result?.scanRecord?.getManufacturerSpecificData(767)
-            if(dataList == null){
-                return
-            } else {
-                val unicastAddress = Converters.bytesToHex(dataList)
-                Timber.d("onScanResult: unicastAddress: $unicastAddress")
-                val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
-                for(node in nodeList){
-                    if(Integer.toHexString(node.node.primaryElementAddress!!)  == unicastAddress ) {
-                        node.fireSignal = 1
-                    }
-                }
-                getMeshNodeList()
+            val test = result?.scanRecord?.bytes
+            if (test != null) {
+                Timber.d(Converters.bytesToHexWhitespaceDelimited(test))
             }
-
-
+            val dataList = result?.scanRecord?.getManufacturerSpecificData(767)
+            if (dataList != null) {
+                Timber.d("onScanResult: ${Converters.bytesToHex(dataList)}")
+                checkFireAlarmSignalFromUnicastAddress(dataList)
+            }
         }
     }
 

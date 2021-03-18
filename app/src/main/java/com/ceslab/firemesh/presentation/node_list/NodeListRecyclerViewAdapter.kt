@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshNode
+import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.util.ConverterUtil
+import timber.log.Timber
 
 class NodeListRecyclerViewAdapter(context: Context) :
     BaseRecyclerViewAdapter<MeshNode, NodeListRecyclerViewAdapter.ViewHolder>(context) {
@@ -33,6 +35,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
         var tvNodeBattery: TextView = view.findViewById(R.id.tv_node_battery)
         var tvNodeProxy : TextView = view.findViewById(R.id.tv_node_proxy)
         var imgFireSignal : ImageView = view.findViewById(R.id.img_flame_signal)
+        var imgNodeFeature : ImageView = view.findViewById(R.id.img_node_feature)
 
         init {
             view.setOnClickListener(this)
@@ -52,10 +55,18 @@ class NodeListRecyclerViewAdapter(context: Context) :
         fun renderUI(meshNode: MeshNode) {
             val node = meshNode.node
             tvNodeName.text = node.name
-            if(meshNode.fireSignal == 1) {
-                imgFireSignal.setImageResource(R.drawable.img_flame)
+
+            if(meshNode.node.deviceCompositionData.supportsLowPower()){
+                imgNodeFeature.setImageResource(R.drawable.img_lpn)
+                if(meshNode.fireSignal == 1) {
+                    imgFireSignal.setImageResource(R.drawable.img_flame)
+                } else {
+                    imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                }
+            } else if(meshNode.node.deviceCompositionData.supportsFriend()){
+                imgNodeFeature.setImageResource(R.drawable.img_friend)
             } else {
-                imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                imgNodeFeature.setImageResource(R.drawable.img_proxy)
             }
 
             if(node.isConnectedAsProxy){
@@ -63,8 +74,8 @@ class NodeListRecyclerViewAdapter(context: Context) :
             } else {
                 tvNodeProxy.visibility = View.GONE
             }
-            tvNodeAddress.text = node.primaryElementAddress?.toString()
-            tvNodeStatus.text = "Disconnected"
+            tvNodeAddress.text = "0x" + Integer.toHexString(node.primaryElementAddress).toUpperCase()
+            tvNodeStatus.text = "Death"
             tvNodeBattery.text = "999%"
 
         }
