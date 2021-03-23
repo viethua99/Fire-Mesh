@@ -26,10 +26,10 @@ object Converters {
         val array = ByteArray(length / 2)
 
         for (i in 0 until length step 2) {
-            val hexByte: String = StringBuilder().append(text[i]).append(text[i+1]).toString()
+            val hexByte: String = StringBuilder().append(text[i]).append(text[i + 1]).toString()
             val result = (hexByte).toInt(16)
             if (result > 127) array[i / 2] = (result - 256).toByte()
-            else array[i/2] = result.toByte()
+            else array[i / 2] = result.toByte()
         }
 
         return array
@@ -37,8 +37,19 @@ object Converters {
 
     fun bytesToHex(bytes: ByteArray): String {
         val builder = StringBuilder()
-        for(byte in bytes) { builder.append(String.format("%02x",byte))}
+        for (byte in bytes) {
+            builder.append(String.format("%02x", byte))
+        }
         return builder.toString()
+    }
+
+    fun bytesToHexReversed(bytes: ByteArray): String {
+        var result = ""
+        for (byte in bytes) {
+            val data = String.format("%02x", byte)
+            result = "$data$result"
+        }
+        return result
     }
 
     fun isZeroed(bytes: ByteArray): Boolean {
@@ -423,7 +434,7 @@ object Converters {
         return returnVal
     }
 
-     fun byteToInt(bytes: ByteArray): Int {
+    fun byteToInt(bytes: ByteArray): Int {
         var result = 0
         var shift = 0
         for (byte in bytes) {

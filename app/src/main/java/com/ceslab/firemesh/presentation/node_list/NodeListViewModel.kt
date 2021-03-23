@@ -73,7 +73,8 @@ class NodeListViewModel @Inject constructor(
     }
 
     private fun checkFireAlarmSignalFromUnicastAddress(unicastAddress: ByteArray) {
-        val hexUnicastAddress = Converters.bytesToHex(unicastAddress)
+        Timber.d("unicastAddress size = ${unicastAddress.size}")
+        val hexUnicastAddress = Converters.bytesToHexReversed(unicastAddress)
         Timber.d("checkFireAlarmSignalFromUnicastAddress: $hexUnicastAddress")
         val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
         for (node in nodeList) {
@@ -86,14 +87,14 @@ class NodeListViewModel @Inject constructor(
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            val rawData = result?.scanRecord?.bytes
-            if (rawData != null) {
-                Timber.d(Converters.bytesToHexWhitespaceDelimited(rawData))
-            }
+//            val rawData = result?.scanRecord?.bytes
+//            if (rawData != null) {
+//                Timber.d(Converters.bytesToHexWhitespaceDelimited(rawData))
+//            }
 
             val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
             if (dataList != null) {
-                Timber.d("onScanResult: ${Converters.bytesToHex(dataList)}")
+                Timber.d("onScanResult: ${Converters.bytesToHexReversed(dataList)}")
                 checkFireAlarmSignalFromUnicastAddress(dataList)
             }
         }

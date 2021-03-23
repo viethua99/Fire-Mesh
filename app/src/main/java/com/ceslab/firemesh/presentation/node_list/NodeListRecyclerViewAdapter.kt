@@ -66,8 +66,13 @@ class NodeListRecyclerViewAdapter(context: Context) :
                         imgFireSignal.setImageResource(R.drawable.img_flame_background)
                     }
                 } else if(it.node.deviceCompositionData.supportsFriend()){
-                    imgFireSignal.visibility = View.GONE
                     imgNodeFeature.setImageResource(R.drawable.img_friend)
+                    imgFireSignal.visibility = View.VISIBLE
+                    if(it.fireSignal == 1) {
+                        imgFireSignal.setImageResource(R.drawable.img_flame)
+                    } else {
+                        imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                    }
                 } else {
                     imgFireSignal.visibility = View.GONE
                     imgNodeFeature.setImageResource(R.drawable.img_proxy)
