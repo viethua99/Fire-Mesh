@@ -6,27 +6,34 @@ import android.view.View
 import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeConfig
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.presentation.base.BaseFragment
+import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigCallback
 import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigDialog
+import com.ceslab.firemesh.presentation.node_list.NodeListRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
+import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_config.*
+import kotlinx.android.synthetic.main.fragment_node_list.*
 import timber.log.Timber
 
 class NodeConfigFragment : BaseFragment() {
 
     private lateinit var nodeConfigViewModel: NodeConfigViewModel
+    private lateinit var functionalityRecyclerViewAdapter: FunctionalityRecyclerViewAdapter
 
     override fun getResLayoutId(): Int {
         return R.layout.fragment_node_config
@@ -34,6 +41,7 @@ class NodeConfigFragment : BaseFragment() {
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
+        setupRecyclerView()
         setupViewModel()
         setFeaturesOnClickListeners()
 
@@ -56,7 +64,7 @@ class NodeConfigFragment : BaseFragment() {
             getProxyStatus().observe(this@NodeConfigFragment, proxyStatusObserver)
             getRelayStatus().observe(this@NodeConfigFragment, relayStatusObserver)
             getFriendStatus().observe(this@NodeConfigFragment, friendStatusObserver)
-            getRetransmissionStatus().observe(this@NodeConfigFragment,retransmissionStatusObserver)
+            getRetransmissionStatus().observe(this@NodeConfigFragment, retransmissionStatusObserver)
             getCurrentConfigTask().observe(this@NodeConfigFragment, configurationStatusObserver)
             getConfigurationError().observe(this@NodeConfigFragment, configurationErrorObserver)
             getProxyAttention().observe(this@NodeConfigFragment, proxyAttentionObserver)
@@ -81,7 +89,7 @@ class NodeConfigFragment : BaseFragment() {
                     if (isSupportFriend) {
                         ll_friend.visibility = View.VISIBLE
                     } else {
-                        ll_friend.visibility =   View.GONE
+                        ll_friend.visibility = View.GONE
                     }
                 }
                 isSupportRelay?.let { isSupportRelay ->
@@ -162,9 +170,12 @@ class NodeConfigFragment : BaseFragment() {
                         ?.let {
                             spinner_group.setSelection(groupNameList.indexOf(it.name), false)
                         }
+                    ll_functionality.visibility = View.VISIBLE
+
                 } else {
                     Timber.d("Node group is empty")
                     spinner_group.setSelection(Adapter.NO_SELECTION, false)
+                    ll_functionality.visibility = View.GONE
                 }
                 spinner_group.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
@@ -174,6 +185,7 @@ class NodeConfigFragment : BaseFragment() {
                         id: Long
                     ) {
                         if (position == 0) {
+                            ll_functionality.visibility = View.GONE
                             nodeConfigViewModel.changeGroup(null)
                         } else {
                             nodeConfigViewModel.changeGroup(groupListInSubnet[position - 1])
@@ -184,6 +196,38 @@ class NodeConfigFragment : BaseFragment() {
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
             }
+        }
+    }
+
+
+    private fun setupRecyclerView() {
+        Timber.d("setupRecyclerView")
+        val linearLayoutManager = LinearLayoutManager(view!!.context)
+        functionalityRecyclerViewAdapter = FunctionalityRecyclerViewAdapter(view!!.context)
+        functionalityRecyclerViewAdapter.itemClickListener = object :
+            BaseRecyclerViewAdapter.ItemClickListener<NodeFunctionality.FunctionalityNamed> {
+            override fun onClick(position: Int, item: NodeFunctionality.FunctionalityNamed) {
+                Timber.d("onClick: $item")
+                ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
+                    Runnable {
+                        val modelConfigDialog = ModelConfigDialog(item)
+                        modelConfigDialog.setModelConfigCallback(object : ModelConfigCallback {
+                            override fun onCancel() {
+                                Timber.d("onCancel")
+                            }
+                        })
+                        modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+                    }
+                    ,50)
+
+            }
+
+            override fun onLongClick(position: Int, item: NodeFunctionality.FunctionalityNamed) {}
+        }
+        rv_functionality.apply {
+            layoutManager = linearLayoutManager
+            setHasFixedSize(true)
+            adapter = functionalityRecyclerViewAdapter
         }
     }
 
@@ -224,15 +268,17 @@ class NodeConfigFragment : BaseFragment() {
                             id: Long
                         ) {
                             Timber.d("onItemSelected: $position")
-                            if(position != 0){
-                                val modelConfigDialog = ModelConfigDialog(functionalitiesNamed[position].functionality)
-                                modelConfigDialog.setModelConfigCallback(object :ModelConfigCallback {
-                                    override fun onCancel() {
-                                        Timber.d("onCancel")
-                                        setSelection(0, false)
-                                    }
-                                })
-                                modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+                            if (position != 0) {
+//                                val modelConfigDialog =
+//                                    ModelConfigDialog(functionalitiesNamed[position].functionality)
+//                                modelConfigDialog.setModelConfigCallback(object :
+//                                    ModelConfigCallback {
+//                                    override fun onCancel() {
+//                                        Timber.d("onCancel")
+//                                        setSelection(0, false)
+//                                    }
+//                                })
+//                                modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
                             }
 
                         }
@@ -268,17 +314,20 @@ class NodeConfigFragment : BaseFragment() {
                 ConfigurationTask.CONFIG_RETRANSMISSION_CHECKING -> showProgressDialog("Checking retransmission status")
                 ConfigurationTask.CONFIG_RETRANSMISSION_ENABLING -> showProgressDialog("Enabling retransmission")
                 ConfigurationTask.CONFIG_RETRANSMISSION_DISABLING -> showProgressDialog("Disabling retransmission")
-                ConfigurationTask.CONFIG_CONTROL_NODE_SUCCEED -> hideDialog()
-                ConfigurationTask.CONFIG_CONTROL_MODEL_SUCCEED ->  hideDialog()
-                ConfigurationTask.CONFIG_CONTROL_PUBLICATION_SUCCEED ->  hideDialog()
-                ConfigurationTask.CONFIG_CONTROL_SUBSCRIPTION_SUCCEED ->  hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_NODE_SUCCEED ->  {
+                    ll_functionality.visibility = View.VISIBLE
+                    hideDialog()
+                }
+                ConfigurationTask.CONFIG_CONTROL_MODEL_SUCCEED -> hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_PUBLICATION_SUCCEED -> hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_SUBSCRIPTION_SUCCEED -> hideDialog()
             }
         }
     }
 
     private val configurationErrorObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
-            showFailedDialog(AppUtil.convertErrorMessage(activity!!,it))
+            showFailedDialog(AppUtil.convertErrorMessage(activity!!, it))
         }
     }
 
@@ -287,10 +336,16 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
+            val test =  NodeFunctionality.getFunctionalitiesNamed(it.meshNode.node).toMutableList()
+            for(func in test){
+                Timber.d("func=$func")
+            }
+            functionalityRecyclerViewAdapter.setDataList(
+test
+            )
             setupFunctionalitySpinner(it.meshNode)
         }
     }
-
 
 
     private val proxyStatusObserver = Observer<Boolean> { isEnabled ->
@@ -307,7 +362,6 @@ class NodeConfigFragment : BaseFragment() {
             sw_relay.isChecked = isEnabled
         }
     }
-
 
 
     private val friendStatusObserver = Observer<Boolean> { isEnabled ->

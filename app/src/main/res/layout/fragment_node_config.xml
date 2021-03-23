@@ -19,6 +19,7 @@
         android:padding="15dp">
 
         <TextView
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/tv_low_power_support"
@@ -44,6 +45,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.SwitchCompat
+            android:textStyle="bold"
             android:id="@+id/sw_proxy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -72,6 +74,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.SwitchCompat
+            android:textStyle="bold"
             android:id="@+id/sw_relay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -100,6 +103,8 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.SwitchCompat
+            android:textStyle="bold"
+
             android:id="@+id/sw_friend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -128,6 +133,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.SwitchCompat
+            android:textStyle="bold"
             android:id="@+id/sw_retransmission"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -156,6 +162,7 @@
         android:padding="15dp">
 
         <TextView
+            android:textStyle="bold"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -172,19 +179,28 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_functionality"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="15dp">
 
         <TextView
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/fragment_node_config_functionality"
             android:textColor="@color/primary_color"
             android:textSize="16sp" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_functionality"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <Spinner
+            android:visibility="gone"
             android:id="@+id/spinner_functionality"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -26,7 +26,7 @@ import javax.inject.Inject
  * Created by Viet Hua on 03/09/2021.
  */
 
-class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY) : BottomSheetDialogFragment() {
+class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.FunctionalityNamed) : BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -54,6 +54,7 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.VENDO
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated")
         setupViewModel()
+        tv_functionality_name.setText(vendorFunctionality.functionalityName)
         cb_add_subscription.isChecked = true
         cb_set_publication.isChecked = true
         dialog?.setOnShowListener {
@@ -91,7 +92,7 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.VENDO
         val isAddSubscription = cb_add_subscription.isChecked
         Timber.d("onStartConfigButtonClicked: functionality=$vendorFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Starting Config Model")
-        modelConfigViewModel.changeFunctionality(vendorFunctionality,isSetPublication,isAddSubscription)
+        modelConfigViewModel.changeFunctionality(vendorFunctionality.functionality,isSetPublication,isAddSubscription)
     }
 
     private val onConfigFinishedObserver = Observer<Boolean> {

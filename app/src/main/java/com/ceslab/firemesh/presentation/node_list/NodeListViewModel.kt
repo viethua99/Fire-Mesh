@@ -23,6 +23,9 @@ class NodeListViewModel @Inject constructor(
     private val meshNodeManager: MeshNodeManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
+    companion object {
+        const val COMPANY_ID = 0x6969
+    }
     private val meshNodeList = MutableLiveData<Set<MeshNode>>()
 
     fun setListeners() {
@@ -83,11 +86,12 @@ class NodeListViewModel @Inject constructor(
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            val test = result?.scanRecord?.bytes
-            if (test != null) {
-                Timber.d(Converters.bytesToHexWhitespaceDelimited(test))
+            val rawData = result?.scanRecord?.bytes
+            if (rawData != null) {
+                Timber.d(Converters.bytesToHexWhitespaceDelimited(rawData))
             }
-            val dataList = result?.scanRecord?.getManufacturerSpecificData(767)
+
+            val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
             if (dataList != null) {
                 Timber.d("onScanResult: ${Converters.bytesToHex(dataList)}")
                 checkFireAlarmSignalFromUnicastAddress(dataList)

@@ -21,10 +21,7 @@ class NodeViewModel @Inject constructor(
     private val bluetoothMeshManager: BluetoothMeshManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
-    companion object {
-        const val SILAB_COMPANY_IDENTIFIER = 767
-    }
-    private val advertise = BluetoothAdapter.getDefaultAdapter().bluetoothLeAdvertiser
+
 
     var isFirstConfig = false
     private val meshStatus = MutableLiveData<MeshStatus>()
@@ -55,7 +52,6 @@ class NodeViewModel @Inject constructor(
 
         if(isFirstConfig){
             meshConnectionManager.disconnect()
-            stopAdvertise()
         }
     }
 
@@ -71,38 +67,8 @@ class NodeViewModel @Inject constructor(
         return meshStatus
     }
 
-    fun stopAdvertise() {
-        Timber.d("stopAdvertise")
-        advertise.stopAdvertising(advertiseCallback)
-    }
 
-    private fun startAdvertiseUnicastAddress() {
-        Timber.d("startAdvertiseUnicastAddress")
-        //TEST ADVERTISING
-        val unicastAddress = bluetoothMeshManager.meshNodeToConfigure!!.node.primaryElementAddress
 
-        val convertedUnicastAddress = byteArrayOf(
-            (((unicastAddress shr 24)) and 0xFF).toByte(),
-            (((unicastAddress shr 16)) and 0xFF).toByte(),
-            (((unicastAddress shr 8)) and 0xFF).toByte(),
-            (((unicastAddress shr 0)) and 0xFF).toByte()
-        )
-        //Settings
-        val advertiseSettingParams = AdvertiseSettings.Builder()
-        advertiseSettingParams.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-            .setConnectable(false)
-        val settings = advertiseSettingParams.build()
-        //DATA
-        val advertiseDataParam = AdvertiseData.Builder()
-        advertiseDataParam.setIncludeDeviceName(false)
-            .setIncludeTxPowerLevel(false)
-            .addManufacturerData(SILAB_COMPANY_IDENTIFIER,convertedUnicastAddress)
-
-        val data = advertiseDataParam.build()
-
-        advertise.startAdvertising(settings,data,advertiseCallback)
-    }
 
 
 
@@ -131,7 +97,6 @@ class NodeViewModel @Inject constructor(
         override fun initialConfigurationLoaded() {
             Timber.d("initialConfigurationLoaded")
             meshStatus.value = MeshStatus.INIT_CONFIGURATION_LOADED
-            startAdvertiseUnicastAddress()
         }
     }
 
@@ -145,19 +110,6 @@ class NodeViewModel @Inject constructor(
         override fun connectionErrorMessage(error: ErrorType) {
             Timber.e("connectionErrorMessage: ${error.type}")
             errorMessage.value = error
-        }
-    }
-
-    private val advertiseCallback = object : AdvertiseCallback() {
-        override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-            super.onStartSuccess(settingsInEffect)
-            Timber.d("onStartSuccess")
-        }
-
-        override fun onStartFailure(errorCode: Int) {
-            super.onStartFailure(errorCode)
-            Timber.e("onStartFailure: $errorCode")
-
         }
     }
 

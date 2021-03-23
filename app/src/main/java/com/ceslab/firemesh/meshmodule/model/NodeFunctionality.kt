@@ -47,9 +47,7 @@ class NodeFunctionality {
     companion object {
 
         fun getFunctionalitiesNamed(node: Node): Set<FunctionalityNamed> {
-            return mutableSetOf(
-                FunctionalityNamed(VENDOR_FUNCTIONALITY.Unknown, "")
-            ).apply {
+            return mutableSetOf<FunctionalityNamed>().apply {
                 addAll(node.elements?.flatMap { it.vendorModels }
                     ?.mapNotNull { vendorModel ->
                         VENDOR_FUNCTIONALITY.fromId(
