@@ -13,7 +13,10 @@ class NodeFunctionality {
     enum class VENDOR_FUNCTIONALITY(vararg val model: VendorModelIdentifier) {
         Unknown,
         MyModelClient(VendorModelIdentifier.MyModelClient),
-        MyModelServer(VendorModelIdentifier.MyModelServer);
+        MyModelServer(VendorModelIdentifier.MyModelServer),
+        GatewayStatusClient(VendorModelIdentifier.GatewayStatusClient),
+        GatewayStatusServer(VendorModelIdentifier.GatewayStatusServer);
+
 
 
         fun getAllModels(): Set<VendorModelIdentifier> {
@@ -58,6 +61,10 @@ class NodeFunctionality {
                                 vendorModelName = "My Model Client"
                             } else if(it.name == VENDOR_FUNCTIONALITY.MyModelServer.name) {
                                 vendorModelName = "My Model Server"
+                            }  else if(it.name == VENDOR_FUNCTIONALITY.GatewayStatusClient.name) {
+                                vendorModelName = "Gateway Status Client"
+                            }  else if(it.name == VENDOR_FUNCTIONALITY.GatewayStatusServer.name) {
+                                vendorModelName = "Gateway Status Server"
                             }
                             FunctionalityNamed(it, vendorModelName)
                         }

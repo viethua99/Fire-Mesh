@@ -52,31 +52,37 @@ class NodeListRecyclerViewAdapter(context: Context) :
             return true
         }
 
-        fun renderUI(meshNode: MeshNode) {
-            val node = meshNode.node
-            tvNodeName.text = node.name
+        fun renderUI(meshNode: MeshNode?) {
+            meshNode?.let {
+                val node = it.node
+                tvNodeName.text = node.name
 
-            if(meshNode.node.deviceCompositionData.supportsLowPower()){
-                imgNodeFeature.setImageResource(R.drawable.img_lpn)
-                if(meshNode.fireSignal == 1) {
-                    imgFireSignal.setImageResource(R.drawable.img_flame)
+                if(it.node.deviceCompositionData.supportsLowPower()){
+                    imgNodeFeature.setImageResource(R.drawable.img_lpn)
+                    imgFireSignal.visibility = View.VISIBLE
+                    if(it.fireSignal == 1) {
+                        imgFireSignal.setImageResource(R.drawable.img_flame)
+                    } else {
+                        imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                    }
+                } else if(it.node.deviceCompositionData.supportsFriend()){
+                    imgFireSignal.visibility = View.GONE
+                    imgNodeFeature.setImageResource(R.drawable.img_friend)
                 } else {
-                    imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                    imgFireSignal.visibility = View.GONE
+                    imgNodeFeature.setImageResource(R.drawable.img_proxy)
                 }
-            } else if(meshNode.node.deviceCompositionData.supportsFriend()){
-                imgNodeFeature.setImageResource(R.drawable.img_friend)
-            } else {
-                imgNodeFeature.setImageResource(R.drawable.img_proxy)
-            }
 
-            if(node.isConnectedAsProxy){
-                tvNodeProxy.visibility = View.VISIBLE
-            } else {
-                tvNodeProxy.visibility = View.GONE
+                if(node.isConnectedAsProxy){
+                    tvNodeProxy.visibility = View.VISIBLE
+                } else {
+                    tvNodeProxy.visibility = View.GONE
+                }
+                tvNodeAddress.text = "0x" + Integer.toHexString(node.primaryElementAddress).toUpperCase()
+                tvNodeStatus.text = "Death"
+                tvNodeBattery.text = "999%"
+
             }
-            tvNodeAddress.text = "0x" + Integer.toHexString(node.primaryElementAddress).toUpperCase()
-            tvNodeStatus.text = "Death"
-            tvNodeBattery.text = "999%"
 
         }
     }

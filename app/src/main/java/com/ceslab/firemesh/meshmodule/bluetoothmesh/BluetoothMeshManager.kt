@@ -27,15 +27,27 @@ class BluetoothMeshManager(context: Context) {
     var currentNetwork: Network? = null
     var currentSubnet: Subnet? = null
     var currentGroup: Group? = null
+
+    //Vendor models
     private val myVendorModelServer = LocalVendorModel(4369, 4369)
     private val myVendorModelClient = LocalVendorModel(4369, 8738)
-    val bluetoothMeshConfiguration =  BluetoothMeshConfiguration(listOf(myVendorModelServer,myVendorModelClient))
+    private val gatewayStatusModelServer = LocalVendorModel(4369, 13107)
+    private val gatewayStatusModelClient = LocalVendorModel(4369, 17476)
+
+    val bluetoothMeshConfiguration = BluetoothMeshConfiguration(
+        listOf(
+            myVendorModelServer,
+            myVendorModelClient,
+            gatewayStatusModelServer,
+            gatewayStatusModelClient
+        )
+    )
 
 
     init {
         BluetoothMesh.initialize(context, bluetoothMeshConfiguration)
         bluetoothMesh = BluetoothMesh.getInstance()
-        val opCodes = byteArrayOf(0x1, 0x2, 0x3,0x4,0x5,0x6,0x7,0x8,0x9,0xA)
+        val opCodes = byteArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA)
 
         val localVendorSettingsMessageHandler =
             LocalVendorSettingsMessageHandler { p0, p1, p2, p3, p4, p5, p6 ->

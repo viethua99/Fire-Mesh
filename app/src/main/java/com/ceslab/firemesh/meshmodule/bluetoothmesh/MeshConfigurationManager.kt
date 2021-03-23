@@ -129,14 +129,14 @@ class MeshConfigurationManager(
         }
         val group = meshNodeToConfigure.node.groups.first()
         group?.let {
-            taskList.addAll(
-                startUnbindModelFromGroupAndClearPublicationSettings(
-                    it,
-                    meshNodeToConfigure.functionality,
-                    isSetPublication,
-                    isAddSubscription
-                )
-            )
+//            taskList.addAll(
+//                startUnbindModelFromGroupAndClearPublicationSettings(
+//                    it,
+//                    meshNodeToConfigure.functionality,
+//                    isSetPublication,
+//                    isAddSubscription
+//                )
+//            )
             taskList.addAll(
                 startBindModelToGroupAndSetPublicationSettings(
                     it,
