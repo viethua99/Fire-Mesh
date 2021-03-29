@@ -232,62 +232,62 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private fun setupFunctionalitySpinner(meshNode: MeshNode) {
-        Timber.d("setupFunctionalitySpinner: $")
-        activity?.runOnUiThread {
-            meshNode.apply {
-                val functionalitiesNamed =
-                    NodeFunctionality.getFunctionalitiesNamed(node).toMutableList()
-                functionalitiesNamed.sortBy { it.functionalityName }
-
-                val functionalitiesName = functionalitiesNamed.map { it.functionalityName }
-                val functionalityAdapter = ArrayAdapter<String>(
-                    context!!,
-                    android.R.layout.simple_spinner_item,
-                    functionalitiesName
-                )
-                functionalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner_functionality.apply {
-                    onItemSelectedListener = null
-                    adapter = functionalityAdapter
-                    if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
-                        functionalitiesNamed.indexOfFirst { it.functionality == functionality }
-                            .takeUnless { it == -1 }
-                            ?.let { index ->
-                                setSelection(index, false)
-                            }
-
-                    } else {
-                        setSelection(Adapter.NO_SELECTION, false)
-                    }
-
-                    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(
-                            parent: AdapterView<*>?,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            Timber.d("onItemSelected: $position")
-                            if (position != 0) {
-//                                val modelConfigDialog =
-//                                    ModelConfigDialog(functionalitiesNamed[position].functionality)
-//                                modelConfigDialog.setModelConfigCallback(object :
-//                                    ModelConfigCallback {
-//                                    override fun onCancel() {
-//                                        Timber.d("onCancel")
-//                                        setSelection(0, false)
-//                                    }
-//                                })
-//                                modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
-                            }
-
-                        }
-
-                        override fun onNothingSelected(parent: AdapterView<*>?) {}
-                    }
-                }
-            }
-        }
+//        Timber.d("setupFunctionalitySpinner: $")
+//        activity?.runOnUiThread {
+//            meshNode.apply {
+//                val functionalitiesNamed =
+//                    NodeFunctionality.getFunctionalitiesNamed(node).toMutableList()
+//                functionalitiesNamed.sortBy { it.functionalityName }
+//
+//                val functionalitiesName = functionalitiesNamed.map { it.functionalityName }
+//                val functionalityAdapter = ArrayAdapter<String>(
+//                    context!!,
+//                    android.R.layout.simple_spinner_item,
+//                    functionalitiesName
+//                )
+//                functionalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//                spinner_functionality.apply {
+//                    onItemSelectedListener = null
+//                    adapter = functionalityAdapter
+//                    if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
+//                        functionalitiesNamed.indexOfFirst { it.functionality == functionality }
+//                            .takeUnless { it == -1 }
+//                            ?.let { index ->
+//                                setSelection(index, false)
+//                            }
+//
+//                    } else {
+//                        setSelection(Adapter.NO_SELECTION, false)
+//                    }
+//
+//                    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//                        override fun onItemSelected(
+//                            parent: AdapterView<*>?,
+//                            view: View?,
+//                            position: Int,
+//                            id: Long
+//                        ) {
+//                            Timber.d("onItemSelected: $position")
+//                            if (position != 0) {
+////                                val modelConfigDialog =
+////                                    ModelConfigDialog(functionalitiesNamed[position].functionality)
+////                                modelConfigDialog.setModelConfigCallback(object :
+////                                    ModelConfigCallback {
+////                                    override fun onCancel() {
+////                                        Timber.d("onCancel")
+////                                        setSelection(0, false)
+////                                    }
+////                                })
+////                                modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+//                            }
+//
+//                        }
+//
+//                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+//                    }
+//                }
+//            }
+//        }
     }
 
     private val configurationStatusObserver = Observer<ConfigurationTask> {
@@ -339,7 +339,6 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
-
             functionalityRecyclerViewAdapter.setDataList(NodeFunctionality.getFunctionalitiesNamed(it.meshNode.node).toMutableList())
            // setupFunctionalitySpinner(it.meshNode)
         }

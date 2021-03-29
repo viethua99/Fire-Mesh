@@ -106,7 +106,7 @@ class MeshConfigurationManager(
             Timber.d("processChangeGroup: isNotEmpty")
             val oldGroup = meshNodeToConfigure.node.groups.first()
             taskList.addAll(
-                unsubscribeModelFromGroup(oldGroup, meshNodeToConfigure.functionality)
+                unsubscribeModelFromGroup(oldGroup, meshNodeToConfigure.functionalityList)
             )
             taskList.add(unbindNodeFromGroup(oldGroup))
         }
@@ -127,7 +127,6 @@ class MeshConfigurationManager(
             meshNodeManager.removeNodeFunc(meshNodeToConfigure)
             return
         }
-        Timber.d("test= ${meshNodeToConfigure.functionalityList}")
         val group = meshNodeToConfigure.node.groups.first()
         group?.let {
 //            taskList.addAll(
@@ -242,15 +241,18 @@ class MeshConfigurationManager(
 
     private fun unsubscribeModelFromGroup(
         group: Group,
-        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY
+        functionalityList: Set<NodeFunctionality.VENDOR_FUNCTIONALITY>
     ): List<Runnable> {
+        Timber.d("unsubscribeModelFromGroup: ${functionalityList}")
         val tasks = mutableListOf<Runnable>()
-        NodeFunctionality.getVendorModels(
-            meshNodeToConfigure.node,
-            functionality
-        ).forEach { model ->
-            Timber.d("unsubscribeModelFromGroup= ${model.vendorAssignedModelIdentifier()}")
-            tasks.add(removeSubscriptionSettings(model, group))
+        for(functionality in functionalityList){
+            NodeFunctionality.getVendorModels(
+                meshNodeToConfigure.node,
+                functionality
+            ).forEach { model ->
+                Timber.d("unsubscribeModelFromGroup= ${model.vendorAssignedModelIdentifier()}")
+                tasks.add(removeSubscriptionSettings(model, group))
+            }
         }
         return tasks
     }

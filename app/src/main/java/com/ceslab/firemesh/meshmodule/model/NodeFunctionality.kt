@@ -18,7 +18,6 @@ class NodeFunctionality {
         GatewayStatusServer(VendorModelIdentifier.GatewayStatusServer);
 
 
-
         fun getAllModels(): Set<VendorModelIdentifier> {
             val models = mutableSetOf<VendorModelIdentifier>()
             models.addAll(model)
@@ -71,9 +70,8 @@ class NodeFunctionality {
         }
 
         fun getVendorModels(node: Node, functionality: VENDOR_FUNCTIONALITY): Set<VendorModel> {
-            Timber.d("getVendorModels")
             val supportedModelIds = functionality.getAllModels()
-
+            Timber.d("getVendorModels=${functionality.getAllModels()}")
             return node.elements?.flatMap { it.vendorModels }
                 ?.filter { vendorModel ->
                     supportedModelIds.any {

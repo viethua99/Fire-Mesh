@@ -30,6 +30,7 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
     private fun wrapNode(node: Node): MeshNode {
         var meshNode: MeshNode? = meshNodes[node]
         if (meshNode == null) {
+            Timber.d("meshNode = null")
             meshNode = MeshNode(node)
          //   meshNode.functionality = nodeFunctionalityDb.getFunctionality(node)
             meshNode.functionalityList = nodeFunctionalityDb.getFunctionalityList(node).toMutableSet()
@@ -52,17 +53,18 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
       //  meshNode.functionality = functionality
         if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
             meshNode.functionalityList.add(functionality)
-            nodeFunctionalityDb.saveFunctionality(meshNode.node, functionality)
+         //   nodeFunctionalityDb.saveFunctionality(meshNode.node, functionality)
             nodeFunctionalityDb.saveFunctionalityList(
                 meshNode.node,
                 meshNode.functionalityList
             )
         } else {
-            nodeFunctionalityDb.removeFunctionality(meshNode.node)
+            nodeFunctionalityDb.removeFunctionalityList(meshNode.node)
         }
     }
 
     fun removeNodeFunc(meshNode: MeshNode) {
+        Timber.d("removeNodeFuc")
      //   meshNode.functionality = NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown
         meshNode.functionalityList = mutableSetOf()
         nodeFunctionalityDb.removeFunctionalityList(meshNode.node)

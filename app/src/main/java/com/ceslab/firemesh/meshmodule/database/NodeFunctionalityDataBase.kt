@@ -45,6 +45,7 @@ class NodeFunctionalityDataBase(val context: Context) {
 
     //Functionality list
     fun saveFunctionalityList(node: Node,functionalityList:Set<NodeFunctionality.VENDOR_FUNCTIONALITY>){
+        Timber.d("saveFunctionalityList: ${node.uuid!!.contentToString()}")
         val gson = Gson()
         val json = gson.toJson(functionalityList)
         val editor = testSharedPreferences.edit()
@@ -62,7 +63,8 @@ class NodeFunctionalityDataBase(val context: Context) {
     }
 
     fun removeFunctionalityList(node: Node) {
-        val editor = sharedPreferences.edit()
+        Timber.d("removeFunctionalityList: ${node.uuid!!.contentToString()}")
+        val editor = testSharedPreferences.edit()
         editor.remove(node.uuid!!.contentToString())
         editor.apply()
     }
