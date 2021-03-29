@@ -318,7 +318,10 @@ class NodeConfigFragment : BaseFragment() {
                     ll_functionality.visibility = View.VISIBLE
                     hideDialog()
                 }
-                ConfigurationTask.CONFIG_CONTROL_MODEL_SUCCEED -> hideDialog()
+                ConfigurationTask.CONFIG_CONTROL_MODEL_SUCCEED -> {
+
+                    hideDialog()
+                }
                 ConfigurationTask.CONFIG_CONTROL_PUBLICATION_SUCCEED -> hideDialog()
                 ConfigurationTask.CONFIG_CONTROL_SUBSCRIPTION_SUCCEED -> hideDialog()
             }
@@ -332,18 +335,13 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val nodeConfigObserver = Observer<NodeConfig> {
-        Timber.d("nodeConfigObserver")
+        Timber.d("nodeConfigObserver=${it.meshNode.functionalityList}")
         activity?.runOnUiThread {
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
-            val test =  NodeFunctionality.getFunctionalitiesNamed(it.meshNode.node).toMutableList()
-            for(func in test){
-                Timber.d("func=$func")
-            }
-            functionalityRecyclerViewAdapter.setDataList(
-test
-            )
-            setupFunctionalitySpinner(it.meshNode)
+
+            functionalityRecyclerViewAdapter.setDataList(NodeFunctionality.getFunctionalitiesNamed(it.meshNode.node).toMutableList())
+           // setupFunctionalitySpinner(it.meshNode)
         }
     }
 

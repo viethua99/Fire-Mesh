@@ -19,7 +19,7 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
         return wrapNode(node)
     }
 
-    fun getMeshNodeList(subnet: Subnet):Set<MeshNode>{
+    fun getMeshNodeList(subnet: Subnet): Set<MeshNode> {
         return wrapNodeList(subnet.nodes)
     }
 
@@ -31,9 +31,11 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
         var meshNode: MeshNode? = meshNodes[node]
         if (meshNode == null) {
             meshNode = MeshNode(node)
-            meshNode.functionality = nodeFunctionalityDb.getFunctionality(node)
+         //   meshNode.functionality = nodeFunctionalityDb.getFunctionality(node)
+            meshNode.functionalityList = nodeFunctionalityDb.getFunctionalityList(node).toMutableSet()
             meshNodes[node] = meshNode
         }
+        Timber.d("wrapNode = ${meshNode.functionalityList}")
         return meshNode
     }
 
@@ -46,16 +48,23 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
     }
 
     fun updateNodeFunc(meshNode: MeshNode, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
-        meshNode.functionality = functionality
+        Timber.d("updateNodeFunc: ${functionality.name}")
+      //  meshNode.functionality = functionality
         if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
+            meshNode.functionalityList.add(functionality)
             nodeFunctionalityDb.saveFunctionality(meshNode.node, functionality)
+            nodeFunctionalityDb.saveFunctionalityList(
+                meshNode.node,
+                meshNode.functionalityList
+            )
         } else {
             nodeFunctionalityDb.removeFunctionality(meshNode.node)
         }
     }
 
     fun removeNodeFunc(meshNode: MeshNode) {
-        meshNode.functionality = NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown
-        nodeFunctionalityDb.removeFunctionality(meshNode.node)
+     //   meshNode.functionality = NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown
+        meshNode.functionalityList = mutableSetOf()
+        nodeFunctionalityDb.removeFunctionalityList(meshNode.node)
     }
 }

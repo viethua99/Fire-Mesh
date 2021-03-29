@@ -127,6 +127,7 @@ class MeshConfigurationManager(
             meshNodeManager.removeNodeFunc(meshNodeToConfigure)
             return
         }
+        Timber.d("test= ${meshNodeToConfigure.functionalityList}")
         val group = meshNodeToConfigure.node.groups.first()
         group?.let {
 //            taskList.addAll(
@@ -248,6 +249,7 @@ class MeshConfigurationManager(
             meshNodeToConfigure.node,
             functionality
         ).forEach { model ->
+            Timber.d("unsubscribeModelFromGroup= ${model.vendorAssignedModelIdentifier()}")
             tasks.add(removeSubscriptionSettings(model, group))
         }
         return tasks
