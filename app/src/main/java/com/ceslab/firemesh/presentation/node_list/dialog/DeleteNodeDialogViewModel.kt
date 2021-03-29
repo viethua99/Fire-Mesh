@@ -37,7 +37,7 @@ class DeleteNodeDialogViewModel @Inject constructor(
             override fun success(node: Node?) {
                 node?.let {
                     val meshNode = meshNodeManager.getMeshNode(it)
-                    meshNodeManager.removeNodeFunc(meshNode)
+                    meshNodeManager.clearNodeFunctionalityList(meshNode)
                     isDeletedSucceed.value = true
                 }
             }

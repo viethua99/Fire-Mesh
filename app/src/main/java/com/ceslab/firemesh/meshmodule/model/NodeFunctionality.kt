@@ -10,12 +10,12 @@ import timber.log.Timber
 
 class NodeFunctionality {
 
-    enum class VENDOR_FUNCTIONALITY(vararg val model: VendorModelIdentifier) {
-        Unknown,
-        NodeStatusClient(VendorModelIdentifier.NodeStatusClient),
-        NodeStatusServer(VendorModelIdentifier.NodeStatusServer),
-        GatewayStatusClient(VendorModelIdentifier.GatewayStatusClient),
-        GatewayStatusServer(VendorModelIdentifier.GatewayStatusServer);
+    enum class VENDOR_FUNCTIONALITY(var isBinded: Boolean,vararg val model: VendorModelIdentifier) {
+        Unknown(false,VendorModelIdentifier.Unknown),
+        NodeStatusClient(false,VendorModelIdentifier.NodeStatusClient),
+        NodeStatusServer(false,VendorModelIdentifier.NodeStatusServer),
+        GatewayStatusClient(false,VendorModelIdentifier.GatewayStatusClient),
+        GatewayStatusServer(false,VendorModelIdentifier.GatewayStatusServer);
 
 
         fun getAllModels(): Set<VendorModelIdentifier> {

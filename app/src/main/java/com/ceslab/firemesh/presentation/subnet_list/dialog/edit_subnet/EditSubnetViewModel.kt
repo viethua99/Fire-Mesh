@@ -125,7 +125,7 @@ class EditSubnetViewModel @Inject constructor(
 
     private fun removeNodesFunc(subnet: Subnet) {
         meshNodeManager.getMeshNodeList(subnet).forEach {
-            meshNodeManager.removeNodeFunc(it)
+            meshNodeManager.clearNodeFunctionalityList(it)
         }
     }
 

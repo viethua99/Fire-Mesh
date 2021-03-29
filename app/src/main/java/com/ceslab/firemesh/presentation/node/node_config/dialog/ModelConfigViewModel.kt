@@ -21,10 +21,10 @@ class ModelConfigViewModel @Inject constructor(
     fun getConfigFinishStatus():LiveData<Boolean>{
         return isConfigFinished
     }
-    fun changeFunctionality(newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY,isSetPublication:Boolean,isAddSubscription: Boolean) {
+    fun bindFunctionality(newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY, isSetPublication:Boolean, isAddSubscription: Boolean) {
         Timber.d("changeFunctionality: functionality=$newFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
         meshConfigurationManager.addConfigurationTaskListener(configurationTaskListener)
-        meshConfigurationManager.processChangeFunctionality(newFunctionality,isSetPublication,isAddSubscription)
+        meshConfigurationManager.processBindModelToGroup(newFunctionality,isSetPublication,isAddSubscription)
     }
 
     private val configurationTaskListener = object : ConfigurationTaskListener {

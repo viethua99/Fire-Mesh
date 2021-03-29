@@ -1,11 +1,9 @@
 package com.ceslab.firemesh.meshmodule.bluetoothmesh
 
-import com.ceslab.firemesh.meshmodule.database.NodeFunctionalityDataBase
 import com.ceslab.firemesh.meshmodule.listener.ConfigurationTaskListener
 import com.ceslab.firemesh.meshmodule.listener.NodeFeatureListener
 import com.ceslab.firemesh.meshmodule.listener.NodeRetransmissionListener
 import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
-import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.configuration_control.CheckNodeBehaviourCallback
@@ -110,43 +108,53 @@ class MeshConfigurationManager(
             )
             taskList.add(unbindNodeFromGroup(oldGroup))
         }
-        taskList.add(updateFunctionalityInSharedPreference(NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown))
+        taskList.add(clearFunctionalityInSharedPreference())
         if (newGroup != null) {
             taskList.add(bindNodeToGroup(newGroup))
         }
         startTasks()
     }
 
-    fun processChangeFunctionality(
-        newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
+    fun processBindModelToGroup(
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
         isSetPublication: Boolean,
         isAddSubscription: Boolean
     ) {
-        Timber.d("changeFunctionality: functionality=$newFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
+        Timber.d("processBindModelToGroup: functionality=$functionality -- publication=$isSetPublication --subscription=$isAddSubscription")
         if (meshNodeToConfigure.node.groups.isEmpty()) {
-            meshNodeManager.removeNodeFunc(meshNodeToConfigure)
+            meshNodeManager.clearNodeFunctionalityList(meshNodeToConfigure)
             return
         }
         val group = meshNodeToConfigure.node.groups.first()
         group?.let {
-//            taskList.addAll(
-//                startUnbindModelFromGroupAndClearPublicationSettings(
-//                    it,
-//                    meshNodeToConfigure.functionality,
-//                    isSetPublication,
-//                    isAddSubscription
-//                )
-//            )
             taskList.addAll(
                 startBindModelToGroupAndSetPublicationSettings(
                     it,
-                    newFunctionality,
+                    functionality,
                     isSetPublication,
                     isAddSubscription
                 )
             )
         }
-        taskList.add(updateFunctionalityInSharedPreference(newFunctionality))
+        taskList.add(addFunctionalityInSharedPreference(functionality))
+        startTasks()
+    }
+
+    fun processUnbindModelFromGroup(
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
+        isSetPublication: Boolean,
+        isAddSubscription: Boolean
+    ) {
+        Timber.d("processUnbindModelToGroup: functionality=$functionality -- publication=$isSetPublication --subscription=$isAddSubscription")
+        if (meshNodeToConfigure.node.groups.isEmpty()) {
+            return
+        }
+
+        val group = meshNodeToConfigure.node.groups.first()
+        group?.let {
+            taskList.addAll(startUnbindModelFromGroupAndClearPublicationSettings(it, functionality))
+        }
+        taskList.add(removeFunctionalityInSharedPreference(functionality))
         startTasks()
     }
 
@@ -221,19 +229,13 @@ class MeshConfigurationManager(
 
     private fun startUnbindModelFromGroupAndClearPublicationSettings(
         group: Group,
-        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
-        isSetPublication: Boolean,
-        isAddSubscription: Boolean
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY
     ): List<Runnable> {
         val tasks = mutableListOf<Runnable>()
         NodeFunctionality.getVendorModels(meshNodeToConfigure.node, functionality)
             .forEach { model ->
-                if (isAddSubscription) {
-                    tasks.add(removeSubscriptionSettings(model, group))
-                }
-                if (isSetPublication) {
-                    tasks.add(clearPublicationSettings(model))
-                }
+                tasks.add(removeSubscriptionSettings(model, group))
+                tasks.add(clearPublicationSettings(model))
                 tasks.add(unbindModelFromGroup(model, group))
             }
         return tasks
@@ -338,11 +340,35 @@ class MeshConfigurationManager(
         }
     }
 
-    private fun updateFunctionalityInSharedPreference(functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): Runnable {
+    private fun addFunctionalityInSharedPreference(functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): Runnable {
         Timber.d("updateFunctionalityInSharedPreference")
         return Runnable {
             try {
-                meshNodeManager.updateNodeFunc(meshNodeToConfigure, functionality)
+                meshNodeManager.addNodeFunctionalityToList(meshNodeToConfigure, functionality)
+                takeNextTask()
+            } catch (e: NodeChangeNameException) {
+                Timber.e(e.localizedMessage)
+            }
+        }
+    }
+
+    private fun removeFunctionalityInSharedPreference(functionality: NodeFunctionality.VENDOR_FUNCTIONALITY): Runnable {
+        Timber.d("removeFunctionalityInSharedPreference")
+        return Runnable {
+            try {
+                meshNodeManager.removeNodeFunctionalityFromList(meshNodeToConfigure, functionality)
+                takeNextTask()
+            } catch (e: NodeChangeNameException) {
+                Timber.e(e.localizedMessage)
+            }
+        }
+    }
+
+    private fun clearFunctionalityInSharedPreference(): Runnable {
+        Timber.d("clearFunctionalityInSharedPreference")
+        return Runnable {
+            try {
+                meshNodeManager.clearNodeFunctionalityList(meshNodeToConfigure)
                 takeNextTask()
             } catch (e: NodeChangeNameException) {
                 Timber.e(e.localizedMessage)

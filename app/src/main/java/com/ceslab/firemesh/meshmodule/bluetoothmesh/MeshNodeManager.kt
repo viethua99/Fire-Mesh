@@ -48,25 +48,28 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
         return result
     }
 
-    fun updateNodeFunc(meshNode: MeshNode, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
+    fun addNodeFunctionalityToList(meshNode: MeshNode, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
         Timber.d("updateNodeFunc: ${functionality.name}")
       //  meshNode.functionality = functionality
         if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
             meshNode.functionalityList.add(functionality)
          //   nodeFunctionalityDb.saveFunctionality(meshNode.node, functionality)
-            nodeFunctionalityDb.saveFunctionalityList(
-                meshNode.node,
-                meshNode.functionalityList
-            )
-        } else {
-            nodeFunctionalityDb.removeFunctionalityList(meshNode.node)
+            nodeFunctionalityDb.saveFunctionalityList(meshNode.node, meshNode.functionalityList)
         }
     }
 
-    fun removeNodeFunc(meshNode: MeshNode) {
-        Timber.d("removeNodeFuc")
+    fun removeNodeFunctionalityFromList(meshNode: MeshNode, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY){
+        Timber.d("removeNodeFunc: ${functionality.name}")
+        if(meshNode.functionalityList.contains(functionality)){
+            meshNode.functionalityList.remove(functionality)
+            nodeFunctionalityDb.saveFunctionalityList(meshNode.node,meshNode.functionalityList)
+        }
+    }
+
+    fun clearNodeFunctionalityList(meshNode: MeshNode) {
+        Timber.d("clearNodeFunc")
      //   meshNode.functionality = NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown
         meshNode.functionalityList = mutableSetOf()
-        nodeFunctionalityDb.removeFunctionalityList(meshNode.node)
+        nodeFunctionalityDb.clearFunctionalityList(meshNode.node)
     }
 }

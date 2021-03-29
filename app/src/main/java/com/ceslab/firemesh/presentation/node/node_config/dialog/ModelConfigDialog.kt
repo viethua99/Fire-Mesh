@@ -1,6 +1,5 @@
 package com.ceslab.firemesh.presentation.node.node_config.dialog
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -92,7 +91,7 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
         val isAddSubscription = cb_add_subscription.isChecked
         Timber.d("onStartConfigButtonClicked: functionality=$vendorFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Starting Config Model")
-        modelConfigViewModel.changeFunctionality(vendorFunctionality.functionality,isSetPublication,isAddSubscription)
+        modelConfigViewModel.bindFunctionality(vendorFunctionality.functionality,isSetPublication,isAddSubscription)
     }
 
     private val onConfigFinishedObserver = Observer<Boolean> {

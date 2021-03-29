@@ -15,6 +15,7 @@ import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.NodeConfig
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
+import com.ceslab.firemesh.meshmodule.model.NodeFunctionality.Companion.getFunctionalitiesNamed
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
@@ -339,7 +340,18 @@ class NodeConfigFragment : BaseFragment() {
         activity?.runOnUiThread {
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
-            functionalityRecyclerViewAdapter.setDataList(NodeFunctionality.getFunctionalitiesNamed(it.meshNode.node).toMutableList())
+            val functionalityNamedList = getFunctionalitiesNamed(it.meshNode.node)
+            for(functionalityNamed in functionalityNamedList ){
+                if(it.meshNode.functionalityList.contains(functionalityNamed.functionality)){
+                    functionalityNamed.functionality.isBinded = true
+                }
+            }
+
+            for(test in functionalityNamedList){
+                Timber.d("TEST= ${test.functionalityName} -- isBinded=${test.functionality.isBinded}")
+            }
+
+            functionalityRecyclerViewAdapter.setDataList(functionalityNamedList.toMutableList())
            // setupFunctionalitySpinner(it.meshNode)
         }
     }
@@ -377,7 +389,7 @@ class NodeConfigFragment : BaseFragment() {
     }
 
     private val proxyAttentionObserver = Observer<Boolean> {
-        Timber.d("proxyAttentionObsever = $it")
+        Timber.d("proxyAttentionObserver = $it")
         activity?.runOnUiThread {
             if (it == true) {
                 val builder =

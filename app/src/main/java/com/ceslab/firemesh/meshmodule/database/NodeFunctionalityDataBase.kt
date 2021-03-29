@@ -62,7 +62,7 @@ class NodeFunctionalityDataBase(val context: Context) {
         return functionalityList ?: emptySet()
     }
 
-    fun removeFunctionalityList(node: Node) {
+    fun clearFunctionalityList(node: Node) {
         Timber.d("removeFunctionalityList: ${node.uuid!!.contentToString()}")
         val editor = testSharedPreferences.edit()
         editor.remove(node.uuid!!.contentToString())

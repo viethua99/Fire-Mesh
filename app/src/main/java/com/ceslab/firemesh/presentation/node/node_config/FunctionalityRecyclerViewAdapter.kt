@@ -32,6 +32,7 @@ class FunctionalityRecyclerViewAdapter(context: Context) :
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         var tvFunctionalityName: TextView = view.findViewById(R.id.tv_functionality_name)
+        var tvFunctionalityBinded: TextView = view.findViewById(R.id.tv_functionality_binded)
 
 
         init {
@@ -47,6 +48,13 @@ class FunctionalityRecyclerViewAdapter(context: Context) :
         fun renderUI(functionality: NodeFunctionality.FunctionalityNamed) {
             Timber.d("Adapter = $functionality")
             tvFunctionalityName.setText(functionality.functionalityName)
+            if(functionality.functionality.isBinded){
+                tvFunctionalityBinded.setText("Binded")
+            } else {
+                tvFunctionalityBinded.setText("Not Binded")
+
+            }
+
         }
     }
 }

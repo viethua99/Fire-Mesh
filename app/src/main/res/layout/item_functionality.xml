@@ -21,13 +21,23 @@
                 android:textColor="@color/primary_color"
                 android:textSize="14sp"/>
 
-            <ImageView
-                android:id="@+id/iv_bluetooth"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+            <TextView
+                android:id="@+id/tv_functionality_binded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Binded"
+                android:textColor="@color/primary_color"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_add" />
+                android:textSize="14sp"/>
+
+<!--            <ImageView-->
+<!--                android:id="@+id/iv_bluetooth"-->
+<!--                android:layout_width="25dp"-->
+<!--                android:layout_height="25dp"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:src="@drawable/ic_add" />-->
         </RelativeLayout>
 
 
