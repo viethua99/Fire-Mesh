@@ -12,8 +12,8 @@ class NodeFunctionality {
 
     enum class VENDOR_FUNCTIONALITY(vararg val model: VendorModelIdentifier) {
         Unknown,
-        MyModelClient(VendorModelIdentifier.MyModelClient),
-        MyModelServer(VendorModelIdentifier.MyModelServer),
+        NodeStatusClient(VendorModelIdentifier.NodeStatusClient),
+        NodeStatusServer(VendorModelIdentifier.NodeStatusServer),
         GatewayStatusClient(VendorModelIdentifier.GatewayStatusClient),
         GatewayStatusServer(VendorModelIdentifier.GatewayStatusServer);
 
@@ -55,10 +55,10 @@ class NodeFunctionality {
                             vendorModel.vendorAssignedModelIdentifier()
                         )?.let {
                             var vendorModelName = "Unknown Model"
-                            if(it.name == VENDOR_FUNCTIONALITY.MyModelClient.name){
-                                vendorModelName = "My Model Client"
-                            } else if(it.name == VENDOR_FUNCTIONALITY.MyModelServer.name) {
-                                vendorModelName = "My Model Server"
+                            if(it.name == VENDOR_FUNCTIONALITY.NodeStatusClient.name){
+                                vendorModelName = "Node Status Client"
+                            } else if(it.name == VENDOR_FUNCTIONALITY.NodeStatusServer.name) {
+                                vendorModelName = "Node Status Server"
                             }  else if(it.name == VENDOR_FUNCTIONALITY.GatewayStatusClient.name) {
                                 vendorModelName = "Gateway Status Client"
                             }  else if(it.name == VENDOR_FUNCTIONALITY.GatewayStatusServer.name) {

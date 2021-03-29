@@ -5,8 +5,8 @@ package com.ceslab.firemesh.meshmodule.model
  */
 
 enum class VendorModelIdentifier(val assignedModelIdentifier: Int, val companyIdentifier: Int) {
-    MyModelClient(8738, 4369), //0x 2222 1111
-    MyModelServer(4369, 4369), // 0x 1111 1111
+    NodeStatusClient(8738, 4369), //0x 2222 1111
+    NodeStatusServer(4369, 4369), // 0x 1111 1111
     GatewayStatusClient(17476, 4369), // 0x 4444 1111
     GatewayStatusServer(13107, 4369) // 0x 3333 1111
 

@@ -26,6 +26,7 @@ class NodeListViewModel @Inject constructor(
     companion object {
         const val COMPANY_ID = 0x6969
     }
+
     private val meshNodeList = MutableLiveData<Set<MeshNode>>()
 
     fun setListeners() {
@@ -89,7 +90,7 @@ class NodeListViewModel @Inject constructor(
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
 //            val rawData = result?.scanRecord?.bytes
 //            if (rawData != null) {
-//                Timber.d(Converters.bytesToHexWhitespaceDelimited(rawData))
+//                Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
 //            }
 
             val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
