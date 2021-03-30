@@ -18,20 +18,25 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <CheckBox
             android:id="@+id/cb_set_publication"
-            android:text="Set Publication"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary_color"
+            android:text="Set Publication" />
+
         <CheckBox
-            android:layout_marginLeft="20dp"
             android:id="@+id/cb_add_subscription"
-            android:text="Add Subscription"
+
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:buttonTint="@color/primary_color"
+            android:text="Add Subscription" />
     </LinearLayout>
 
     <Button

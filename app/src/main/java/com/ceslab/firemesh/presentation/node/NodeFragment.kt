@@ -34,6 +34,7 @@ class NodeFragment(private val nodeName: String) : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
+        setHasOptionsMenu(true)
         arguments?.let {
             if (it.containsKey(ProvisionBottomDialog.IS_FIRST_CONFIG_KEY)) {
                 isFirstConfig = it.getBoolean(ProvisionBottomDialog.IS_FIRST_CONFIG_KEY)
@@ -45,6 +46,11 @@ class NodeFragment(private val nodeName: String) : BaseFragment() {
         super.onDestroy()
         Timber.d("onDestroy")
         disconnectFromNode()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
     }
 
 

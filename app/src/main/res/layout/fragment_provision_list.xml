@@ -2,14 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_provision"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/scanning_gradient_container"
         android:background="@color/gray_background_color" />
-
+    
     <LinearLayout
         android:layout_above="@id/scanning_gradient_container"
         android:id="@+id/looking_for_devices_background"

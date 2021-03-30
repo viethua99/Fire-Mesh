@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.node.node_config.dialog
+package com.ceslab.firemesh.presentation.node.node_config.unbind_dialog
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -16,22 +16,22 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.dialog_model_config_bottom_sheet.*
-import kotlinx.android.synthetic.main.dialog_model_config_bottom_sheet.view.*
+import kotlinx.android.synthetic.main.dialog_model_unbind_bottom_sheet.*
+import kotlinx.android.synthetic.main.dialog_model_unbind_bottom_sheet.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
 /**
- * Created by Viet Hua on 03/09/2021.
+ * Created by Viet Hua on 03/30/2021.
  */
 
-class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.FunctionalityNamed) : BottomSheetDialogFragment() {
+class ModelUnbindDialog(private val vendorFunctionality: NodeFunctionality.FunctionalityNamed) : BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private lateinit var modelConfigViewModel: ModelConfigViewModel
+    private lateinit var modelUnbindViewModel: ModelUnbindViewModel
 
-    private lateinit var modelConfigCallback: ModelConfigCallback
+    private lateinit var modelUnbindCallback: ModelUnbindCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +44,8 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
         savedInstanceState: Bundle?
     ): View? {
         Timber.d("onCreateView")
-        val view = inflater.inflate(R.layout.dialog_model_config_bottom_sheet, container, false)
-        view.btn_start_config.setOnClickListener(onStartConfigButtonClicked)
+        val view = inflater.inflate(R.layout.dialog_model_unbind_bottom_sheet, container, false)
+        view.btn_unbind_model.setOnClickListener(onUnbindButtonClicked)
         return view
     }
 
@@ -54,8 +54,6 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
         Timber.d("onViewCreated")
         setupViewModel()
         tv_functionality_name.setText(vendorFunctionality.functionalityName)
-        cb_add_subscription.isChecked = true
-        cb_set_publication.isChecked = true
         dialog?.setOnShowListener {
             val dialog = it as BottomSheetDialog
             val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
@@ -69,29 +67,27 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Timber.d("onCancel")
-        modelConfigCallback.onCancel()
+        modelUnbindCallback.onCancel()
     }
 
-    fun setModelConfigCallback(modelConfigCallback: ModelConfigCallback) {
-        this.modelConfigCallback = modelConfigCallback
+    fun setModelUnbindCallback(unbindCallback: ModelUnbindCallback) {
+        this.modelUnbindCallback = unbindCallback
     }
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        modelConfigViewModel = ViewModelProvider(this, viewModelFactory).get(ModelConfigViewModel::class.java)
-        modelConfigViewModel.getConfigFinishStatus().observe(this,onConfigFinishedObserver)
+        modelUnbindViewModel = ViewModelProvider(this, viewModelFactory).get(ModelUnbindViewModel::class.java)
+        modelUnbindViewModel.getConfigFinishStatus().observe(this,onConfigFinishedObserver)
     }
 
 
 
 
-    private val onStartConfigButtonClicked = View.OnClickListener {
-        val isSetPublication = cb_set_publication.isChecked
-        val isAddSubscription = cb_add_subscription.isChecked
-        Timber.d("onStartConfigButtonClicked: functionality=$vendorFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
+    private val onUnbindButtonClicked = View.OnClickListener {
+        Timber.d("onStartConfigButtonClicked: functionality=$vendorFunctionality")
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Starting Config Model")
-        modelConfigViewModel.bindFunctionality(vendorFunctionality.functionality,isSetPublication,isAddSubscription)
+        modelUnbindViewModel.unbindFunctionality(vendorFunctionality.functionality)
     }
 
     private val onConfigFinishedObserver = Observer<Boolean> {

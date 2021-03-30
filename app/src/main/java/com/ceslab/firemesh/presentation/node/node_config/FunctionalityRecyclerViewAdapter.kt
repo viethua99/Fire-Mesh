@@ -1,6 +1,7 @@
 package com.ceslab.firemesh.presentation.node.node_config
 
 import android.content.Context
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -49,9 +50,11 @@ class FunctionalityRecyclerViewAdapter(context: Context) :
             Timber.d("Adapter = $functionality")
             tvFunctionalityName.setText(functionality.functionalityName)
             if(functionality.functionality.isBinded){
-                tvFunctionalityBinded.setText("Binded")
+                tvFunctionalityBinded.text = "Unbind"
+                tvFunctionalityBinded.setTextColor(Color.parseColor("#F44336"))
             } else {
-                tvFunctionalityBinded.setText("Not Binded")
+                tvFunctionalityBinded.text = "Bind"
+                tvFunctionalityBinded.setTextColor(Color.parseColor("#0288D1"))
 
             }
 

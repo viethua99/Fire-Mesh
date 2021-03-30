@@ -32,7 +32,6 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
         if (meshNode == null) {
             Timber.d("meshNode = null")
             meshNode = MeshNode(node)
-         //   meshNode.functionality = nodeFunctionalityDb.getFunctionality(node)
             meshNode.functionalityList = nodeFunctionalityDb.getFunctionalityList(node).toMutableSet()
             meshNodes[node] = meshNode
         }
@@ -50,16 +49,14 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
 
     fun addNodeFunctionalityToList(meshNode: MeshNode, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
         Timber.d("updateNodeFunc: ${functionality.name}")
-      //  meshNode.functionality = functionality
         if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
             meshNode.functionalityList.add(functionality)
-         //   nodeFunctionalityDb.saveFunctionality(meshNode.node, functionality)
             nodeFunctionalityDb.saveFunctionalityList(meshNode.node, meshNode.functionalityList)
         }
     }
 
     fun removeNodeFunctionalityFromList(meshNode: MeshNode, functionality: NodeFunctionality.VENDOR_FUNCTIONALITY){
-        Timber.d("removeNodeFunc: ${functionality.name}")
+        Timber.d("removeNodeFunctionalityFromList: ${functionality.name}")
         if(meshNode.functionalityList.contains(functionality)){
             meshNode.functionalityList.remove(functionality)
             nodeFunctionalityDb.saveFunctionalityList(meshNode.node,meshNode.functionalityList)
@@ -67,8 +64,7 @@ class MeshNodeManager(private val nodeFunctionalityDb: NodeFunctionalityDataBase
     }
 
     fun clearNodeFunctionalityList(meshNode: MeshNode) {
-        Timber.d("clearNodeFunc")
-     //   meshNode.functionality = NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown
+        Timber.d("clearNodeFunctionalityList")
         meshNode.functionalityList = mutableSetOf()
         nodeFunctionalityDb.clearFunctionalityList(meshNode.node)
     }

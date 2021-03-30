@@ -49,7 +49,9 @@ class NodeInfoFragment : BaseFragment() {
         Timber.d("showMeshNodeInfo: ${meshNode.node.name}")
         activity?.runOnUiThread {
             tv_node_name.text = meshNode.node.name
-            tv_node_unicast_address.text = meshNode.node.primaryElementAddress!!.toString()
+
+            tv_node_unicast_address.text =
+                "0x" + Integer.toHexString(meshNode.node.primaryElementAddress).toUpperCase()
             tv_node_uuid.text = ConverterUtil.getHexValue(meshNode.node.uuid)
 
             val network = meshNode.node.subnets.iterator().next()
@@ -57,7 +59,8 @@ class NodeInfoFragment : BaseFragment() {
 
             tv_node_network_key.text = ConverterUtil.getHexValue(network.netKey.key)
             if (meshNode.node.groups.size > 0) {
-                tv_node_app_key.text = ConverterUtil.getHexValue(meshNode.node.groups.iterator().next().appKey.key)
+                tv_node_app_key.text =
+                    ConverterUtil.getHexValue(meshNode.node.groups.iterator().next().appKey.key)
             }
 
             tv_node_dev_key.text = ConverterUtil.getHexValue(meshNode.node.devKey.key)
@@ -94,7 +97,8 @@ class NodeInfoFragment : BaseFragment() {
                         modelId = "0x" + ConverterUtil.getHexValueNoSpace(vendorId)
                     }
 
-                    val modelInfo = ModelTableDescription(elementIndex, modelType, modelId, modelName)
+                    val modelInfo =
+                        ModelTableDescription(elementIndex, modelType, modelId, modelName)
                     table_models.addView(createRowElement(modelInfo))
                     tableIndex++
                 }

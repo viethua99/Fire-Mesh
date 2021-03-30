@@ -141,11 +141,8 @@ class MeshConfigurationManager(
     }
 
     fun processUnbindModelFromGroup(
-        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY,
-        isSetPublication: Boolean,
-        isAddSubscription: Boolean
-    ) {
-        Timber.d("processUnbindModelToGroup: functionality=$functionality -- publication=$isSetPublication --subscription=$isAddSubscription")
+        functionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
+        Timber.d("processUnbindModelToGroup: functionality=$functionality")
         if (meshNodeToConfigure.node.groups.isEmpty()) {
             return
         }

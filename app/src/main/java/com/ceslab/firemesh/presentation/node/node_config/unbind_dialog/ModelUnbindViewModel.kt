@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.node.node_config.dialog
+package com.ceslab.firemesh.presentation.node.node_config.unbind_dialog
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,22 +9,26 @@ import com.ceslab.firemesh.meshmodule.model.ConfigurationTask
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import timber.log.Timber
-
 import javax.inject.Inject
 
-class ModelConfigViewModel @Inject constructor(
+/**
+ * Created by Viet Hua on 03/30/2021.
+ */
+
+class ModelUnbindViewModel @Inject constructor(
     private val meshConfigurationManager: MeshConfigurationManager
-    ) : ViewModel() {
+) : ViewModel() {
 
     private var isConfigFinished = MutableLiveData<Boolean>()
 
-    fun getConfigFinishStatus():LiveData<Boolean>{
+    fun getConfigFinishStatus(): LiveData<Boolean> {
         return isConfigFinished
     }
-    fun bindFunctionality(newFunctionality: NodeFunctionality.VENDOR_FUNCTIONALITY, isSetPublication:Boolean, isAddSubscription: Boolean) {
-        Timber.d("changeFunctionality: functionality=$newFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
+
+    fun unbindFunctionality(functionality: NodeFunctionality.VENDOR_FUNCTIONALITY) {
+        Timber.d("changeFunctionality: functionality=$functionality")
         meshConfigurationManager.addConfigurationTaskListener(configurationTaskListener)
-        meshConfigurationManager.processBindModelToGroup(newFunctionality,isSetPublication,isAddSubscription)
+        meshConfigurationManager.processUnbindModelFromGroup(functionality)
     }
 
     private val configurationTaskListener = object : ConfigurationTaskListener {
@@ -44,5 +48,4 @@ class ModelConfigViewModel @Inject constructor(
             meshConfigurationManager.removeConfigurationTaskListener(this)
         }
     }
-
 }

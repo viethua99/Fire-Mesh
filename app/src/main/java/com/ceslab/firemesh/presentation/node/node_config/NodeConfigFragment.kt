@@ -19,8 +19,10 @@ import com.ceslab.firemesh.meshmodule.model.NodeFunctionality.Companion.getFunct
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigCallback
-import com.ceslab.firemesh.presentation.node.node_config.dialog.ModelConfigDialog
+import com.ceslab.firemesh.presentation.node.node_config.config_dialog.ModelConfigCallback
+import com.ceslab.firemesh.presentation.node.node_config.config_dialog.ModelConfigDialog
+import com.ceslab.firemesh.presentation.node.node_config.unbind_dialog.ModelUnbindCallback
+import com.ceslab.firemesh.presentation.node.node_config.unbind_dialog.ModelUnbindDialog
 import com.ceslab.firemesh.presentation.node_list.NodeListRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
@@ -211,15 +213,26 @@ class NodeConfigFragment : BaseFragment() {
                 Timber.d("onClick: $item")
                 ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
                     Runnable {
-                        val modelConfigDialog = ModelConfigDialog(item)
-                        modelConfigDialog.setModelConfigCallback(object : ModelConfigCallback {
-                            override fun onCancel() {
-                                Timber.d("onCancel")
-                            }
-                        })
-                        modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+                        if (!item.functionality.isBinded) {
+                            val modelConfigDialog = ModelConfigDialog(item)
+                            modelConfigDialog.setModelConfigCallback(object : ModelConfigCallback {
+                                override fun onCancel() {
+                                    Timber.d("onCancel")
+                                }
+                            })
+                            modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
+                        } else {
+                            val unbindModelDialog = ModelUnbindDialog(item)
+                            unbindModelDialog.setModelUnbindCallback(object : ModelUnbindCallback {
+                                override fun onCancel() {
+                                    Timber.d("onCancel")
+                                }
+                            })
+                            unbindModelDialog.show(fragmentManager!!, "ModelUnbindDialog")
+                        }
+
                     }
-                    ,50)
+                    , 50)
 
             }
 
@@ -232,64 +245,7 @@ class NodeConfigFragment : BaseFragment() {
         }
     }
 
-    private fun setupFunctionalitySpinner(meshNode: MeshNode) {
-//        Timber.d("setupFunctionalitySpinner: $")
-//        activity?.runOnUiThread {
-//            meshNode.apply {
-//                val functionalitiesNamed =
-//                    NodeFunctionality.getFunctionalitiesNamed(node).toMutableList()
-//                functionalitiesNamed.sortBy { it.functionalityName }
-//
-//                val functionalitiesName = functionalitiesNamed.map { it.functionalityName }
-//                val functionalityAdapter = ArrayAdapter<String>(
-//                    context!!,
-//                    android.R.layout.simple_spinner_item,
-//                    functionalitiesName
-//                )
-//                functionalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//                spinner_functionality.apply {
-//                    onItemSelectedListener = null
-//                    adapter = functionalityAdapter
-//                    if (functionality != NodeFunctionality.VENDOR_FUNCTIONALITY.Unknown) {
-//                        functionalitiesNamed.indexOfFirst { it.functionality == functionality }
-//                            .takeUnless { it == -1 }
-//                            ?.let { index ->
-//                                setSelection(index, false)
-//                            }
-//
-//                    } else {
-//                        setSelection(Adapter.NO_SELECTION, false)
-//                    }
-//
-//                    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//                        override fun onItemSelected(
-//                            parent: AdapterView<*>?,
-//                            view: View?,
-//                            position: Int,
-//                            id: Long
-//                        ) {
-//                            Timber.d("onItemSelected: $position")
-//                            if (position != 0) {
-////                                val modelConfigDialog =
-////                                    ModelConfigDialog(functionalitiesNamed[position].functionality)
-////                                modelConfigDialog.setModelConfigCallback(object :
-////                                    ModelConfigCallback {
-////                                    override fun onCancel() {
-////                                        Timber.d("onCancel")
-////                                        setSelection(0, false)
-////                                    }
-////                                })
-////                                modelConfigDialog.show(fragmentManager!!, "ModelConfigDialog")
-//                            }
-//
-//                        }
-//
-//                        override fun onNothingSelected(parent: AdapterView<*>?) {}
-//                    }
-//                }
-//            }
-//        }
-    }
+
 
     private val configurationStatusObserver = Observer<ConfigurationTask> {
         Timber.d("configurationStatusObserver: $it")
@@ -315,7 +271,7 @@ class NodeConfigFragment : BaseFragment() {
                 ConfigurationTask.CONFIG_RETRANSMISSION_CHECKING -> showProgressDialog("Checking retransmission status")
                 ConfigurationTask.CONFIG_RETRANSMISSION_ENABLING -> showProgressDialog("Enabling retransmission")
                 ConfigurationTask.CONFIG_RETRANSMISSION_DISABLING -> showProgressDialog("Disabling retransmission")
-                ConfigurationTask.CONFIG_CONTROL_NODE_SUCCEED ->  {
+                ConfigurationTask.CONFIG_CONTROL_NODE_SUCCEED -> {
                     ll_functionality.visibility = View.VISIBLE
                     hideDialog()
                 }
@@ -341,18 +297,17 @@ class NodeConfigFragment : BaseFragment() {
             setupNodeFeatureConfig(it)
             setupGroupSpinner(it.meshNode)
             val functionalityNamedList = getFunctionalitiesNamed(it.meshNode.node)
-            for(functionalityNamed in functionalityNamedList ){
-                if(it.meshNode.functionalityList.contains(functionalityNamed.functionality)){
-                    functionalityNamed.functionality.isBinded = true
-                }
+            Timber.d("FuncList = ${it.meshNode.functionalityList}")
+            for (functionalityNamed in functionalityNamedList) {
+                functionalityNamed.functionality.isBinded =
+                    it.meshNode.functionalityList.contains(functionalityNamed.functionality)
             }
 
-            for(test in functionalityNamedList){
+            for (test in functionalityNamedList) {
                 Timber.d("TEST= ${test.functionalityName} -- isBinded=${test.functionality.isBinded}")
             }
 
             functionalityRecyclerViewAdapter.setDataList(functionalityNamedList.toMutableList())
-           // setupFunctionalitySpinner(it.meshNode)
         }
     }
 
