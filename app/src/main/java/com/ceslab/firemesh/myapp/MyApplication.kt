@@ -32,6 +32,5 @@ class MyApplication : Application(), HasAndroidInjector {
         Timber.d("initDagger")
         appComponent = DaggerAppComponent.builder().application(this).build()
         appComponent.inject(this)
-
     }
 }

@@ -2,8 +2,7 @@ package com.ceslab.firemesh.presentation.main.activity
 
 
 import android.Manifest
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.app.ActivityManager
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -11,8 +10,8 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -24,14 +23,12 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
-import com.ceslab.firemesh.presentation.node.NodeFragment
-import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
-import com.ceslab.firemesh.presentation.splash.SplashActivity
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
+import com.ceslab.firemesh.service.FireMeshService
+import com.ceslab.firemesh.service.Restarter
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
-import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity() {
 
@@ -65,6 +62,38 @@ class MainActivity : BaseActivity() {
         checkPermissions()
     }
 
+    override fun onDestroy() {
+        val broadcastIntent = Intent()
+        broadcastIntent.action = "restartService"
+        broadcastIntent.setClass(this, Restarter::class.java)
+        this.sendBroadcast(broadcastIntent)
+        super.onDestroy()
+
+    }
+
+    lateinit var serviceIntent : Intent
+    private lateinit var  fireMeshService: FireMeshService
+    private fun startFireMeshService(){
+        Timber.d("startFireMeshService")
+        fireMeshService = FireMeshService()
+        serviceIntent = Intent(this,fireMeshService::class.java)
+        if(!isServiceRunning(fireMeshService::class.java)){
+            startService(serviceIntent)
+        }
+    }
+
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean{
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for(service in manager.getRunningServices(Int.MAX_VALUE)){
+            if(serviceClass.name == service.service.className){
+                Timber.d("Service status: Running")
+                return true
+            }
+        }
+        Timber.d("Service status: Not running")
+        return false
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -76,7 +105,9 @@ class MainActivity : BaseActivity() {
                     grantResults.forEach { result ->
                         if (result != PackageManager.PERMISSION_GRANTED) {
                             finish()
+                            return
                         }
+                        startFireMeshService()
                     }
                 }
             }
@@ -137,6 +168,11 @@ class MainActivity : BaseActivity() {
                 reqPermissions.toTypedArray(),
                 PERMISSIONS_REQUEST_CODE
             )
+        } else {
+//            val mgr: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+//            val wakeLock: PowerManager.WakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock")
+//            wakeLock.acquire()
+            startFireMeshService()
         }
     }
 

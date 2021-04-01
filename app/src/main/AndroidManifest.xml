@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -23,6 +26,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireMesh">
+        <service android:name=".service.FireMeshService" android:enabled="true" />
+        <receiver
+            android:name=".service.Restarter"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartService" />
+            </intent-filter>
+        </receiver>
         <activity
             android:noHistory="true"
             android:name=".presentation.splash.SplashActivity">
