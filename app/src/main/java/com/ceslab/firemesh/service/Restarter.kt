@@ -17,7 +17,7 @@ class Restarter : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         Timber.d("Broadcast Listened\", \"Service tried to stop")
         Toast.makeText(context,"Service Restarted",Toast.LENGTH_SHORT).show()
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Timber.d("Larger")
             context.startForegroundService(Intent(context,FireMeshService::class.java))
         } else {

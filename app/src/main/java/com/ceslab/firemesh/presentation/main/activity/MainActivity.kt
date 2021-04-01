@@ -42,6 +42,8 @@ class MainActivity : BaseActivity() {
         }
     }
 
+     private lateinit var serviceIntent : Intent
+    private lateinit var  fireMeshService: FireMeshService
     private lateinit var mainActivityViewModel: MainActivityViewModel
 
     override fun getResLayoutId(): Int {
@@ -63,6 +65,8 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        Timber.d("onDestroy")
+        stopService(serviceIntent)
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartService"
         broadcastIntent.setClass(this, Restarter::class.java)
@@ -71,8 +75,7 @@ class MainActivity : BaseActivity() {
 
     }
 
-    lateinit var serviceIntent : Intent
-    private lateinit var  fireMeshService: FireMeshService
+
     private fun startFireMeshService(){
         Timber.d("startFireMeshService")
         fireMeshService = FireMeshService()
