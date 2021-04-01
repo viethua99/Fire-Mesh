@@ -60,7 +60,7 @@ class FireMeshService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand")
-        startScanBle()
+     //   startScanBle()
         //startTimer()
         return START_STICKY
     }

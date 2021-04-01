@@ -1,9 +1,7 @@
 package com.ceslab.firemesh.presentation.node_list
 
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.le.BluetoothLeScanner
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
+import android.bluetooth.le.*
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -65,7 +63,12 @@ class NodeListViewModel @Inject constructor(
 
     fun scanNodeStatus() {
         Timber.d("scanNodeStatus")
-        bluetoothLeScanner.startScan(scanCallback)
+        val filterBuilder = ScanFilter.Builder()
+        val filter = filterBuilder.build()
+        val settingBuilder = ScanSettings.Builder()
+        settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+        val setting = settingBuilder.build()
+        bluetoothLeScanner.startScan(listOf(filter),setting,scanCallback)
     }
 
     fun stopScan() {
@@ -88,10 +91,10 @@ class NodeListViewModel @Inject constructor(
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
-//            val rawData = result?.scanRecord?.bytes
-//            if (rawData != null) {
-//                Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
-//            }
+            val rawData = result?.scanRecord?.bytes
+            if (rawData != null) {
+                Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
+            }
 
             val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
             if (dataList != null) {

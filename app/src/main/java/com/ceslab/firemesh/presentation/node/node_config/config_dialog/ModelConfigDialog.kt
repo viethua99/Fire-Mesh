@@ -54,8 +54,22 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
         Timber.d("onViewCreated")
         setupViewModel()
         tv_functionality_name.setText(vendorFunctionality.functionalityName)
-        cb_add_subscription.isChecked = true
-        cb_set_publication.isChecked = true
+        if(vendorFunctionality.functionality.isSupportPublication){
+            cb_set_publication.isEnabled = true
+            cb_set_publication.isChecked = true
+        } else {
+            cb_set_publication.isEnabled = false
+            cb_set_publication.isChecked = false
+        }
+
+        if(vendorFunctionality.functionality.isSupportSubscription){
+            cb_add_subscription.isEnabled = true
+            cb_add_subscription.isChecked = true
+        } else {
+            cb_add_subscription.isEnabled = false
+            cb_add_subscription.isChecked = false
+        }
+
         dialog?.setOnShowListener {
             val dialog = it as BottomSheetDialog
             val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
