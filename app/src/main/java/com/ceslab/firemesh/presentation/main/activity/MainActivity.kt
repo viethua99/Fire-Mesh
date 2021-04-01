@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PowerManager
 import android.provider.Settings
 import android.view.MenuItem
 import android.view.View
@@ -24,8 +23,8 @@ import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
-import com.ceslab.firemesh.service.FireMeshService
-import com.ceslab.firemesh.service.Restarter
+import com.ceslab.firemesh.background_service.FireMeshService
+import com.ceslab.firemesh.background_service.ScanRestartReceiver
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -69,7 +68,7 @@ class MainActivity : BaseActivity() {
         stopService(serviceIntent)
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartService"
-        broadcastIntent.setClass(this, Restarter::class.java)
+        broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
         this.sendBroadcast(broadcastIntent)
         super.onDestroy()
 

@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
 
     <uses-feature
@@ -26,9 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireMesh">
-        <service android:name=".service.FireMeshService" android:enabled="true" />
+        <service android:name=".background_service.FireMeshService" android:enabled="true" />
         <receiver
-            android:name=".service.Restarter"
+            android:name=".background_service.ScanRestartReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

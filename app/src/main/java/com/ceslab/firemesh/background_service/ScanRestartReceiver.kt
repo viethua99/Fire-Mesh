@@ -1,6 +1,5 @@
-package com.ceslab.firemesh.service
+package com.ceslab.firemesh.background_service
 
-import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,7 +12,7 @@ import timber.log.Timber
  */
 
 
-class Restarter : BroadcastReceiver() {
+class ScanRestartReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         Timber.d("Broadcast Listened\", \"Service tried to stop")
         Toast.makeText(context,"Service Restarted",Toast.LENGTH_SHORT).show()

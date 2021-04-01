@@ -1,21 +1,19 @@
-package com.ceslab.firemesh.service
+package com.ceslab.firemesh.background_service
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
-
 import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
+import android.os.Vibrator
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.ota.utils.Converters
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import timber.log.Timber
 import java.util.*
 
@@ -32,7 +30,6 @@ class FireMeshService : Service() {
     }
 
     private var counter = 0
-
     private val bluetoothLeScanner: BluetoothLeScanner
         get() {
             val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -41,39 +38,40 @@ class FireMeshService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.d( "onCreate")
+        Timber.d("onCreate")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Timber.d("Larger")
             startMyOwnForeGround()
         } else {
             Timber.d("Smaller")
-            val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            val notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.drawable.img_app)
-                .setContentTitle("Fire Mesh")
-                .setContentText("App is running in background")
-                .setPriority(NotificationManager.IMPORTANCE_MIN)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .build()
-            startForeground(1, notification)
+//            val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+//            val notification = notificationBuilder.setOngoing(true)
+//                .setSmallIcon(R.drawable.img_app)
+//                .setContentTitle("Fire Mesh")
+//                .setContentText("App is running in background")
+//                .setPriority(NotificationManager.IMPORTANCE_MIN)
+//                .setCategory(Notification.CATEGORY_SERVICE)
+//                .build()
+            startForeground(1, Notification())
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.d("onStartCommand")
-           startScanBle()
-     //   startTimer()
+        //    startScanBle()
+
+        startTimer()
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
-        stopScanBle()
-     //   stopTimerTask()
+        // stopScanBle()
+        stopTimerTask()
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartService"
-        broadcastIntent.setClass(this, Restarter::class.java)
+        broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
         this.sendBroadcast(broadcastIntent)
 
     }
@@ -116,7 +114,7 @@ class FireMeshService : Service() {
         val settingBuilder = ScanSettings.Builder()
         settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
         val setting = settingBuilder.build()
-        bluetoothLeScanner.startScan(listOf(filter),setting,scanCallback)
+        bluetoothLeScanner.startScan(listOf(filter), setting, scanCallback)
     }
 
     fun stopScanBle() {
@@ -146,6 +144,38 @@ class FireMeshService : Service() {
         timerTask = object : TimerTask() {
             override fun run() {
                 Timber.i("Count: --- ${counter++}")
+//                if (counter % 10 == 0) {
+//                    val vibrator: Vibrator =
+//                        getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+//                    if (vibrator.hasVibrator()) {
+//                        vibrator.vibrate(1000)
+//                    }
+//
+//                    val notificationBuilder =
+//                        NotificationCompat.Builder(this@FireMeshService, NOTIFICATION_CHANNEL_ID)
+//                    val notification = notificationBuilder.setOngoing(true)
+//                        .setSmallIcon(R.drawable.img_app)
+//                        .setContentTitle("Fire Mesh (EMERGENCY)")
+//                        .setContentText("We detected fire signal from your mesh, please check immediately!!!")
+//                        .setPriority(NotificationManager.IMPORTANCE_HIGH)
+//                        .setCategory(Notification.CATEGORY_SERVICE)
+//                        .setContentIntent(
+//                            PendingIntent.getActivity(
+//                                this@FireMeshService,
+//                                0,
+//                                Intent(this@FireMeshService, MainActivity::class.java),
+//                                0
+//                            )
+//                        )
+//                        .setAutoCancel(true)
+//                        .build()
+//                    val notificationManager = getSystemService(NotificationManager::class.java)
+//                    notificationManager.notify(3, notification)
+//                }
+
+
+
+
             }
         }
         timer!!.schedule(timerTask, 1000, 1000)
