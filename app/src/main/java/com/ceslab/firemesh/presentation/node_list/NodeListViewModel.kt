@@ -43,11 +43,6 @@ class NodeListViewModel @Inject constructor(
         return meshNodeList
     }
 
-    private val bluetoothLeScanner: BluetoothLeScanner
-        get() {
-            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            return bluetoothAdapter.bluetoothLeScanner
-        }
 
     fun refreshNodeListStatus() {
         Timber.d("refreshNodeListStatus")
@@ -58,48 +53,8 @@ class NodeListViewModel @Inject constructor(
         getMeshNodeList()
     }
 
-    fun scanNodeStatus() {
-        Timber.d("scanNodeStatus")
-        val filterBuilder = ScanFilter.Builder()
-        val filter = filterBuilder.build()
-        val settingBuilder = ScanSettings.Builder()
-        settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-        val setting = settingBuilder.build()
-        bluetoothLeScanner.startScan(listOf(filter),setting,scanCallback)
-    }
 
-    fun stopScan() {
-        Timber.d("stopScan")
-        bluetoothLeScanner.stopScan(scanCallback)
-    }
 
-    private fun checkFireAlarmSignalFromUnicastAddress(unicastAddress: ByteArray) {
-        Timber.d("unicastAddress size = ${unicastAddress.size}")
-        val hexUnicastAddress = Converters.bytesToHexReversed(unicastAddress)
-        Timber.d("checkFireAlarmSignalFromUnicastAddress: $hexUnicastAddress")
-        val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
-        for (node in nodeList) {
-            if (Integer.toHexString(node.node.primaryElementAddress!!) == hexUnicastAddress) {
-                node.fireSignal = 1
-            }
-        }
-        getMeshNodeList()
-    }
-
-    private val scanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            val rawData = result?.scanRecord?.bytes
-            if (rawData != null) {
-                Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
-            }
-
-            val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
-            if (dataList != null) {
-                Timber.d("onScanResult: ${Converters.bytesToHexReversed(dataList)}")
-                checkFireAlarmSignalFromUnicastAddress(dataList)
-            }
-        }
-    }
 
     private val connectionStatusListener = object : ConnectionStatusListener {
         override fun connecting() {}
@@ -107,7 +62,6 @@ class NodeListViewModel @Inject constructor(
         override fun connected() {
             Timber.d("connected")
             getMeshNodeList()
-            scanNodeStatus()
         }
 
 
