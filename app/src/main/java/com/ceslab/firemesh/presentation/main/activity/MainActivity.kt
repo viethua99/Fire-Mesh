@@ -25,6 +25,8 @@ import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.background_service.FireMeshService
 import com.ceslab.firemesh.background_service.ScanRestartReceiver
+import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
+import com.ceslab.firemesh.ota.utils.Converters
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -52,6 +54,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
+
         supportFragmentManager.addOnBackStackChangedListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
             if(currentFragment is SubnetFragment){
@@ -61,6 +64,7 @@ class MainActivity : BaseActivity() {
         setupViewModel()
         setupViews()
         checkPermissions()
+        getExtraData()
     }
 
     override fun onDestroy() {
@@ -171,10 +175,27 @@ class MainActivity : BaseActivity() {
                 PERMISSIONS_REQUEST_CODE
             )
         } else {
-//            val mgr: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-//            val wakeLock: PowerManager.WakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock")
-//            wakeLock.acquire()
             startFireMeshService()
+        }
+    }
+
+    private fun getExtraData(){
+        Timber.d("getExtraData")
+        val extras = intent.extras
+        extras?.let {
+            if(extras.containsKey(FireMeshService.FIRE_MESH_SERVICE_KEY)){
+                val netKey = extras.getByteArray(FireMeshService.FIRE_MESH_SERVICE_KEY)
+                netKey?.let {
+                    Timber.d("netKey=${Converters.bytesToHex(netKey)}")
+                 val subnet =   mainActivityViewModel.setCurrentSubnet(netKey)
+                    subnet?.let {
+                       replaceFragment(SubnetFragment(it.name),SubnetFragment.TAG,R.id.container_main)
+                    }
+                }
+
+
+
+            }
         }
     }
 

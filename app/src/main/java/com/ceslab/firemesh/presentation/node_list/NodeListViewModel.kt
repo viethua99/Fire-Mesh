@@ -12,6 +12,7 @@ import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
+import com.ceslab.firemesh.myapp.COMPANY_ID
 import com.ceslab.firemesh.ota.utils.Converters
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,10 +22,6 @@ class NodeListViewModel @Inject constructor(
     private val meshNodeManager: MeshNodeManager,
     private val meshConnectionManager: MeshConnectionManager
 ) : ViewModel() {
-    companion object {
-        const val COMPANY_ID = 0x6969
-    }
-
     private val meshNodeList = MutableLiveData<Set<MeshNode>>()
 
     fun setListeners() {
