@@ -1,6 +1,8 @@
 package com.ceslab.firemesh.presentation.subnet
 
 import android.graphics.Color
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
@@ -30,10 +32,16 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
+        setHasOptionsMenu(true)
         setupViewModel()
         setupBottomNavigationView()
         setupViewPager()
         connectToSubnet()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.clear()
     }
 
     override fun onDestroy() {
@@ -97,7 +105,6 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
                 R.id.nav_item_groups -> {
                     subnet_view_pager.currentItem = SubnetViewPagerAdapter.GROUP_LIST_PAGE
                     true
-
                 }
                 R.id.nav_item_nodes -> {
                     subnet_view_pager.currentItem = SubnetViewPagerAdapter.NODE_LIST_PAGE

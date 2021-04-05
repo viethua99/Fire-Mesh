@@ -6,13 +6,13 @@ import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.AudioAttributes
 import android.os.Build
 import android.os.IBinder
 import android.os.Vibrator
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.ceslab.firemesh.R
-import com.ceslab.firemesh.meshmodule.bluetoothmesh.BluetoothMeshManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.myapp.COMPANY_ID
@@ -75,11 +75,11 @@ class FireMeshService : Service() {
         super.onDestroy()
         Timber.d("onDestroy")
         stopScanBle()
-        //  stopTimerTask()
-        val broadcastIntent = Intent()
-        broadcastIntent.action = "restartService"
-        broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
-        this.sendBroadcast(broadcastIntent)
+        //stopTimerTask()
+//        val broadcastIntent = Intent()
+//        broadcastIntent.action = "restartService"
+//        broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
+//        this.sendBroadcast(broadcastIntent)
 
     }
 
@@ -162,13 +162,15 @@ class FireMeshService : Service() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(FIRE_MESH_SERVICE_KEY, subnet.netKey.key)
 
+
         val notificationBuilder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         val notification = notificationBuilder.setOngoing(true)
             .setSmallIcon(R.drawable.img_app)
+            .setDefaults(Notification.DEFAULT_SOUND)
             .setContentTitle("Fire Mesh (EMERGENCY)")
             .setContentText("We detected fire signal from ${subnet.name}, please check immediately!!!")
-            .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setPriority(Notification.PRIORITY_HIGH)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setContentIntent(
                 PendingIntent.getActivity(

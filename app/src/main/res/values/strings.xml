@@ -3,6 +3,7 @@
     <string name="app_name">Fire Mesh</string>
 
     <string name="nav_item_ota">OTA</string>
+    <string name="nav_item_background_scan">Start Background</string>
     <string name="nav_item_provision">Provision</string>
     <string name="nav_item_subnets">Subnets</string>
     <string name="nav_item_groups">Groups</string>

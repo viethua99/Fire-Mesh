@@ -20,8 +20,6 @@ import timber.log.Timber
 class MainFragment : BaseFragment() {
     companion object {
         const val TAG = "MainFragment"
-        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
-
     }
 
 
@@ -41,28 +39,6 @@ class MainFragment : BaseFragment() {
         Timber.d("onResume")
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_main,menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.item_ota -> {
-                if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
-                    )
-                } else {
-                    OTAListActivity.startOTAListActivity(activity as AppCompatActivity)
-                }
-            }
-        }
-        return true
-    }
-
-
 
     private fun setupViewPager() {
         Timber.d("setupViewPager")

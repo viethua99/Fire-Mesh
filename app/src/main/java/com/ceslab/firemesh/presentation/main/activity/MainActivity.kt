@@ -11,6 +11,7 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -25,8 +26,8 @@ import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.background_service.FireMeshService
 import com.ceslab.firemesh.background_service.ScanRestartReceiver
-import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
 import com.ceslab.firemesh.ota.utils.Converters
+import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -35,6 +36,7 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val PERMISSIONS_REQUEST_CODE: Int = 12
+        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
 
         fun startMainActivity(activity: AppCompatActivity) {
             Timber.d("startMainActivity")
@@ -43,9 +45,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
-     private lateinit var serviceIntent : Intent
-    private lateinit var  fireMeshService: FireMeshService
+    private lateinit var serviceIntent: Intent
     private lateinit var mainActivityViewModel: MainActivityViewModel
+    private var fireMeshService: FireMeshService? = null
 
     override fun getResLayoutId(): Int {
         return R.layout.activity_main
@@ -57,7 +59,7 @@ class MainActivity : BaseActivity() {
 
         supportFragmentManager.addOnBackStackChangedListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.container_main)
-            if(currentFragment is SubnetFragment){
+            if (currentFragment is SubnetFragment) {
                 currentFragment.onResume()
             }
         }
@@ -69,29 +71,33 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         Timber.d("onDestroy")
-        stopService(serviceIntent)
-        val broadcastIntent = Intent()
-        broadcastIntent.action = "restartService"
-        broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
-        this.sendBroadcast(broadcastIntent)
+        if (isServiceRunning(fireMeshService!!::class.java)) {
+            stopService(serviceIntent)
+            val broadcastIntent = Intent()
+            broadcastIntent.action = "restartService"
+            broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
+            this.sendBroadcast(broadcastIntent)
+        }
         super.onDestroy()
 
     }
 
 
-    private fun startFireMeshService(){
-        Timber.d("startFireMeshService")
+    private fun triggerFireMeshService() {
+        Timber.d("triggerFireMeshService")
         fireMeshService = FireMeshService()
-        serviceIntent = Intent(this,fireMeshService::class.java)
-        if(!isServiceRunning(fireMeshService::class.java)){
+        serviceIntent = Intent(this, fireMeshService!!::class.java)
+        if (!isServiceRunning(fireMeshService!!::class.java)) {
             startService(serviceIntent)
+        } else {
+            stopService(serviceIntent)
         }
     }
 
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean{
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for(service in manager.getRunningServices(Int.MAX_VALUE)){
-            if(serviceClass.name == service.service.className){
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
                 Timber.d("Service status: Running")
                 return true
             }
@@ -113,11 +119,25 @@ class MainActivity : BaseActivity() {
                             finish()
                             return
                         }
-                        startFireMeshService()
                     }
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        val item = menu?.findItem(R.id.item_background_scan)
+        item?.let {
+            if (fireMeshService != null) {
+                if (isServiceRunning(fireMeshService!!::class.java)) {
+                    item.title = "Stop Background"
+                } else {
+                    item.title = "Start Background"
+                }
+            }
+        }
+        return true
     }
 
 
@@ -127,12 +147,40 @@ class MainActivity : BaseActivity() {
                 onBackPressed()
                 return true
             }
+        } else {
+            when (item.itemId) {
+                R.id.item_ota -> {
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        requestPermissions(
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
+                        )
+                    } else {
+                        OTAListActivity.startOTAListActivity(this)
+                    }
+                }
+                R.id.item_background_scan -> {
+                    if (isLocationEnabled() && BluetoothAdapter.getDefaultAdapter().isEnabled) {
+                        triggerFireMeshService()
+                        if (fireMeshService != null) {
+                            if (isServiceRunning(fireMeshService!!::class.java)) {
+                                item.title = "Stop Background"
+                            } else {
+                                item.title = "Start Background"
+                            }
+                        }
+                    } else {
+                        showToastMessage("Cannot start background scan")
+                    }
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
-
-
-
 
 
     private fun setupViewModel() {
@@ -174,25 +222,26 @@ class MainActivity : BaseActivity() {
                 reqPermissions.toTypedArray(),
                 PERMISSIONS_REQUEST_CODE
             )
-        } else {
-            startFireMeshService()
         }
     }
 
-    private fun getExtraData(){
+    private fun getExtraData() {
         Timber.d("getExtraData")
         val extras = intent.extras
         extras?.let {
-            if(extras.containsKey(FireMeshService.FIRE_MESH_SERVICE_KEY)){
+            if (extras.containsKey(FireMeshService.FIRE_MESH_SERVICE_KEY)) {
                 val netKey = extras.getByteArray(FireMeshService.FIRE_MESH_SERVICE_KEY)
                 netKey?.let {
                     Timber.d("netKey=${Converters.bytesToHex(netKey)}")
-                 val subnet =   mainActivityViewModel.setCurrentSubnet(netKey)
+                    val subnet = mainActivityViewModel.setCurrentSubnet(netKey)
                     subnet?.let {
-                       replaceFragment(SubnetFragment(it.name),SubnetFragment.TAG,R.id.container_main)
+                        replaceFragment(
+                            SubnetFragment(it.name),
+                            SubnetFragment.TAG,
+                            R.id.container_main
+                        )
                     }
                 }
-
 
 
             }
@@ -242,9 +291,23 @@ class MainActivity : BaseActivity() {
 
     private val onGetMeshStatusObserver = Observer<MeshStatus> {
         it.let {
-            when(it) {
-                MeshStatus.BLUETOOTH_STATE_CHANGED -> showBluetoothEnableView()
-                MeshStatus.LOCATION_STATE_CHANGED -> showLocationEnableView()
+            when (it) {
+                MeshStatus.BLUETOOTH_STATE_CHANGED -> {
+                    showBluetoothEnableView()
+                    if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
+                        if (isServiceRunning(fireMeshService!!::class.java)) {
+                            stopService(serviceIntent)
+                        }
+                    }
+                }
+                MeshStatus.LOCATION_STATE_CHANGED -> {
+                    showLocationEnableView()
+                    if (!isLocationEnabled()) {
+                        if (isServiceRunning(fireMeshService!!::class.java)) {
+                            stopService(serviceIntent)
+                        }
+                    }
+                }
             }
         }
     }
