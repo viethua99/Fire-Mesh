@@ -3,7 +3,6 @@ package com.ceslab.firemesh.background_service
 import android.app.*
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
@@ -83,10 +82,6 @@ class FireMeshService : Service() {
         Timber.d("onDestroy")
         stopScanBle()
      //   stopTimerTask()
-//        val broadcastIntent = Intent()
-//        broadcastIntent.action = "restartService"
-//        broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
-//        this.sendBroadcast(broadcastIntent)
 
     }
 
@@ -99,7 +94,7 @@ class FireMeshService : Service() {
     private lateinit var timerTask: TimerTask
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun startScanBle() {
+    private fun startScanBle() {
         Timber.d("startScanBle")
         val filterBuilder = ScanFilter.Builder()
         val filter = filterBuilder.build()
@@ -111,7 +106,7 @@ class FireMeshService : Service() {
         bluetoothLeScanner.startScan(listOf(filter), setting, scanCallback)
     }
 
-    fun stopScanBle() {
+    private fun stopScanBle() {
         Timber.d("stopScanBle")
         bluetoothLeScanner.stopScan(scanCallback)
     }
@@ -149,8 +144,7 @@ class FireMeshService : Service() {
             for (node in nodeList) {
                 if (Integer.toHexString(node.node.primaryElementAddress!!) == hexUnicastAddress) {
                     node.fireSignal = 1
-                    vibratePhone(1000)
-                    showEmergencyNotification(subnet)
+                    triggerEmergencyAlarm(subnet)
                 }
             }
         }
@@ -165,20 +159,31 @@ class FireMeshService : Service() {
         }
     }
 
-    private fun showEmergencyNotification(subnet: Subnet) {
-        Timber.d("showEmergencyNotification: ${Converters.bytesToHex(subnet.netKey.key)}")
+    private fun triggerAlarmSound(){
+        Timber.d("triggerAlarmSound")
+        val alarmSoundUri: Uri = Uri.parse("android.resource://" + applicationContext.packageName.toString() + "/" + R.raw.sound_alarm)
+
+        val ringTone: Ringtone = RingtoneManager.getRingtone(applicationContext, alarmSoundUri)
+        ringTone.play()
+    }
+
+    private fun triggerEmergencyAlarm(subnet: Subnet) {
+        Timber.d("triggerEmergencyAlarm: ${Converters.bytesToHex(subnet.netKey.key)}")
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(FIRE_MESH_SERVICE_KEY, subnet.netKey.key)
+
+        vibratePhone(1000)
+        triggerAlarmSound()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             showNotificationInOreoDevice(intent, subnet)
         } else {
             Timber.d("Smaller")
-            showNotificationInNormalDevice(intent, subnet)
+            showNotificationInLegacyDevice(intent, subnet)
         }
     }
 
-    private fun showNotificationInNormalDevice(intent: Intent?, subnet: Subnet) {
+    private fun showNotificationInLegacyDevice(intent: Intent?, subnet: Subnet) {
         val notificationBuilder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         val notification = notificationBuilder.setOngoing(true)
@@ -204,34 +209,18 @@ class FireMeshService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotificationInOreoDevice(intent: Intent?, subnet: Subnet) {
-        val soundUri: Uri = Uri.parse(
-            "android.resource://" + applicationContext.packageName.toString() + "/" + R.raw.sound_alarm
-        )
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelName = "Emergency Channel"
-        val existingChannel = manager.getNotificationChannel(EMERGENCY_CHANNEL_ID)
+
+        val existingChannel = notificationManager.getNotificationChannel(EMERGENCY_CHANNEL_ID)
         existingChannel?.let {
-            manager.deleteNotificationChannel(EMERGENCY_CHANNEL_ID)
+            notificationManager.deleteNotificationChannel(EMERGENCY_CHANNEL_ID)
         }
 
-        val chan = NotificationChannel(
-            EMERGENCY_CHANNEL_ID,
-            channelName,
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        val audioAttributes =
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .build()
-        chan.enableVibration(true)
-        chan.setSound(soundUri,audioAttributes)
-        chan.vibrationPattern =  longArrayOf(1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000)
-        val r: Ringtone =
-            RingtoneManager.getRingtone(applicationContext, soundUri)
-        r.play()
+        val channel = NotificationChannel(EMERGENCY_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH)
 
-        manager.createNotificationChannel(chan)
+        notificationManager.createNotificationChannel(channel)
         val notificationBuilder = NotificationCompat.Builder(this@FireMeshService, EMERGENCY_CHANNEL_ID)
         val notification = notificationBuilder.setOngoing(true)
             .setSmallIcon(R.drawable.img_app)
@@ -239,17 +228,9 @@ class FireMeshService : Service() {
             .setContentText("We detected fire signal from ${subnet.name}, please check immediately!!!")
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    this,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            )
-
+            .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
             .build()
-        manager.notify(10, notification)
+        notificationManager.notify(10, notification)
     }
 
 

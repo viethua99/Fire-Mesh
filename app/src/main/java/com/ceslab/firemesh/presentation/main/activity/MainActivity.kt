@@ -230,6 +230,7 @@ class MainActivity : BaseActivity() {
         val extras = intent.extras
         extras?.let {
             if (extras.containsKey(FireMeshService.FIRE_MESH_SERVICE_KEY)) {
+                stopService(serviceIntent) // User turned on app by clicked notification, so we can stop background scan from now
                 val netKey = extras.getByteArray(FireMeshService.FIRE_MESH_SERVICE_KEY)
                 netKey?.let {
                     Timber.d("netKey=${Converters.bytesToHex(netKey)}")
