@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +26,8 @@ import javax.inject.Inject
  * Created by Viet Hua on 03/09/2021.
  */
 
-class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.FunctionalityNamed) : BottomSheetDialogFragment() {
+class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.FunctionalityNamed) :
+    BottomSheetDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -54,18 +56,22 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
         Timber.d("onViewCreated")
         setupViewModel()
         tv_functionality_name.setText(vendorFunctionality.functionalityName)
-        if(vendorFunctionality.functionality.isSupportPublication){
+        if (vendorFunctionality.functionality.isSupportPublication) {
             cb_set_publication.isEnabled = true
             cb_set_publication.isChecked = true
         } else {
+            cb_set_publication.backgroundTintList =
+                ContextCompat.getColorStateList(context!!, R.color.gray_7)
             cb_set_publication.isEnabled = false
             cb_set_publication.isChecked = false
         }
 
-        if(vendorFunctionality.functionality.isSupportSubscription){
+        if (vendorFunctionality.functionality.isSupportSubscription) {
             cb_add_subscription.isEnabled = true
             cb_add_subscription.isChecked = true
         } else {
+            cb_add_subscription.backgroundTintList =
+                ContextCompat.getColorStateList(context!!, R.color.gray_7)
             cb_add_subscription.isEnabled = false
             cb_add_subscription.isChecked = false
         }
@@ -93,11 +99,10 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        modelConfigViewModel = ViewModelProvider(this, viewModelFactory).get(ModelConfigViewModel::class.java)
-        modelConfigViewModel.getConfigFinishStatus().observe(this,onConfigFinishedObserver)
+        modelConfigViewModel =
+            ViewModelProvider(this, viewModelFactory).get(ModelConfigViewModel::class.java)
+        modelConfigViewModel.getConfigFinishStatus().observe(this, onConfigFinishedObserver)
     }
-
-
 
 
     private val onStartConfigButtonClicked = View.OnClickListener {
@@ -105,7 +110,11 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
         val isAddSubscription = cb_add_subscription.isChecked
         Timber.d("onStartConfigButtonClicked: functionality=$vendorFunctionality -- publication=$isSetPublication --subscription=$isAddSubscription")
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, "Starting Config Model")
-        modelConfigViewModel.bindFunctionality(vendorFunctionality.functionality,isSetPublication,isAddSubscription)
+        modelConfigViewModel.bindFunctionality(
+            vendorFunctionality.functionality,
+            isSetPublication,
+            isAddSubscription
+        )
     }
 
     private val onConfigFinishedObserver = Observer<Boolean> {

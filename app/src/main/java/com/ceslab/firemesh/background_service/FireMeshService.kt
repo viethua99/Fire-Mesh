@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.os.Build
 import android.os.IBinder
 import android.os.Vibrator
@@ -66,7 +67,9 @@ class FireMeshService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.d("onStartCommand")
-        startScanBle()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startScanBle()
+        }
         // startTimer()
         return START_STICKY
     }
@@ -91,13 +94,16 @@ class FireMeshService : Service() {
     private var timer: Timer? = null
     private lateinit var timerTask: TimerTask
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun startScanBle() {
         Timber.d("startScanBle")
         val filterBuilder = ScanFilter.Builder()
         val filter = filterBuilder.build()
         val settingBuilder = ScanSettings.Builder()
         settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-        val setting = settingBuilder.build()
+        val setting = settingBuilder
+            .setLegacy(false)
+            .build()
         bluetoothLeScanner.startScan(listOf(filter), setting, scanCallback)
     }
 
@@ -162,7 +168,15 @@ class FireMeshService : Service() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(FIRE_MESH_SERVICE_KEY, subnet.netKey.key)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            showNotificationInOreoDevice(intent, subnet)
+        } else {
+            Timber.d("Smaller")
+            showNotificationInNormalDevice(intent, subnet)
+        }
+    }
 
+    private fun showNotificationInNormalDevice(intent: Intent?, subnet: Subnet) {
         val notificationBuilder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         val notification = notificationBuilder.setOngoing(true)
@@ -184,6 +198,40 @@ class FireMeshService : Service() {
             .build()
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.notify(3, notification)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showNotificationInOreoDevice(intent: Intent?, subnet: Subnet) {
+        val channelName = "FireMesh Background Service"
+        val chan = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        chan.lightColor = Color.BLUE
+        chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.createNotificationChannel(chan)
+        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notification = notificationBuilder.setOngoing(true)
+            .setSmallIcon(R.drawable.img_app)
+            .setContentTitle("Fire Mesh (EMERGENCY)")
+            .setContentText("We detected fire signal from ${subnet.name}, please check immediately!!!")
+            .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
+            .setAutoCancel(true)
+            .build()
+        manager.notify(3, notification)
     }
 
 

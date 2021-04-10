@@ -18,8 +18,7 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate")
-        supportActionBar!!.hide();
-
+        supportActionBar!!.hide()
         changeToMainActivityAfterDelayTime()
     }
 

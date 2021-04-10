@@ -31,7 +31,6 @@
 
         <CheckBox
             android:id="@+id/cb_add_subscription"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
