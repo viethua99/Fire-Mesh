@@ -3,6 +3,7 @@ package com.ceslab.firemesh.presentation.node_list
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -56,22 +57,27 @@ class NodeListRecyclerViewAdapter(context: Context) :
             meshNode?.let {
                 val node = it.node
                 tvNodeName.text = node.name
-
+                 val shakeAnimation = AnimationUtils.loadAnimation(context,R.anim.shake_animation)
                 if(it.node.deviceCompositionData.supportsLowPower()){
                     imgNodeFeature.setImageResource(R.drawable.img_lpn)
                     imgFireSignal.visibility = View.VISIBLE
                     if(it.fireSignal == 1) {
                         imgFireSignal.setImageResource(R.drawable.img_flame)
+                        imgFireSignal.startAnimation(shakeAnimation)
                     } else {
                         imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                        imgFireSignal.clearAnimation()
+
                     }
                 } else if(it.node.deviceCompositionData.supportsFriend()){
                     imgNodeFeature.setImageResource(R.drawable.img_friend)
                     imgFireSignal.visibility = View.VISIBLE
                     if(it.fireSignal == 1) {
                         imgFireSignal.setImageResource(R.drawable.img_flame)
+                        imgFireSignal.startAnimation(shakeAnimation)
                     } else {
                         imgFireSignal.setImageResource(R.drawable.img_flame_background)
+                        imgFireSignal.clearAnimation()
                     }
                 } else {
                     imgFireSignal.visibility = View.GONE
