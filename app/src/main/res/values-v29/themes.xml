@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.FireMesh" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
-
+        <item name="android:forceDarkAllowed">false</item>
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryVariant">@color/primary_color</item>
         <item name="colorOnPrimary">@color/white</item>
