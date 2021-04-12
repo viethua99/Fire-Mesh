@@ -24,8 +24,8 @@ import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
-import com.ceslab.firemesh.background_service.FireMeshService
-import com.ceslab.firemesh.background_service.ScanRestartReceiver
+import com.ceslab.firemesh.service.FireMeshService
+import com.ceslab.firemesh.service.ScanRestartReceiver
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import dagger.android.AndroidInjection
@@ -94,7 +94,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+     fun isServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
             if (serviceClass.name == service.service.className) {

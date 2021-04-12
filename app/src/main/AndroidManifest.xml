@@ -27,9 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireMesh">
-        <service android:name=".background_service.FireMeshService" android:enabled="true" />
+        <service android:name=".service.FireMeshService" android:enabled="true" />
         <receiver
-            android:name=".background_service.ScanRestartReceiver"
+            android:name=".service.ScanRestartReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

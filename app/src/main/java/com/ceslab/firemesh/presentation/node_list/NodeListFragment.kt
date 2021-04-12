@@ -2,6 +2,7 @@ package com.ceslab.firemesh.presentation.node_list
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -22,6 +23,7 @@ import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeCallback
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
 import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
+import com.ceslab.firemesh.service.FireMeshService
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_list.*
 import timber.log.Timber
@@ -49,6 +51,12 @@ class NodeListFragment : BaseFragment(){
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val mainActivity = activity as MainActivity
+            if(!mainActivity.isServiceRunning(FireMeshService::class.java)){
+                nodeListViewModel.stopScan()
+            }
+        }
         nodeListViewModel.removeListener()
     }
 
@@ -72,8 +80,15 @@ class NodeListFragment : BaseFragment(){
         AndroidSupportInjection.inject(this)
         nodeListViewModel = ViewModelProvider(this, viewModelFactory).get(NodeListViewModel::class.java)
         nodeListViewModel.setListeners()
-
         nodeListViewModel.getMeshNodeList().observe(this,meshNodeListObserver)
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val mainActivity = activity as MainActivity
+            if(!mainActivity.isServiceRunning(FireMeshService::class.java)){
+                nodeListViewModel.startScan()
+            }
+        }
     }
 
     private fun setupRecyclerView(){

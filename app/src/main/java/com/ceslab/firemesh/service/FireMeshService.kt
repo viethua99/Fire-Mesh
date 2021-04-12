@@ -1,11 +1,10 @@
-package com.ceslab.firemesh.background_service
+package com.ceslab.firemesh.service
 
 import android.app.*
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -49,11 +48,13 @@ class FireMeshService : Service() {
 
     private var counter = 0
 
-    private val bluetoothLeScanner: BluetoothLeScanner
-        get() {
-            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            return bluetoothAdapter.bluetoothLeScanner
-        }
+    private val fireMeshScanner = FireMeshScanner.instance
+
+//    private val bluetoothLeScanner: BluetoothLeScanner
+//        get() {
+//            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+//            return bluetoothAdapter.bluetoothLeScanner
+//        }
 
     override fun onCreate() {
         super.onCreate()
@@ -71,7 +72,9 @@ class FireMeshService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.d("onStartCommand")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startScanBle()
+            fireMeshScanner.addFireMeshScannerCallback(fireMeshScanResult)
+            fireMeshScanner.startScanBle()
+            //startScanBle()
         }
        // startTimer()
         return START_STICKY
@@ -80,7 +83,9 @@ class FireMeshService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
-        stopScanBle()
+        fireMeshScanner.removeFireMeshScannerCallback(fireMeshScanResult)
+        fireMeshScanner.stopScanBle()
+      //  stopScanBle()
      //   stopTimerTask()
 
     }
@@ -93,23 +98,23 @@ class FireMeshService : Service() {
     private var timer: Timer? = null
     private lateinit var timerTask: TimerTask
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun startScanBle() {
-        Timber.d("startScanBle")
-        val filterBuilder = ScanFilter.Builder()
-        val filter = filterBuilder.build()
-        val settingBuilder = ScanSettings.Builder()
-        settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-        val setting = settingBuilder
-            .setLegacy(false)
-            .build()
-        bluetoothLeScanner.startScan(listOf(filter), setting, scanCallback)
-    }
-
-    private fun stopScanBle() {
-        Timber.d("stopScanBle")
-        bluetoothLeScanner.stopScan(scanCallback)
-    }
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    private fun startScanBle() {
+//        Timber.d("startScanBle")
+//        val filterBuilder = ScanFilter.Builder()
+//        val filter = filterBuilder.build()
+//        val settingBuilder = ScanSettings.Builder()
+//        settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+//        val setting = settingBuilder
+//            .setLegacy(false)
+//            .build()
+//        bluetoothLeScanner.startScan(listOf(filter), setting, scanCallback)
+//    }
+//
+//    private fun stopScanBle() {
+//        Timber.d("stopScanBle")
+//        bluetoothLeScanner.stopScan(scanCallback)
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startMyOwnForeGround() {
@@ -233,21 +238,27 @@ class FireMeshService : Service() {
         notificationManager.notify(10, notification)
     }
 
-
-    private val scanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-//            val rawData = result?.scanRecord?.bytes
-//            if (rawData != null) {
-//                Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
-//            }
-
-            val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
-            if (dataList != null) {
-                Timber.d("onScanResult: ${Converters.bytesToHexReversed(dataList)}")
-                checkFireAlarmSignalFromUnicastAddress(dataList)
-            }
+    private val fireMeshScanResult = object: FireMeshScanner.FireMeshScannerCallback {
+        override fun onScanResult(dataList: ByteArray) {
+            Timber.d("onScanResult: ${Converters.bytesToHexReversed(dataList)}")
+            checkFireAlarmSignalFromUnicastAddress(dataList)
         }
     }
+
+//    private val scanCallback = object : ScanCallback() {
+//        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+////            val rawData = result?.scanRecord?.bytes
+////            if (rawData != null) {
+////                Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
+////            }
+//
+//            val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
+//            if (dataList != null) {
+//                Timber.d("onScanResult: ${Converters.bytesToHexReversed(dataList)}")
+//                checkFireAlarmSignalFromUnicastAddress(dataList)
+//            }
+//        }
+//    }
 
 
     //************TIMER TASK JUST FOR TEST BACKGROUND SERVICE********//

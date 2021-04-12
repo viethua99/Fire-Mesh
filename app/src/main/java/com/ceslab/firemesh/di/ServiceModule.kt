@@ -1,6 +1,6 @@
 package com.ceslab.firemesh.di
 
-import com.ceslab.firemesh.background_service.FireMeshService
+import com.ceslab.firemesh.service.FireMeshService
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

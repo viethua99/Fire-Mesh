@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.background_service
+package com.ceslab.firemesh.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
