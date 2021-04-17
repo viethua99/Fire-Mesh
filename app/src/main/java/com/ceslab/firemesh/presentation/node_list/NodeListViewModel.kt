@@ -1,9 +1,6 @@
 package com.ceslab.firemesh.presentation.node_list
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.le.*
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,8 +10,6 @@ import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshConnectionManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshNode
-import com.ceslab.firemesh.meshmodule.model.MeshStatus
-import com.ceslab.firemesh.myapp.COMPANY_ID
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.service.FireMeshScanner
 import timber.log.Timber
@@ -37,7 +32,6 @@ class NodeListViewModel @Inject constructor(
     fun removeListener() {
         meshConnectionManager.removeMeshConnectionListener(connectionStatusListener)
         fireMeshScanner.removeFireMeshScannerCallback(fireMeshScanCallback)
-
     }
 
     fun setDeviceToConfigure(meshNode: MeshNode) {
@@ -88,9 +82,6 @@ class NodeListViewModel @Inject constructor(
             checkFireAlarmSignalFromUnicastAddress(dataList)
         }
     }
-
-
-
 
     private val connectionStatusListener = object : ConnectionStatusListener {
         override fun connecting() {}

@@ -7,6 +7,8 @@ import androidx.annotation.RequiresApi
 import com.ceslab.firemesh.myapp.COMPANY_ID
 import com.ceslab.firemesh.ota.utils.Converters
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FireMeshScanner private constructor() {
     private val fireMeshScannerCallbackList: ArrayList<FireMeshScannerCallback> = ArrayList()
@@ -68,4 +70,48 @@ class FireMeshScanner private constructor() {
     interface FireMeshScannerCallback {
         fun onScanResult(dataList: ByteArray)
     }
+
+
+
+
+    //************TIMER TASK JUST FOR TEST BACKGROUND SERVICE********//
+    private val timerCallbackList: ArrayList<TimerCallback> = ArrayList()
+    fun addTimerCallback(timerCallback: TimerCallback){
+        synchronized(timerCallbackList){
+            timerCallbackList.add(timerCallback)
+        }
+    }
+
+    fun removeTimerCallback(timerCallback: TimerCallback) {
+        synchronized(timerCallbackList) {
+            timerCallbackList.remove(timerCallback)
+        }
+    }
+    private var counter = 0
+    private var timer: Timer? = null
+    private lateinit var timerTask: TimerTask
+    interface TimerCallback {
+        fun onScanResult(counter: Int)
+    }
+
+    fun startTimer() {
+        timer = Timer()
+        timerTask = object : TimerTask() {
+            override fun run() {
+                Timber.i("Count: --- ${counter++}")
+                timerCallbackList.forEach { listener -> listener.onScanResult(counter) }
+
+            }
+        }
+        timer!!.schedule(timerTask, 1000, 1000)
+    }
+
+    fun stopTimerTask() {
+        if (timer != null) {
+            timer!!.cancel()
+            timer = null
+        }
+    }
+    //*****************************************************************//
+
 }
