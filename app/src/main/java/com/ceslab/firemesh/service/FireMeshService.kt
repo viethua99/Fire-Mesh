@@ -16,12 +16,15 @@ import androidx.core.app.NotificationCompat
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
+import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.myapp.COMPANY_ID
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
+import com.siliconlabs.bluetoothmesh.App.AESUtils
 import dagger.android.AndroidInjection
 import timber.log.Timber
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -107,16 +110,17 @@ class FireMeshService : Service() {
         startForeground(2, notification)
     }
 
+
     private fun checkFireAlarmSignalFromUnicastAddress(unicastAddress: ByteArray) {
-        Timber.d("unicastAddress size = ${unicastAddress.size}")
-        val hexUnicastAddress = Converters.bytesToHexReversed(unicastAddress)
-        Timber.d("checkFireAlarmSignalFromUnicastAddress: $hexUnicastAddress")
+        val hexUnicastAddress = Converters.bytesToHex(unicastAddress)
+        Timber.d("checkFireAlarmSignalFromUnicastAddress: $hexUnicastAddress -- size=${unicastAddress.size}")
 
         val network = meshNetworkManager.network
         for (subnet in network!!.subnets) {
             val nodeList = meshNodeManager.getMeshNodeList(subnet)
             for (node in nodeList) {
-                if (Integer.toHexString(node.node.primaryElementAddress!!) == hexUnicastAddress) {
+                val address = "%4x".format(node.node.primaryElementAddress!!)
+                if (address == hexUnicastAddress) {
                     node.fireSignal = 1
                     triggerEmergencyAlarm(subnet)
                 }
@@ -209,8 +213,17 @@ class FireMeshService : Service() {
 
     private val fireMeshScanResult = object: FireMeshScanner.FireMeshScannerCallback {
         override fun onScanResult(dataList: ByteArray) {
-            Timber.d("onScanResult: ${Converters.bytesToHexReversed(dataList)}")
-            checkFireAlarmSignalFromUnicastAddress(dataList)
+            Timber.d("onScanResult: ${Converters.bytesToHex(dataList)}")
+            try {
+                val decryptedData = AESUtils.decrypt(AESUtils.ECB_ZERO_BYTE_PADDING_ALGORITHM, AES_KEY, dataList)
+                Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
+                if(decryptedData.size == 2){
+                    checkFireAlarmSignalFromUnicastAddress(decryptedData)
+                }
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+
         }
     }
 }
