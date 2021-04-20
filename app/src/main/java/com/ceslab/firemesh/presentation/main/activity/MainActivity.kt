@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
+import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment

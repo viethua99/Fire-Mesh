@@ -91,7 +91,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
                 }
                 tvNodeAddress.text = "0x" + Integer.toHexString(node.primaryElementAddress).toUpperCase()
                 tvNodeStatus.text = "Death"
-                tvNodeBattery.text = "999%"
+                tvNodeBattery.text = "${it.batteryPercent}%"
 
             }
 
