@@ -73,7 +73,7 @@ class NodeListViewModel @Inject constructor(
         val nodeStatusList = ArrayList<FireNodeStatus>()
 
         for (i in dataArray.indices step 3) {
-            val unicastAddress = bytesToHex(byteArrayOf(dataArray[i],dataArray[i+1]))
+            val unicastAddress = bytesToHex(byteArrayOf(dataArray[i+1],dataArray[i]))
             val batteryPercent = byteToUnsignedInt(dataArray[i+2])
             Timber.d("parseDataPacket: unicastAddress=$unicastAddress-- battery=$batteryPercent")
             nodeStatusList.add(FireNodeStatus(batteryPercent,unicastAddress))
@@ -85,7 +85,7 @@ class NodeListViewModel @Inject constructor(
         Timber.d("bindDataToMeshNode:dataList={${Converters.bytesToHexWhitespaceDelimited(dataList)}} ---- size = ${dataList.size}")
         val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
         if(dataList.size == 2){ //Fire alarm signal
-            val receivedUnicastAddress = bytesToHex(dataList)
+            val receivedUnicastAddress = bytesToHex(dataList.reversedArray())
             for (node in nodeList ) {
                 val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
                 if (unicastAddress == receivedUnicastAddress) {

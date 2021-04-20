@@ -67,6 +67,7 @@ class MainActivity : BaseActivity() {
             }
         }
         setupViewModel()
+        setupFireMeshService()
         setupViews()
         checkPermissions()
         getExtraData()
@@ -86,11 +87,13 @@ class MainActivity : BaseActivity() {
 
     }
 
+    private fun setupFireMeshService() {
+        fireMeshService = FireMeshService()
+        serviceIntent = Intent(this, fireMeshService!!::class.java)
+    }
 
     private fun triggerFireMeshService() {
         Timber.d("triggerFireMeshService")
-        fireMeshService = FireMeshService()
-        serviceIntent = Intent(this, fireMeshService!!::class.java)
         if (!isServiceRunning(fireMeshService!!::class.java)) {
             startService(serviceIntent)
         } else {

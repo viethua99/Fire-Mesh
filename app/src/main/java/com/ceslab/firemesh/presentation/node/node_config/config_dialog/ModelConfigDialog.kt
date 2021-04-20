@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -60,8 +61,7 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
             cb_set_publication.isEnabled = true
             cb_set_publication.isChecked = true
         } else {
-            cb_set_publication.backgroundTintList =
-                ContextCompat.getColorStateList(context!!, R.color.gray_7)
+            CompoundButtonCompat.setButtonTintList(cb_set_publication,ContextCompat.getColorStateList(context!!, R.color.gray_7))
             cb_set_publication.isEnabled = false
             cb_set_publication.isChecked = false
         }
@@ -70,8 +70,7 @@ class ModelConfigDialog(private val vendorFunctionality: NodeFunctionality.Funct
             cb_add_subscription.isEnabled = true
             cb_add_subscription.isChecked = true
         } else {
-            cb_add_subscription.backgroundTintList =
-                ContextCompat.getColorStateList(context!!, R.color.gray_7)
+            CompoundButtonCompat.setButtonTintList(cb_add_subscription,ContextCompat.getColorStateList(context!!, R.color.gray_7))
             cb_add_subscription.isEnabled = false
             cb_add_subscription.isChecked = false
         }

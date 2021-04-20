@@ -108,7 +108,7 @@ class FireMeshService : Service() {
 
 
     private fun checkFireAlarmSignalFromUnicastAddress(unicastAddress: ByteArray) {
-        val receivedUnicastAddress = Converters.bytesToHex(unicastAddress)
+        val receivedUnicastAddress = Converters.bytesToHex(unicastAddress.reversedArray())
         Timber.d("checkFireAlarmSignalFromUnicastAddress: $receivedUnicastAddress -- size=${unicastAddress.size}")
 
         val network = meshNetworkManager.network
