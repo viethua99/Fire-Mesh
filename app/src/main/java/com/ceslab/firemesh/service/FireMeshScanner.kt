@@ -27,7 +27,7 @@ class FireMeshScanner private constructor() {
      fun startScanBle() {
         Timber.d("startScanBle")
         val filterBuilder = ScanFilter.Builder()
-        val filter = filterBuilder.build()
+        val filter = filterBuilder.setManufacturerData(COMPANY_ID, byteArrayOf()).build()
         val settingBuilder = ScanSettings.Builder()
         settingBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
         val setting = settingBuilder
