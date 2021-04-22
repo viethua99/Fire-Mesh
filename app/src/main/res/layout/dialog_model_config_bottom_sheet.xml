@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:theme="@style/Theme.FireMesh">
+
+    <TextView
+        android:id="@+id/tv_functionality_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Model Config"
+        android:textColor="@color/primary_color"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_set_publication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary_color"
+            android:text="Set Publication" />
+
+        <CheckBox
+            android:id="@+id/cb_add_subscription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:buttonTint="@color/primary_color"
+            android:text="Add Subscription" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_start_config"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="Start Config" />
+</LinearLayout>

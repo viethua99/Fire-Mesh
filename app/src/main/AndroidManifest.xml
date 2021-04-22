@@ -2,20 +2,59 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ceslab.firemesh">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+
+
     <application
+        android:hardwareAccelerated="true"
+        android:name=".myapp.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireMesh">
-        <activity android:name=".MainActivity">
+        <service android:name=".service.FireMeshService" android:enabled="true" />
+        <receiver
+            android:name=".service.ScanRestartReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartService" />
+            </intent-filter>
+        </receiver>
+        <activity
+            android:noHistory="true"
+            android:name=".presentation.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".presentation.main.activity.MainActivity"/>
+        <activity android:name=".presentation.ota_list.OTAListActivity"/>
+        <activity android:name=".presentation.ota_config.OTAConfigActivity"/>
+        <service android:name=".ota.service.OTAService" />
+        <receiver android:name=".ota.service.OTAService$Receiver">
+            <intent-filter>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+                <action android:name="android.bluetooth.adapter.action.DISCOVERY_FINISHED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

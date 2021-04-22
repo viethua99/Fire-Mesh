@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--   ~ Copyright © 2019 Silicon Labs, http://www.silabs.com. All rights reserved. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.siliconlab.bluetoothmesh.adk"
+    android:versionCode="21001031"
+    android:versionName="2.10.1" >
+
+    <uses-sdk
+        android:minSdkVersion="23"
+        android:targetSdkVersion="29" />
+
+</manifest>

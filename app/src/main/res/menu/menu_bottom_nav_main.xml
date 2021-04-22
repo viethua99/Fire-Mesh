@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_item_networks"
+        android:icon="@drawable/img_mesh"
+        android:title="@string/nav_item_subnets" />
+    <item
+        android:id="@+id/nav_item_provision"
+        android:icon="@drawable/img_provision"
+        android:title="@string/nav_item_provision" />
+</menu>

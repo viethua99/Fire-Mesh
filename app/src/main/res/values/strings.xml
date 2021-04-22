@@ -1,3 +1,159 @@
 <resources>
+
     <string name="app_name">Fire Mesh</string>
+
+    <string name="nav_item_ota">OTA</string>
+    <string name="nav_item_background_scan">Start Background</string>
+    <string name="nav_item_provision">Provision</string>
+    <string name="nav_item_subnets">Subnets</string>
+    <string name="nav_item_groups">Groups</string>
+    <string name="nav_item_nodes">Nodes</string>
+
+    <string name="options_menu_item_ota">OTA</string>
+    <string name="options_menu_item_refresh">Refresh</string>
+
+    <string name="main_activity_enable_button">Enable</string>
+    <string name="main_activity_bluetooth_adapter_disabled">Bluetooth adapter is disabled</string>
+    <string name="main_activity_location_adapter_disabled">Location adapter is disabled</string>
+
+    <!-- FRAGMENTS -->
+
+    <string name="fragment_provision_list_press_start_message">Press start to scan unprovisioned device</string>
+    <string name="fragment_provision_list_looking_for_nearby_devices">Looking for nearby devices...</string>
+    <string name="fragment_provision_list_start_scanning">Start Scanning</string>
+    <string name="fragment_provision_list_stop_scanning">Stop Scanning</string>
+
+    <string name="fragment_ota_list_press_start_message">Press start to scan ota device</string>
+    <string name="fragment_ota_list_looking_for_nearby_devices">Looking for nearby devices...</string>
+    <string name="fragment_ota_list_start_scanning">Start Scanning</string>
+    <string name="fragment_ota_list_stop_scanning">Stop Scanning</string>
+
+
+    <string name="fragment_node_config_lpn">Low power energy</string>
+    <string name="fragment_node_config_lpn_supported">Supported</string>
+    <string name="fragment_node_config_lpn_no_supported">No Supported</string>
+    <string name="fragment_node_config_proxy">Proxy Feature</string>
+    <string name="fragment_node_config_relay">Relay Feature</string>
+    <string name="fragment_node_config_friend">Friend Feature</string>
+
+    <string name="fragment_node_config_retransmission">Retransmission</string>
+    <string name="fragment_node_config_group">Group</string>
+    <string name="fragment_node_config_functionality">Functionality</string>
+
+    <string name="fragment_node_info_node_name">Node Name</string>
+    <string name="fragment_node_info_node_details">Node Details</string>
+    <string name="fragment_node_info_unicast_address">Unicast Address</string>
+    <string name="fragment_node_info_uuid">UUID</string>
+    <string name="fragment_node_info_subnet_name">Subnet Name</string>
+    <string name="fragment_node_info_network_key">Network Key</string>
+    <string name="fragment_node_info_app_key">App Key</string>
+    <string name="fragment_node_info_dev_key">Dev Key</string>
+    <string name="fragment_node_info_model_table">Model Table</string>
+    <string name="fragment_node_info_cell_element">Element</string>
+    <string name="fragment_node_info_cell_vendor">Vendor</string>
+    <string name="fragment_node_info_cell_id">ID</string>
+    <string name="fragment_node_info_cell_description">Model Description</string>
+
+
+    <string name="fragment_group_list_no_group_message">No group in subnet\nPlease add a new group</string>
+    <string name="fragment_group_list_add_group_fab">Add Group</string>
+
+    <string name="fragment_subnet_list_no_subnet_message">No subnet in mesh\nPlease add a new subnet</string>
+    <string name="fragment_subnet_list_add_subnet_fab">Add Subnet</string>
+
+    <string name="fragment_node_list_no_node_message">No node in subnet\nPlease provision some devices</string>
+
+    <string name="fragment_group_list_no_node_message">No node in group\nPlease provision some devices</string>
+
+
+    <!-- LIST ITEMS -->
+    <string name="item_group_group_name">Group Name</string>
+    <string name="item_group_app_key">App Key</string>
+
+    <string name="item_subnet_subnet_name">Subnet Name</string>
+    <string name="item_network_sub_key">Subnet Key</string>
+
+    <string name="item_scanned_device_device_name">Device Name</string>
+    <string name="item_scanned_device_rssi">-53 dBm</string>
+    <string name="item_scanned_provision_button">Provision</string>
+
+    <string name="item_scanned_device_device_address">00:00:00:00:00</string>
+
+    <string name="item_node_node_name">Node Name</string>
+    <string name="item_node_node_address">00:00:00:00:00</string>
+    <string name="item_node_node_status">Alive</string>
+    <string name="item_node_node_battery_percent">100%</string>
+
+
+
+    <!-- DIALOGS -->
+    <string name="dialog_start_ota">Start OTA</string>
+    <string name="dialog_cancel_ota">Cancel</string>
+    <string name="dialog_ota_config_header">OTA Device Firmware Update</string>
+    <string name="dialog_ota_process_header">OTA Progress</string>
+    <string name="dialog_ota_process_file_name_colon">File name:</string>
+    <string name="dialog_ota_process_file_size_colon">File size:</string>
+    <string name="dialog_ota_process_packet_size_colon">Packet size:</string>
+    <string name="dialog_ota_process_zero_percent">0%</string>
+    <string name="dialog_ota_process_end">End</string>
+    <string name="dialog_ota_node_name">Node name</string>
+    <string name="dialog_ota_partial_ota">PARTIAL OTA</string>
+    <string name="dialog_ota_full_ota">FULL OTA</string>
+    <string name="dialog_ota_mode_colon">Mode:</string>
+    <string name="dialog_ota_mtu_colon">MTU:</string>
+    <string name="dialog_ota_max_mtu">250</string>
+    <string name="dialog_ota_reliability">Reliability</string>
+    <string name="dialog_ota_speed">Speed</string>
+    <string name="dialog_ota_priority">Priority</string>
+    <string name="dialog_ota_priority_low">LOW</string>
+    <string name="dialog_ota_priority_high">HIGH</string>
+    <string name="dialog_ota_application_colon">Application:</string>
+    <string name="dialog_ota_apploader_colon">Apploader:</string>
+    <string name="dialog_ota_select_application_gbl_file">Select Application .gbl file</string>
+    <string name="dialog_ota_select_apploader_gbl_file">Select Apploader .gbl file</string>
+
+    <string name="dialog_provision_bottom_provisioning_device">Provisioning Device</string>
+    <string name="dialog_provision_bottom_provision">Provision</string>
+    <string name="dialog_provision_bottom_node_name_hint">Node name</string>
+    <string name="dialog_provision_bottom_network">Network</string>
+
+    <string name="dialog_add_group_bottom_adding_group">Adding Group</string>
+    <string name="dialog_add_group_bottom_group_name_hint">Group name</string>
+    <string name="dialog_add_group_bottom_add_group_button">Add Group</string>
+
+    <string name="dialog_add_subnet_bottom_adding_subnet">Adding Subnet</string>
+    <string name="dialog_add_subnet_bottom_subnet_name_hint">Subnet name</string>
+    <string name="dialog_add_subnet_bottom_add_subnet_button">Add Subnet</string>
+
+    <string name="dialog_edit_subnet_bottom_editing_subnet">Editing Subnet</string>
+    <string name="dialog_edit_subnet_bottom_subnet_name_hint">Subnet name</string>
+    <string name="dialog_edit_subnet_bottom_delete_subnet_button">Delete Subnet</string>
+    <string name="dialog_edit_subnet_bottom_save_changes_button">Save Changes</string>
+
+    <string name="dialog_edit_group_bottom_editing_group">Editing Group</string>
+    <string name="dialog_edit_group_bottom_group_name_hint">Group name</string>
+    <string name="dialog_edit_group_bottom_delete_group_button">Delete Group</string>
+    <string name="dialog_edit_group_bottom_save_changes_button">Save Changes</string>
+
+    <string name="dialog_delete_node_bottom_deleting_node">Deleting node</string>
+    <string name="dialog_delete_node_bottom_delete">Delete</string>
+
+    <string name="error_message_timeout">Request timeout</string>
+    <string name="error_message_unknown">Unknown error</string>
+    <string name="error_message_api_error">Bluetooth mesh error</string>
+    <string name="error_message_could_not_connect_to_device">Connecting to the device failed</string>
+    <string name="error_message_could_not_subscribe_to_characteristic">Subscribing to the device characteristic failed</string>
+    <string name="error_message_could_write_to_characteristic">Writing to the device characteristic failed</string>
+    <string name="error_message_could_not_disconnect_from_device">Disconnecting from the device failed</string>
+    <string name="error_message_could_not_read_service_data">Reading service data failed</string>
+    <string name="error_message_disconnected_from_device">Disconnected from the device</string>
+    <string name="error_message_provisioning_already_pending">A provisioning session is already pending</string>
+    <string name="error_message_max_connections_active">Attempt to exceed the maximum number of connections</string>
+    <string name="error_message_could_not_provision">Provisioning failed</string>
+    <string name="error_message_cannot_save_to_database">Saving to local storage failed</string>
+    <string name="error_message_code">Error %1$d</string>
+    <string name="error_message_code_and_content">Error %1$d: %2$s</string>
+
+
+
 </resources>

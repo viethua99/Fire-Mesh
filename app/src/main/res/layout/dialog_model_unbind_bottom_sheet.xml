@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:theme="@style/Theme.FireMesh">
+
+    <TextView
+        android:id="@+id/tv_functionality_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Model Config"
+        android:textColor="@color/primary_color"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:backgroundTint="@color/red_500"
+        android:id="@+id/btn_unbind_model"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="Unbind" />
+</LinearLayout>
