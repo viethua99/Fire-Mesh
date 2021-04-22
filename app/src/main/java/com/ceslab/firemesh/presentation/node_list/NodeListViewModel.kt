@@ -14,6 +14,8 @@ import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.ota.utils.Converters.byteToUnsignedInt
 import com.ceslab.firemesh.ota.utils.Converters.bytesToHex
+import com.ceslab.firemesh.ota.utils.Converters.bytesToHexReversed
+import com.ceslab.firemesh.ota.utils.Converters.bytesToHexWhitespaceDelimited
 import com.ceslab.firemesh.service.FireMeshScanner
 import com.ceslab.firemesh.service.FireNodeStatus
 import com.siliconlabs.bluetoothmesh.App.AESUtils
@@ -69,11 +71,24 @@ class NodeListViewModel @Inject constructor(
         getMeshNodeList()
     }
 
+    private fun getDataFlag(rawData: ByteArray): Byte{
+        return rawData[0]
+    }
+
+    private fun getUserData(rawData: ByteArray): ByteArray{
+        var userData = byteArrayOf()
+        for(i in 1 until rawData.size){
+            userData += rawData[i]
+        }
+        return userData
+    }
+
     private fun parseDataPacket(dataArray:ByteArray): List<FireNodeStatus>{
+        Timber.d("parseDataPacket: ${bytesToHexReversed(dataArray)}")
         val nodeStatusList = ArrayList<FireNodeStatus>()
 
         for (i in dataArray.indices step 3) {
-            val unicastAddress = bytesToHex(byteArrayOf(dataArray[i+1],dataArray[i]))
+            val unicastAddress = bytesToHex(byteArrayOf(dataArray[i],dataArray[i+1]))
             val batteryPercent = byteToUnsignedInt(dataArray[i+2])
             Timber.d("parseDataPacket: unicastAddress=$unicastAddress-- battery=$batteryPercent")
             nodeStatusList.add(FireNodeStatus(batteryPercent,unicastAddress))
@@ -81,39 +96,51 @@ class NodeListViewModel @Inject constructor(
        return nodeStatusList
     }
 
-    private fun bindDataToMeshNode(dataList: ByteArray){
-        Timber.d("bindDataToMeshNode:dataList={${Converters.bytesToHexWhitespaceDelimited(dataList)}} ---- size = ${dataList.size}")
+    private fun bindDataToMeshNode(dataFlag:Byte,userData: ByteArray){
         val nodeList = meshNodeManager.getMeshNodeList(bluetoothMeshManager.currentSubnet!!)
-        if(dataList.size == 2){ //Fire alarm signal
-            val receivedUnicastAddress = bytesToHex(dataList.reversedArray())
-            for (node in nodeList ) {
-                val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
-                if (unicastAddress == receivedUnicastAddress) {
-                    node.fireSignal = 1
-                }
-            }
-        } else {
-            val nodeStatusList = parseDataPacket(dataList) //Heartbeat period signal
-            for(nodeStatus in nodeStatusList){
+        val leftFlag = ((dataFlag.toInt() and 0xF0) shr 4)
+        val rightFlag = (dataFlag.toInt() and 0x0F)
+        Timber.d("leftFlag = $leftFlag --rightFlag=$rightFlag")
+
+        if(leftFlag == 0){ //Main gateway
+            if(rightFlag == 0){ //Fire alarm signal
+                val receivedUnicastAddress = bytesToHex(userData)
                 for (node in nodeList ) {
                     val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
-                    if (unicastAddress == nodeStatus.unicastAddress) {
-                        node.batteryPercent = nodeStatus.batteryPercent
+                    if (unicastAddress == receivedUnicastAddress) {
+                        node.fireSignal = 1
+                    }
+                }
+            } else if(rightFlag == 1) { //Heartbeat period signal
+                val nodeStatusList = parseDataPacket(userData)
+                for(nodeStatus in nodeStatusList){
+                    for (node in nodeList ) {
+                        val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
+                        if (unicastAddress == nodeStatus.unicastAddress) {
+                            node.batteryPercent = nodeStatus.batteryPercent
+                        }
                     }
                 }
             }
+        } else if(leftFlag == 1){ // Backup gateway
+
         }
+
         getMeshNodeList()
 
     }
 
     private val fireMeshScanCallback = object : FireMeshScanner.FireMeshScannerCallback {
-        override fun onScanResult(dataList: ByteArray) {
-            Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(dataList)}")
+        override fun onScanResult(rawData: ByteArray) {
+            Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(rawData)}")
             try {
-                val decryptedData = AESUtils.decrypt(AESUtils.ECB_ZERO_BYTE_PADDING_ALGORITHM, AES_KEY, dataList)
+                val dataFlag = getDataFlag(rawData)
+                val encryptedUserData = getUserData(rawData)
+                Timber.d("dataFlag = ${bytesToHex(byteArrayOf(dataFlag))} --encryptedUserData=${Converters.bytesToHexWhitespaceDelimited(encryptedUserData)} --size={${encryptedUserData.size}}")
+
+                val decryptedData = AESUtils.decrypt(AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM, AES_KEY, encryptedUserData)
                 Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
-                bindDataToMeshNode(decryptedData)
+                  bindDataToMeshNode(dataFlag,decryptedData)
 
             } catch (exception: Exception) {
                 exception.printStackTrace()

@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec
 
 object AESUtils {
     const val ECB_ZERO_BYTE_PADDING_ALGORITHM =  "AES/ECB/ZeroBytePadding"
-
+    const val ECB_ZERO_BYTE_NO_PADDING_ALGORITHM =  "AES/ECB/NoPadding"
     @Throws(
         NoSuchPaddingException::class,
         NoSuchAlgorithmException::class,
