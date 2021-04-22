@@ -1,14 +1,10 @@
 package com.ceslab.firemesh.presentation.node_list
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,11 +14,9 @@ import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeCallback
 import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
-import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import com.ceslab.firemesh.service.FireMeshService
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_list.*

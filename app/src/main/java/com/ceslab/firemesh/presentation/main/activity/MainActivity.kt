@@ -21,19 +21,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
-import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.presentation.base.BaseActivity
 import com.ceslab.firemesh.presentation.main.fragment.MainFragment
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.service.FireMeshService
 import com.ceslab.firemesh.service.ScanRestartReceiver
 import com.ceslab.firemesh.ota.utils.Converters
-import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
-import com.siliconlabs.bluetoothmesh.App.AESUtils
+import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
-import java.lang.Exception
 
 class MainActivity : BaseActivity() {
 
@@ -170,7 +167,8 @@ class MainActivity : BaseActivity() {
                             WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
                         )
                     } else {
-                        OTAListActivity.startOTAListActivity(this)
+                       // OTAListActivity.startOTAListActivity(this)
+                        replaceFragment(OTAListFragment(),OTAListFragment.TAG,R.id.container_main)
                     }
                 }
                 R.id.item_background_scan -> {

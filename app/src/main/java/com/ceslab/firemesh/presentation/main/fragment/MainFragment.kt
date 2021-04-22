@@ -1,19 +1,10 @@
 package com.ceslab.firemesh.presentation.main.fragment
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
-import com.ceslab.firemesh.presentation.ota_list.OTAListActivity
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 

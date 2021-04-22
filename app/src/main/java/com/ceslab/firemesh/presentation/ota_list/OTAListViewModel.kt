@@ -7,4 +7,5 @@ import javax.inject.Inject
 
 class OTAListViewModel @Inject constructor() : ViewModel() {
 
+
 }
