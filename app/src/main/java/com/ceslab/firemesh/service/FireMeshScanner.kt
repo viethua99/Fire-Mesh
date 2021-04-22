@@ -24,7 +24,7 @@ class FireMeshScanner private constructor() {
         }
 
     @RequiresApi(Build.VERSION_CODES.O)
-     fun startScanBle() {
+    fun startScanBle() {
         Timber.d("startScanBle")
         val filterBuilder = ScanFilter.Builder()
         val filter = filterBuilder.setManufacturerData(COMPANY_ID, byteArrayOf()).build()
@@ -36,13 +36,13 @@ class FireMeshScanner private constructor() {
         bluetoothLeScanner.startScan(listOf(filter), setting, scanCallback)
     }
 
-     fun stopScanBle() {
+    fun stopScanBle() {
         Timber.d("stopScanBle")
         bluetoothLeScanner.stopScan(scanCallback)
     }
 
-    fun addFireMeshScannerCallback(scannerCallback: FireMeshScannerCallback){
-        synchronized(fireMeshScannerCallbackList){
+    fun addFireMeshScannerCallback(scannerCallback: FireMeshScannerCallback) {
+        synchronized(fireMeshScannerCallbackList) {
             fireMeshScannerCallbackList.add(scannerCallback)
         }
     }
@@ -58,12 +58,13 @@ class FireMeshScanner private constructor() {
             val rawData = result?.scanRecord?.bytes
             if (rawData != null) {
                 Timber.d("Raw: " + Converters.bytesToHexWhitespaceDelimited(rawData))
+                val encryptedData = result.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
+                Timber.d("Encrypted data: " + Converters.bytesToHexWhitespaceDelimited(encryptedData))
+                fireMeshScannerCallbackList.forEach { listener -> listener.onScanResult(encryptedData!!) }
+
             }
 
-            val dataList = result?.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
-            if (dataList != null) {
-                fireMeshScannerCallbackList.forEach { listener -> listener.onScanResult(dataList) }
-            }
+
         }
     }
 
@@ -72,12 +73,10 @@ class FireMeshScanner private constructor() {
     }
 
 
-
-
     //************TIMER TASK JUST FOR TEST BACKGROUND SERVICE********//
     private val timerCallbackList: ArrayList<TimerCallback> = ArrayList()
-    fun addTimerCallback(timerCallback: TimerCallback){
-        synchronized(timerCallbackList){
+    fun addTimerCallback(timerCallback: TimerCallback) {
+        synchronized(timerCallbackList) {
             timerCallbackList.add(timerCallback)
         }
     }
@@ -87,9 +86,11 @@ class FireMeshScanner private constructor() {
             timerCallbackList.remove(timerCallback)
         }
     }
+
     private var counter = 0
     private var timer: Timer? = null
     private lateinit var timerTask: TimerTask
+
     interface TimerCallback {
         fun onScanResult(counter: Int)
     }

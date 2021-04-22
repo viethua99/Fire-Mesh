@@ -94,11 +94,16 @@ class MainActivity : BaseActivity() {
 
     private fun triggerFireMeshService() {
         Timber.d("triggerFireMeshService")
-        if (!isServiceRunning(fireMeshService!!::class.java)) {
-            startService(serviceIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!isServiceRunning(fireMeshService!!::class.java)) {
+                startService(serviceIntent)
+            } else {
+                stopService(serviceIntent)
+            }
         } else {
-            stopService(serviceIntent)
+            showToastMessage("Only Android 8.0 (Oreo) or higher can use this feature")
         }
+
     }
 
     fun isServiceRunning(serviceClass: Class<*>): Boolean {
@@ -172,6 +177,7 @@ class MainActivity : BaseActivity() {
                     if (isLocationEnabled() && BluetoothAdapter.getDefaultAdapter().isEnabled) {
                         triggerFireMeshService()
                         if (fireMeshService != null) {
+
                             if (isServiceRunning(fireMeshService!!::class.java)) {
                                 item.title = "Stop Background"
                             } else {
@@ -179,7 +185,7 @@ class MainActivity : BaseActivity() {
                             }
                         }
                     } else {
-                        showToastMessage("Cannot start background scan")
+                        showToastMessage("Please enable bluetooth and location")
                     }
                 }
             }

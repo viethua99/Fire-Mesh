@@ -1,4 +1,7 @@
 package com.ceslab.firemesh.presentation.subnet_list
+import android.bluetooth.BluetoothAdapter
+import android.content.Context
+import android.location.LocationManager
 import android.view.View
 import androidx.core.view.ViewCompat
 
@@ -6,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
+import com.ceslab.firemesh.meshmodule.model.MeshStatus
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
@@ -80,14 +84,27 @@ class SubnetListFragment : BaseFragment(){
         }
     }
 
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        return locationManager?.let {
+            it.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || it.isProviderEnabled(
+                LocationManager.GPS_PROVIDER
+            )
+        } ?: false
+    }
     private val onSubnetItemClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<Subnet> {
         override fun onClick(position: Int, item: Subnet) {
             Timber.d("onSubnetItemClickedListener: clicked")
             ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
                 Runnable {
-                    subnetListViewModel.setCurrentSubnet(item)
-                    val mainActivity = activity as MainActivity
-                    mainActivity.replaceFragment(SubnetFragment(item.name),SubnetFragment.TAG,R.id.container_main)
+                    if (!BluetoothAdapter.getDefaultAdapter().isEnabled || !isLocationEnabled()) {
+                        showToastMessage("Please enable bluetooth and location")
+                    } else {
+                        subnetListViewModel.setCurrentSubnet(item)
+                        val mainActivity = activity as MainActivity
+                        mainActivity.replaceFragment(SubnetFragment(item.name),SubnetFragment.TAG,R.id.container_main)
+                    }
+
                 }
                 ,50)
         }

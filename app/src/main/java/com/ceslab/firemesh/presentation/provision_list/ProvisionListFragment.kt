@@ -1,6 +1,9 @@
 package com.ceslab.firemesh.presentation.provision_list
 
+import android.bluetooth.BluetoothAdapter
+import android.content.Context
 import android.graphics.Color
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -93,9 +96,22 @@ class ProvisionListFragment : BaseFragment() {
         }
     }
 
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        return locationManager?.let {
+            it.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || it.isProviderEnabled(
+                LocationManager.GPS_PROVIDER
+            )
+        } ?: false
+    }
+
     private val onScanButtonClickListener = View.OnClickListener {
         Timber.d("onScanButtonClickListener: clicked")
-        provisionViewModel.scanUnprovisionedDevice()
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled || !isLocationEnabled()) {
+            showToastMessage("Please enable bluetooth and location")
+        } else {
+            provisionViewModel.scanUnprovisionedDevice()
+        }
     }
 
     private val isLeScanStartedObserver = Observer<Boolean> {

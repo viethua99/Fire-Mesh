@@ -76,4 +76,8 @@ abstract class BaseFragment : Fragment() {
         AndroidDialogUtil.getInstance().hideDialog()
     }
 
+    fun showToastMessage(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
 }
