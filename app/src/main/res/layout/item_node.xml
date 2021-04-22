@@ -101,7 +101,7 @@
                         android:layout_marginTop="6dp"
                         android:orientation="horizontal">
 
-                        img_<ImageView
+                        <ImageView
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
@@ -113,7 +113,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginStart="10dp"
-                            android:text="@string/item_node_node_battery_percent"
+                            android:text="Plugging"
                             android:textColor="@android:color/black"
                             android:textSize="14sp" />
                     </LinearLayout>

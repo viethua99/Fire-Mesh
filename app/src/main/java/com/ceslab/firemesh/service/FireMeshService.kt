@@ -107,21 +107,35 @@ class FireMeshService : Service() {
     }
 
 
-    private fun checkFireAlarmSignalFromUnicastAddress(unicastAddress: ByteArray) {
-        val receivedUnicastAddress = Converters.bytesToHex(unicastAddress.reversedArray())
-        Timber.d("checkFireAlarmSignalFromUnicastAddress: $receivedUnicastAddress -- size=${unicastAddress.size}")
-
+    private fun checkFireAlarmSignalFromUnicastAddress(dataFlag: Byte, userData: ByteArray) {
         val network = meshNetworkManager.network
-        for (subnet in network!!.subnets) {
-            val nodeList = meshNodeManager.getMeshNodeList(subnet)
-            for (node in nodeList) {
-                val address = "%4x".format(node.node.primaryElementAddress!!)
-                if (address == receivedUnicastAddress) {
-                    node.fireSignal = 1
-                    triggerEmergencyAlarm(subnet)
+        val rightFlag = (dataFlag.toInt() and 0x0F)
+        if (rightFlag == 0) { //Fire alarm signal
+            val receivedUnicastAddress = Converters.bytesToHex(byteArrayOf(userData[1], userData[0]))
+            for (subnet in network!!.subnets) {
+                val nodeList = meshNodeManager.getMeshNodeList(subnet)
+                for (node in nodeList) {
+                    val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
+                    if (unicastAddress == receivedUnicastAddress) {
+                        node.fireSignal = 1
+                        triggerEmergencyAlarm(subnet)
+                    }
                 }
             }
         }
+
+    }
+
+    private fun getDataFlag(rawData: ByteArray): Byte {
+        return rawData[0]
+    }
+
+    private fun getUserData(rawData: ByteArray): ByteArray {
+        var userData = byteArrayOf()
+        for (i in 1 until rawData.size) {
+            userData += rawData[i]
+        }
+        return userData
     }
 
     private fun vibratePhone(millisecond: Long) {
@@ -133,9 +147,10 @@ class FireMeshService : Service() {
         }
     }
 
-    private fun triggerAlarmSound(){
+    private fun triggerAlarmSound() {
         Timber.d("triggerAlarmSound")
-        val alarmSoundUri: Uri = Uri.parse("android.resource://" + applicationContext.packageName.toString() + "/" + R.raw.sound_alarm)
+        val alarmSoundUri: Uri =
+            Uri.parse("android.resource://" + applicationContext.packageName.toString() + "/" + R.raw.sound_alarm)
 
         val ringTone: Ringtone = RingtoneManager.getRingtone(applicationContext, alarmSoundUri)
         ringTone.play()
@@ -184,7 +199,8 @@ class FireMeshService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotificationInOreoDevice(intent: Intent?, subnet: Subnet) {
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelName = "Emergency Channel"
 
         val existingChannel = notificationManager.getNotificationChannel(EMERGENCY_CHANNEL_ID)
@@ -192,31 +208,48 @@ class FireMeshService : Service() {
             notificationManager.deleteNotificationChannel(EMERGENCY_CHANNEL_ID)
         }
 
-        val channel = NotificationChannel(EMERGENCY_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH)
+        val channel = NotificationChannel(
+            EMERGENCY_CHANNEL_ID,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        )
 
         notificationManager.createNotificationChannel(channel)
-        val notificationBuilder = NotificationCompat.Builder(this@FireMeshService, EMERGENCY_CHANNEL_ID)
+        val notificationBuilder =
+            NotificationCompat.Builder(this@FireMeshService, EMERGENCY_CHANNEL_ID)
         val notification = notificationBuilder.setOngoing(true)
             .setSmallIcon(R.drawable.img_app)
             .setContentTitle("Fire Mesh (EMERGENCY)")
             .setContentText("We detected fire signal from ${subnet.name}, please check immediately!!!")
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
             .build()
         notificationManager.notify(10, notification)
     }
 
-    private val fireMeshScanResult = object: FireMeshScanner.FireMeshScannerCallback {
-        override fun onScanResult(dataList: ByteArray) {
-            Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(dataList)}")
+    private val fireMeshScanResult = object : FireMeshScanner.FireMeshScannerCallback {
+        override fun onScanResult(rawData: ByteArray) {
+            Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(rawData)}")
             try {
-                val decryptedData = AESUtils.decrypt(AESUtils.ECB_ZERO_BYTE_PADDING_ALGORITHM, AES_KEY, dataList)
-                Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
-                if(decryptedData.size == 2){
-                    checkFireAlarmSignalFromUnicastAddress(decryptedData)
+                val dataFlag = getDataFlag(rawData)
+                val encryptedUserData = getUserData(rawData)
 
-                }
+                val decryptedData = AESUtils.decrypt(
+                    AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
+                    AES_KEY,
+                    encryptedUserData
+                )
+                Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
+
+                checkFireAlarmSignalFromUnicastAddress(dataFlag, decryptedData)
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
