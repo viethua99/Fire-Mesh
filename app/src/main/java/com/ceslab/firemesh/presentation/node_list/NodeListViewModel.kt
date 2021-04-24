@@ -83,7 +83,7 @@ class NodeListViewModel @Inject constructor(
     }
 
     private fun parsePeriodDataPacket(leftFlag:Int,dataArray: ByteArray): List<FireNodeStatus> {
-        Timber.d("parsePeriodDataPacket: ${bytesToHexReversed(dataArray)}")
+        Timber.d("parsePeriodDataPacket: ${bytesToHex(dataArray)}")
         val nodeStatusList = mutableSetOf<FireNodeStatus>()
         val redundantValue = dataArray.size % 3
         for (i in 0 until (dataArray.size - redundantValue) step 3) {
@@ -127,11 +127,11 @@ class NodeListViewModel @Inject constructor(
                     val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
                     if (unicastAddress == nodeStatus.unicastAddress) {
                         node.gatewayType = nodeStatus.gatewayType
-                        if (node.batteryPercent == 0xFF) { //Node is Death
+                        node.batteryPercent = nodeStatus.batteryPercent
+                        if (nodeStatus.batteryPercent == 0xFF) { //Node is Death
                             node.heartBeat = 0
                         } else {
                             node.heartBeat = 1
-                            node.batteryPercent = nodeStatus.batteryPercent
                         }
                     }
                 }
