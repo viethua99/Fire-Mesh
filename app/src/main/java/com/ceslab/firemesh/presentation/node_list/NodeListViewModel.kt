@@ -100,7 +100,8 @@ class NodeListViewModel @Inject constructor(
 
             nodeStatusList.add(FireNodeStatus(batteryPercent, unicastAddress, gatewayType))
         }
-        return nodeStatusList.toList()
+
+        return nodeStatusList.filter { it.unicastAddress != "0000" }.toList()
     }
 
     private fun bindDataToMeshNode(dataFlag: Byte, userData: ByteArray) {

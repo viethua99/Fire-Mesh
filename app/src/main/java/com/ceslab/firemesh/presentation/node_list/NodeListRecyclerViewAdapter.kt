@@ -1,6 +1,7 @@
 package com.ceslab.firemesh.presentation.node_list
 
 import android.content.Context
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -72,8 +73,12 @@ class NodeListRecyclerViewAdapter(context: Context) :
                 //Heartbeat render
                 if (it.heartBeat == 1) {
                     tvNodeStatus.text = "Alive"
+                    tvNodeStatus.setTextColor(Color.parseColor("#4CAF50"))
+
                 } else {
                     tvNodeStatus.text = "Death"
+                    tvNodeStatus.setTextColor(Color.parseColor("#F44336"))
+
                 }
 
                 //Node feature render
