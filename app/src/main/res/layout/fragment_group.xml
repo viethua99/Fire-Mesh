@@ -31,12 +31,11 @@
             android:layout_height="64dp"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
-
             <ImageView
                 android:id="@+id/img_connection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/connection_indicator" />
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:src="@color/white" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -68,6 +67,7 @@
                 android:src="@drawable/img_empty" />
 
             <TextView
+                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

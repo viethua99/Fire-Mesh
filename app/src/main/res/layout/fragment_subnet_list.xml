@@ -29,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:textColor="@color/black"
             android:gravity="center"
             android:text="@string/fragment_subnet_list_no_subnet_message"
             android:textSize="20sp" />

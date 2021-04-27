@@ -6,6 +6,6 @@
         android:title="@string/nav_item_groups" />
     <item
         android:id="@+id/nav_item_nodes"
-        android:icon="@drawable/img_node"
+        android:icon="@drawable/img_flame"
         android:title="@string/nav_item_nodes" />
 </menu>
