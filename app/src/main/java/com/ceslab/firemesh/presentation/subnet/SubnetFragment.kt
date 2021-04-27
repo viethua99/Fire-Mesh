@@ -53,8 +53,8 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
     override fun onResume() {
         super.onResume()
         Timber.d("onResume")
+        setupToolbarTitle(subnetName)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = subnetName
     }
 
     private fun setupViewModel() {
@@ -149,17 +149,17 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
                 when (meshStatus) {
                     MeshStatus.MESH_CONNECTING -> {
                         text = "Connecting"
-                        setBackgroundColor(Color.parseColor("#FF9800"))
+                        background = resources.getDrawable(R.drawable.background_gradient_orange)
                         showConnectingAnimation()
                     }
                     MeshStatus.MESH_CONNECTED -> {
                         text = "Connected"
-                        setBackgroundColor(Color.parseColor("#4CAF50"))
+                        background = resources.getDrawable(R.drawable.background_gradient_green)
                         hideConnectingAnimation()
                     }
                     MeshStatus.MESH_DISCONNECTED -> {
                         text = "Disconnected"
-                        setBackgroundColor(Color.parseColor("#F44336"))
+                        background = resources.getDrawable(R.drawable.background_gradient_red)
                         hideConnectingAnimation()
                     }
                 }

@@ -55,7 +55,7 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
         super.onResume()
         Timber.d("onResume")
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = groupName
+        setupToolbarTitle(groupName)
     }
 
     private fun setupViewModel() {
@@ -121,20 +121,21 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
                 when (meshStatus) {
                     MeshStatus.MESH_CONNECTING -> {
                         text = "Connecting"
-                        setBackgroundColor(Color.parseColor("#FF9800"))
+                        background = resources.getDrawable(R.drawable.background_gradient_orange)
                         showConnectingAnimation()
                     }
                     MeshStatus.MESH_CONNECTED -> {
                         text = "Connected"
-                        setBackgroundColor(Color.parseColor("#4CAF50"))
+                        background = resources.getDrawable(R.drawable.background_gradient_green)
                         hideConnectingAnimation()
                     }
                     MeshStatus.MESH_DISCONNECTED -> {
                         text = "Disconnected"
-                        setBackgroundColor(Color.parseColor("#F44336"))
+                        background = resources.getDrawable(R.drawable.background_gradient_red)
                         hideConnectingAnimation()
                     }
                 }
+
 
                 setOnClickListener {
                     groupViewModel.changeMeshStatus(meshStatus)

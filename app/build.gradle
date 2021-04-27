@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     //Dialog module
-    implementation project(':sweetDialog')
+
     //Rx Java/RxAndroid
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
@@ -67,6 +67,9 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     //GSon
     implementation 'com.google.code.gson:gson:2.8.6'
+    //
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+
     //Test Libs
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

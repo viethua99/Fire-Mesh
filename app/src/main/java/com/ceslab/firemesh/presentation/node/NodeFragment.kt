@@ -57,8 +57,8 @@ class NodeFragment(private val nodeName: String) : BaseFragment() {
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
         setupViewModel()
+        setupToolbarTitle(nodeName)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = nodeName
         setupDeviceViewPager()
         connectToNode()
     }

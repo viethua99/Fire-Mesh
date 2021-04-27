@@ -4,9 +4,10 @@
     <item
         app:showAsAction="always"
         android:id="@+id/item_background_scan"
+        android:icon="@drawable/ic_background_scan_on"
         android:title="@string/nav_item_background_scan" />
     <item
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:id="@+id/item_ota"
         android:title="@string/nav_item_ota" />
 

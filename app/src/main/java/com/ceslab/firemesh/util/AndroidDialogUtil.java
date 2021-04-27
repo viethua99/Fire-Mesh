@@ -2,7 +2,8 @@ package com.ceslab.firemesh.util;
 
 import android.content.Context;
 
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 /**
  * Created by Viet Hua on 11/30/2020.

@@ -10,12 +10,14 @@
     <androidx.cardview.widget.CardView
         android:layout_margin="8dp"
         card_view:cardElevation="8dp"
+        app:cardPreventCornerOverlap="false"
         card_view:cardUseCompatPadding="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp">
 
         <LinearLayout
+            android:background="@drawable/background_gradient_blue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp">

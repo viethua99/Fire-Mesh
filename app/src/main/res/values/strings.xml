@@ -43,7 +43,7 @@
     <string name="fragment_node_info_node_name">Node Name</string>
     <string name="fragment_node_info_node_details">Node Details</string>
     <string name="fragment_node_info_unicast_address">Unicast Address</string>
-    <string name="fragment_node_info_uuid">UUID</string>
+    <string name="fragment_node_info_uuid">Node UUID</string>
     <string name="fragment_node_info_subnet_name">Subnet Name</string>
     <string name="fragment_node_info_network_key">Network Key</string>
     <string name="fragment_node_info_app_key">App Key</string>

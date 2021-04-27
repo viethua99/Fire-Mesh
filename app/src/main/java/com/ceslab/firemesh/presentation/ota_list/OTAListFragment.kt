@@ -64,7 +64,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         super.onResume()
         Timber.d("onResume")
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = "OTA List"
+        setupToolbarTitle("OTA List")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

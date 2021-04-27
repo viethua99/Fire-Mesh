@@ -5,7 +5,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/gray_background_color"
+        android:background="@color/white"
         android:id="@+id/rv_node_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -16,7 +16,7 @@
         android:id="@+id/no_node_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/gray_background_color"
+        android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical">
 
