@@ -144,9 +144,9 @@ class MainActivity : BaseActivity() {
         val item = menu?.findItem(R.id.item_background_scan)
         item?.let {
             if (isServiceRunning(FireMeshService::class.java)) {
-                item.title = "Stop Background"
+                item.icon = resources.getDrawable(R.drawable.ic_background_scan_off)
             } else {
-                item.title = "Start Background"
+                item.icon = resources.getDrawable(R.drawable.ic_background_scan_on)
             }
         }
         return true
