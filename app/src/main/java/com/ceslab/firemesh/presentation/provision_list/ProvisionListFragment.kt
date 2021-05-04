@@ -122,10 +122,11 @@ class ProvisionListFragment : BaseFragment() {
             if (it) {
                 btn_scanning.text = getString(R.string.fragment_ota_list_stop_scanning)
                 btn_scanning.setBackgroundColor(Color.parseColor("#ff5050"))
-                tv_scanning_message.visibility = View.GONE
-                bg_ripple.visibility = View.VISIBLE
-                bg_ripple.startRippleAnimation()
-
+                if(scannerRecyclerViewAdapter.dataList.isEmpty()){
+                    tv_scanning_message.visibility = View.GONE
+                    bg_ripple.visibility = View.VISIBLE
+                    bg_ripple.startRippleAnimation()
+                }
             } else {
                 btn_scanning.text = getString(R.string.fragment_provision_list_start_scanning)
                 tv_scanning_message.visibility = View.VISIBLE
