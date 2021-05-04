@@ -60,7 +60,7 @@ class FireMeshScanner private constructor() {
                 Timber.d("Raw: %s -- size = ${rawData.size}", Converters.bytesToHexWhitespaceDelimited(rawData))
                 val encryptedData = result.scanRecord?.getManufacturerSpecificData(COMPANY_ID)
                 Timber.d("Encrypted data: %s", Converters.bytesToHexWhitespaceDelimited(encryptedData))
-                fireMeshScannerCallbackList.forEach { listener -> listener.onScanResult(encryptedData!!) }
+                fireMeshScannerCallbackList.forEach { listener -> listener.onScanResult(encryptedData) }
 
             }
 
@@ -69,7 +69,7 @@ class FireMeshScanner private constructor() {
     }
 
     interface FireMeshScannerCallback {
-        fun onScanResult(rawData: ByteArray)
+        fun onScanResult(rawData: ByteArray?)
     }
 
 

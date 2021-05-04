@@ -236,22 +236,25 @@ class FireMeshService : Service() {
     }
 
     private val fireMeshScanResult = object : FireMeshScanner.FireMeshScannerCallback {
-        override fun onScanResult(rawData: ByteArray) {
-            Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(rawData)}")
-            try {
-                val dataFlag = getDataFlag(rawData)
-                val encryptedUserData = getUserData(rawData)
+        override fun onScanResult(rawData: ByteArray?) {
+            rawData?.let {
+                Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(it)}")
+                try {
+                    val dataFlag = getDataFlag(it)
+                    val encryptedUserData = getUserData(it)
 
-                val decryptedData = AESUtils.decrypt(
-                    AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
-                    AES_KEY,
-                    encryptedUserData
-                )
-                Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
+                    val decryptedData = AESUtils.decrypt(
+                        AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
+                        AES_KEY,
+                        encryptedUserData
+                    )
+                    Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
 
-                checkFireAlarmSignalFromUnicastAddress(dataFlag, decryptedData)
-            } catch (exception: Exception) {
-                exception.printStackTrace()
+                    checkFireAlarmSignalFromUnicastAddress(dataFlag, decryptedData)
+                } catch (exception: Exception) {
+                    exception.printStackTrace()
+                }
+
             }
 
         }

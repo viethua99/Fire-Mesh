@@ -14,7 +14,6 @@ import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.ota.utils.Converters.byteToUnsignedInt
 import com.ceslab.firemesh.ota.utils.Converters.bytesToHex
-import com.ceslab.firemesh.ota.utils.Converters.bytesToHexReversed
 import com.ceslab.firemesh.service.FireMeshScanner
 import com.ceslab.firemesh.service.FireNodeStatus
 import com.siliconlabs.bluetoothmesh.App.AESUtils
@@ -144,28 +143,31 @@ class NodeListViewModel @Inject constructor(
     }
 
     private val fireMeshScanCallback = object : FireMeshScanner.FireMeshScannerCallback {
-        override fun onScanResult(rawData: ByteArray) {
-            Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(rawData)}")
-            try {
-                val dataFlag = getDataFlag(rawData)
-                val encryptedUserData = getUserData(rawData)
-                Timber.d(
-                    "dataFlag = ${bytesToHex(byteArrayOf(dataFlag))} --encryptedUserData=${Converters.bytesToHexWhitespaceDelimited(
+        override fun onScanResult(rawData: ByteArray?) {
+            rawData?.let {
+                Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(it)}")
+                try {
+                    val dataFlag = getDataFlag(it)
+                    val encryptedUserData = getUserData(it)
+                    Timber.d(
+                        "dataFlag = ${bytesToHex(byteArrayOf(dataFlag))} --encryptedUserData=${Converters.bytesToHexWhitespaceDelimited(
+                            encryptedUserData
+                        )} --size={${encryptedUserData.size}}"
+                    )
+
+                    val decryptedData = AESUtils.decrypt(
+                        AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
+                        AES_KEY,
                         encryptedUserData
-                    )} --size={${encryptedUserData.size}}"
-                )
+                    )
+                    Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
+                    bindDataToMeshNode(dataFlag, decryptedData)
 
-                val decryptedData = AESUtils.decrypt(
-                    AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
-                    AES_KEY,
-                    encryptedUserData
-                )
-                Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
-                bindDataToMeshNode(dataFlag, decryptedData)
-
-            } catch (exception: Exception) {
-                exception.printStackTrace()
+                } catch (exception: Exception) {
+                    exception.printStackTrace()
+                }
             }
+
         }
     }
 
