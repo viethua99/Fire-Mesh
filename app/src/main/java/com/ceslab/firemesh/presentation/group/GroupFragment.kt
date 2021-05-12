@@ -1,6 +1,10 @@
 package com.ceslab.firemesh.presentation.group
 
 import android.graphics.Color
+import android.os.Build
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
@@ -14,6 +18,7 @@ import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node_list.NodeListRecyclerViewAdapter
+import com.ceslab.firemesh.service.FireMeshService
 import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
@@ -41,6 +46,7 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
 
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
+        setHasOptionsMenu(true)
         setupViewModel()
         setupRecyclerView()
     }
@@ -48,6 +54,12 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val mainActivity = activity as MainActivity
+            if(!mainActivity.isServiceRunning(FireMeshService::class.java)){
+                groupViewModel.stopScan()
+            }
+        }
         groupViewModel.removeListeners()
     }
 
@@ -57,6 +69,21 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupToolbarTitle(groupName)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_node_list,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.item_refresh -> {
+                groupViewModel.refreshNodeListStatus()
+            }
+        }
+        return true
+    }
+
 
     private fun setupViewModel() {
         Timber.d("setupViewModel")
@@ -69,6 +96,13 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
             getConnectionMessage().observe(this@GroupFragment, connectionMessageObserver)
             getErrorMessage().observe(this@GroupFragment, errorMessageObserver)
 
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val mainActivity = activity as MainActivity
+                if(!mainActivity.isServiceRunning(FireMeshService::class.java)){
+                    groupViewModel.startScan()
+                }
+            }
         }
     }
 

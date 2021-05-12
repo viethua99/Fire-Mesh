@@ -99,7 +99,11 @@ class NodeListRecyclerViewAdapter(context: Context) :
                         if (it.batteryPercent == 0xFF) { //dead node
                             tvNodeBattery.text = "???"
                         } else {
-                            tvNodeBattery.text = "${it.batteryPercent}%"
+                            if(it.batteryPercent >= 100){
+                                tvNodeBattery.text = "100%"
+                            } else {
+                                tvNodeBattery.text = "${it.batteryPercent}%"
+                            }
                         }
                         imgNodeFeature.setImageResource(R.drawable.img_lpn)
                         imgFireSignal.visibility = View.VISIBLE
@@ -124,8 +128,6 @@ class NodeListRecyclerViewAdapter(context: Context) :
                         }
                     }
                 }
-
-
             }
 
         }
