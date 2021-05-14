@@ -82,6 +82,11 @@ class ProvisionListFragment : BaseFragment() {
 
     private fun setupViews() {
         Timber.d("setupViews")
+        pull_to_refresh.setOnRefreshListener {
+            scannerRecyclerViewAdapter.clear()
+            pull_to_refresh.isRefreshing = false
+
+        }
         btn_scanning.setOnClickListener(onScanButtonClickListener)
         setupRecyclerView()
     }
