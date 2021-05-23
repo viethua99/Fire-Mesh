@@ -35,6 +35,8 @@ class FireMeshService : Service() {
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "ceslab.firemesh"
         private const val EMERGENCY_CHANNEL_ID = "ceslab.firemesh.emergency"
+        private const val GROUP_ALARM_KEY = "ceslab.firemesh.group.alarm"
+
 
         const val FIRE_MESH_SERVICE_KEY = "FIRE_MESH_SERVICE_KEY"
         const val RESET_DATA_RECEIVED_DELAY = 15000L
@@ -196,6 +198,8 @@ class FireMeshService : Service() {
             .setContentTitle("Fire Mesh (EMERGENCY)")
             .setContentText("We detected fire signal from ${subnet.name}, please check immediately!!!")
             .setPriority(Notification.PRIORITY_HIGH)
+            .setGroup(GROUP_ALARM_KEY)
+            .setGroupSummary(true)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setContentIntent(
                 PendingIntent.getActivity(
@@ -237,6 +241,8 @@ class FireMeshService : Service() {
             .setContentTitle("Fire Mesh (EMERGENCY)")
             .setContentText("We detected fire signal from ${subnet.name}, please check immediately!!!")
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
+            .setGroup(GROUP_ALARM_KEY)
+            .setGroupSummary(true)
             .setAutoCancel(true)
             .setContentIntent(
                 PendingIntent.getActivity(
