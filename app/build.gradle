@@ -45,9 +45,11 @@ dependencies {
 
 
     //BLE MESH Modules
-    implementation 'com.google.code.gson:gson:2.8.6'
 
+    implementation project(path: ':ble_mesh-android_api-v2_low-debug')
+    implementation project(path: ':ble_mesh-android_api-v2_high-debug')
     //Dialog module
+    implementation 'com.github.f0ris.sweetalert:library:1.6.2'
 
     //Rx Java/RxAndroid
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
@@ -56,8 +58,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.27'
     implementation 'com.google.dagger:dagger-android:2.27'
     implementation 'com.google.dagger:dagger-android-support:2.27'
-    implementation project(path: ':ble_mesh-android_api-v2_low-debug')
-    implementation project(path: ':ble_mesh-android_api-v2_high-debug')
+
     // if you use the support libraries
     kapt 'com.google.dagger:dagger-compiler:2.27'
     kapt 'com.google.dagger:dagger-android-processor:2.27'
@@ -68,8 +69,7 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     //GSon
     implementation 'com.google.code.gson:gson:2.8.6'
-
-    implementation 'com.github.f0ris.sweetalert:library:1.6.2'
+    //Ripple
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
     //Test Libs

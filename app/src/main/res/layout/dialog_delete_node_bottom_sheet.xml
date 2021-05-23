@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,17 +11,53 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_delete_node_bottom_deleting_node"
+        android:text="@string/dialog_edit_node_bottom_editing_node"
         android:textColor="@color/primary_color"
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <Button
-        android:backgroundTint="@color/red_500"
-        android:id="@+id/btn_delete_node"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_node_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:text="@string/dialog_delete_node_bottom_delete" />
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:hint="@string/dialog_edit_node_bottom_node_name_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_node_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/btn_delete_node"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="@color/red_500"
+            android:padding="10dp"
+            android:text="@string/dialog_edit_node_bottom_delete_node_button" />
+
+        <Button
+            android:id="@+id/btn_save_changes_node"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
+            android:padding="10dp"
+            android:text="@string/dialog_edit_node_bottom_save_changes_button" />
+    </LinearLayout>
+
 </LinearLayout>

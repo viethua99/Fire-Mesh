@@ -35,22 +35,19 @@ public class AndroidDialogUtil {
         hideDialog();
         sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE);
         sweetAlertDialog
-                .setTitleText(message)
+                .setContentText(message)
+                .setContentTextSize(17)
                 .setCustomImage(null)
                 .show();
     }
 
-    public void setOnConfirmClickedListener(SweetAlertDialog.OnSweetClickListener listener) {
-        if (sweetAlertDialog != null) {
-            sweetAlertDialog.setConfirmClickListener(listener);
-        }
-    }
 
     public void showWarningDialog(Context context,String message) {
         hideDialog();
         sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
         sweetAlertDialog
-                .setTitleText(message)
+                .setContentText(message)
+                .setContentTextSize(17)
                 .setCustomImage(null)
                 .show();
     }
@@ -59,7 +56,8 @@ public class AndroidDialogUtil {
         hideDialog();
         sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
         sweetAlertDialog
-                .setTitleText(message)
+                .setContentText(message)
+                .setContentTextSize(17)
                 .setCustomImage(null)
                 .show();
     }
@@ -68,7 +66,8 @@ public class AndroidDialogUtil {
         hideDialog();
         sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog
-                .setTitleText(message)
+                .setContentText(message)
+                .setContentTextSize(17)
                 .setCancelable(false);
         sweetAlertDialog.show();
     }

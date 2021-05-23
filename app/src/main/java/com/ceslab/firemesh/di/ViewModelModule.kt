@@ -18,7 +18,7 @@ import com.ceslab.firemesh.presentation.node.node_config.config_dialog.ModelConf
 import com.ceslab.firemesh.presentation.node.node_config.unbind_dialog.ModelUnbindViewModel
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoViewModel
 import com.ceslab.firemesh.presentation.node_list.NodeListViewModel
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialogViewModel
+import com.ceslab.firemesh.presentation.node_list.dialog.EditNodeDialogViewModel
 import com.ceslab.firemesh.presentation.ota_list.OTAListViewModel
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionDialogViewModel
 import com.ceslab.firemesh.presentation.provision_list.ProvisionViewModel
@@ -128,6 +128,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(DeleteNodeDialogViewModel::class)
-    abstract fun bindDeleteNodeDialogViewModel(deleteNodeDialogViewModel: DeleteNodeDialogViewModel):ViewModel
+    @ViewModelKey(EditNodeDialogViewModel::class)
+    abstract fun bindDeleteNodeDialogViewModel(editNodeDialogViewModel: EditNodeDialogViewModel):ViewModel
 }

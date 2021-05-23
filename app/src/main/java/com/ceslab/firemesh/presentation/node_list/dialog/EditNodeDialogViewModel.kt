@@ -5,10 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
 import com.ceslab.firemesh.meshmodule.model.MeshNode
+import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlab.bluetoothmesh.adk.configuration_control.ConfigurationControl
 import com.siliconlab.bluetoothmesh.adk.configuration_control.FactoryResetCallback
 import com.siliconlab.bluetoothmesh.adk.data_model.node.Node
+import com.siliconlab.bluetoothmesh.adk.data_model.node.NodeChangeNameException
+import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
+import com.siliconlab.bluetoothmesh.adk.data_model.subnet.SubnetChangeNameException
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,7 +20,7 @@ import javax.inject.Inject
  * Created by Viet Hua on 03/02/2021.
  */
 
-class DeleteNodeDialogViewModel @Inject constructor(
+class EditNodeDialogViewModel @Inject constructor(
    private val meshNodeManager: MeshNodeManager
 ) : ViewModel() {
 
@@ -30,6 +34,18 @@ class DeleteNodeDialogViewModel @Inject constructor(
 
     fun getDeleteNodeStatus() : LiveData<Boolean> {
         return isDeletedSucceed
+    }
+
+    fun updateNode(meshNode: MeshNode, newName: String) {
+        if (!AppUtil.isNameValid(newName)) {
+            return
+        }
+
+        try {
+            meshNode.node.name = newName
+        } catch (e: NodeChangeNameException) {
+            Timber.e("updateNode exception: $e")
+        }
     }
 
     private fun factoryResetDevice(configurationControl: ConfigurationControl) {

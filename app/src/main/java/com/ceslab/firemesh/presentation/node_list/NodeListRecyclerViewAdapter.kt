@@ -57,8 +57,14 @@ class NodeListRecyclerViewAdapter(context: Context) :
 
         fun renderUI(meshNode: MeshNode?) {
             meshNode?.let {
+                Timber.d("$meshNode -- ${meshNode.batteryPercent} -- ${meshNode.heartBeat} -- ${meshNode.gatewayType}")
+                Timber.d("friendsupport=${meshNode.node.deviceCompositionData.supportsFriend()}")
+                Timber.d("lpn=${meshNode.node.deviceCompositionData.supportsLowPower()}")
+                //Initialize
                 val node = it.node
                 val shakeAnimation = AnimationUtils.loadAnimation(context, R.anim.shake_animation)
+                imgNodeFeature.visibility = View.VISIBLE
+                imgFireSignal.visibility = View.VISIBLE
                 tvNodeName.text = node.name
                 tvNodeAddress.text =
                     "0x" + Integer.toHexString(node.primaryElementAddress).toUpperCase()
@@ -126,6 +132,11 @@ class NodeListRecyclerViewAdapter(context: Context) :
                             imgFireSignal.setImageResource(R.drawable.img_flame_background)
                             imgFireSignal.clearAnimation()
                         }
+                    } else {
+                        tvNodeStatus.text = "???"
+                        tvNodeBattery.text = "???"
+                        imgNodeFeature.visibility = View.GONE
+                        imgFireSignal.visibility = View.GONE
                     }
                 }
             }

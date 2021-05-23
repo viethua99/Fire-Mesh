@@ -56,9 +56,6 @@ abstract class BaseFragment : Fragment() {
             .commit()
     }
 
-    fun setOnConfirmDialogCLicked(sweetClickListener: SweetAlertDialog.OnSweetClickListener) {
-        AndroidDialogUtil.getInstance().setOnConfirmClickedListener(sweetClickListener)
-    }
 
     fun showProgressDialog(message: String) {
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, message)
