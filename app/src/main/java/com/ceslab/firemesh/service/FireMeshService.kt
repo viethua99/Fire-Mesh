@@ -7,6 +7,7 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.os.Vibrator
 import androidx.annotation.RequiresApi
@@ -21,7 +22,6 @@ import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import com.siliconlabs.bluetoothmesh.App.AESUtils
 import dagger.android.AndroidInjection
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -37,6 +37,7 @@ class FireMeshService : Service() {
         private const val EMERGENCY_CHANNEL_ID = "ceslab.firemesh.emergency"
 
         const val FIRE_MESH_SERVICE_KEY = "FIRE_MESH_SERVICE_KEY"
+        const val RESET_DATA_RECEIVED_DELAY = 15000L
     }
 
     @Inject
@@ -47,6 +48,10 @@ class FireMeshService : Service() {
 
 
     private val fireMeshScanner = FireMeshScanner.instance
+
+    private val taskHandler: Handler = Handler()
+    private var isHandlerStarted = false
+    private var isAlarmTriggered = false
 
 
     override fun onCreate() {
@@ -74,6 +79,7 @@ class FireMeshService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("onDestroy")
+        stopHandler()
         fireMeshScanner.removeFireMeshScannerCallback(fireMeshScanResult)
         fireMeshScanner.stopScanBle()
 
@@ -111,16 +117,25 @@ class FireMeshService : Service() {
         val network = meshNetworkManager.network
         val rightFlag = (dataFlag.toInt() and 0x0F)
         if (rightFlag == 0) { //Fire alarm signal
-            val receivedUnicastAddress = Converters.bytesToHex(byteArrayOf(userData[1], userData[0]))
-            for (subnet in network!!.subnets) {
-                val nodeList = meshNodeManager.getMeshNodeList(subnet)
-                for (node in nodeList) {
-                    val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
-                    if (unicastAddress == receivedUnicastAddress) {
-                        node.fireSignal = 1
-                        triggerEmergencyAlarm(subnet)
+
+            if(!isHandlerStarted){ //Start handler only one time
+                startHandler()
+                isHandlerStarted = true
+            }
+
+            if(!isAlarmTriggered){
+                val receivedUnicastAddress = Converters.bytesToHex(byteArrayOf(userData[1], userData[0]))
+                for (subnet in network!!.subnets) {
+                    val nodeList = meshNodeManager.getMeshNodeList(subnet)
+                    for (node in nodeList) {
+                        val unicastAddress = "%4x".format(node.node.primaryElementAddress!!)
+                        if (unicastAddress == receivedUnicastAddress) {
+                            node.fireSignal = 1
+                            triggerEmergencyAlarm(subnet)
+                        }
                     }
                 }
+                isAlarmTriggered = true //Flag to make sure data is alarm only trigger one time for every 15 seconds
             }
         }
 
@@ -235,22 +250,35 @@ class FireMeshService : Service() {
         notificationManager.notify(10, notification)
     }
 
+    private fun startHandler() {
+        taskHandler.postDelayed(repeatableTaskRunnable, RESET_DATA_RECEIVED_DELAY)
+    }
+
+    private fun stopHandler() {
+        taskHandler.removeCallbacks(repeatableTaskRunnable)
+    }
+
+
+    private val repeatableTaskRunnable = Runnable {
+        isAlarmTriggered = false //Reset flag every 15 seconds
+    }
+
+
     private val fireMeshScanResult = object : FireMeshScanner.FireMeshScannerCallback {
         override fun onScanResult(rawData: ByteArray?) {
             rawData?.let {
                 Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(it)}")
                 try {
-                    val dataFlag = getDataFlag(it)
-                    val encryptedUserData = getUserData(it)
+                        val dataFlag = getDataFlag(it)
+                        val encryptedUserData = getUserData(it)
 
-                    val decryptedData = AESUtils.decrypt(
-                        AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
-                        AES_KEY,
-                        encryptedUserData
-                    )
-                    Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
-
-                    checkFireAlarmSignalFromUnicastAddress(dataFlag, decryptedData)
+                        val decryptedData = AESUtils.decrypt(
+                            AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
+                            AES_KEY,
+                            encryptedUserData
+                        )
+                        Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
+                        checkFireAlarmSignalFromUnicastAddress(dataFlag, decryptedData)
                 } catch (exception: Exception) {
                     exception.printStackTrace()
                 }
