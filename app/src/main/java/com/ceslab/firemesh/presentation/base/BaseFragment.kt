@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
+import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.util.AndroidDialogUtil
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -40,6 +41,11 @@ abstract class BaseFragment : Fragment() {
         onMyViewCreated(view)
     }
 
+    fun setupToolbarTitle(title:String){
+        val mainActivity = activity as MainActivity
+        mainActivity.setToolbarTitle(title)
+    }
+
     fun replaceFragment(fragment: Fragment, tag: String, containerId: Int) {
         Timber.d("replaceFragment: name=${fragment.javaClass.name}")
         val fragmentManager = childFragmentManager
@@ -50,9 +56,6 @@ abstract class BaseFragment : Fragment() {
             .commit()
     }
 
-    fun setOnConfirmDialogCLicked(sweetClickListener: SweetAlertDialog.OnSweetClickListener) {
-        AndroidDialogUtil.getInstance().setOnConfirmClickedListener(sweetClickListener)
-    }
 
     fun showProgressDialog(message: String) {
         AndroidDialogUtil.getInstance().showLoadingDialog(activity, message)

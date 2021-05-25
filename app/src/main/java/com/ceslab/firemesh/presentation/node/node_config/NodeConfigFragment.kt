@@ -18,19 +18,14 @@ import com.ceslab.firemesh.meshmodule.model.NodeFunctionality
 import com.ceslab.firemesh.meshmodule.model.NodeFunctionality.Companion.getFunctionalitiesNamed
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.node_config.config_dialog.ModelConfigCallback
 import com.ceslab.firemesh.presentation.node.node_config.config_dialog.ModelConfigDialog
 import com.ceslab.firemesh.presentation.node.node_config.unbind_dialog.ModelUnbindCallback
 import com.ceslab.firemesh.presentation.node.node_config.unbind_dialog.ModelUnbindDialog
-import com.ceslab.firemesh.presentation.node_list.NodeListRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
-import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_config.*
-import kotlinx.android.synthetic.main.fragment_node_list.*
 import timber.log.Timber
 
 class NodeConfigFragment : BaseFragment() {

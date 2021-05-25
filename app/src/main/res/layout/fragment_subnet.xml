@@ -50,9 +50,9 @@
 
             <ImageView
                 android:id="@+id/img_connection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/connection_indicator" />
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:src="@color/white" />
         </LinearLayout>
     </RelativeLayout>
 

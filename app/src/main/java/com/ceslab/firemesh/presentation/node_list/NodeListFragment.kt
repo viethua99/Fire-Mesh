@@ -15,8 +15,8 @@ import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeCallback
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
+import com.ceslab.firemesh.presentation.node_list.dialog.EditNodeCallback
+import com.ceslab.firemesh.presentation.node_list.dialog.EditNodeDialog
 import com.ceslab.firemesh.service.FireMeshService
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_list.*
@@ -111,9 +111,9 @@ class NodeListFragment : BaseFragment(){
 
         override fun onLongClick(position: Int, item: MeshNode) {
             Timber.d("onNodeItemClickedListener: longClicked")
-            val deleteNodeDialog = DeleteNodeDialog(item)
-            deleteNodeDialog.show(fragmentManager!!, "DeleteNodeDialog")
-            deleteNodeDialog.setDeleteNodeCallback(onDeleteNodeCallback)
+            val editNodeDialog = EditNodeDialog(item)
+            editNodeDialog.show(fragmentManager!!, "DeleteNodeDialog")
+            editNodeDialog.setDeleteNodeCallback(onEditNodeCallback)
         }
     }
 
@@ -127,7 +127,7 @@ class NodeListFragment : BaseFragment(){
         }
     }
 
-    private val onDeleteNodeCallback = object : DeleteNodeCallback {
+    private val onEditNodeCallback = object : EditNodeCallback {
         override fun onChanged() {
             Timber.d("onChanged")
             nodeListViewModel.getMeshNodeList()

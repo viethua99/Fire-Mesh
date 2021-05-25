@@ -11,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
 import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetViewModel
@@ -88,24 +89,18 @@ class EditGroupDialog(private val group: Group) : BottomSheetDialogFragment() {
     private fun showDeleteGroupLocallyDialog() {
         activity?.runOnUiThread {
             AndroidDialogUtil.getInstance().hideDialog()
-            val builder = AlertDialog.Builder(activity, R.style.AlertDialogTheme)
-            builder.apply {
-                setTitle("Delete Locally")
-                setMessage("Delete failed,Do you want to delete group from the app?")
-                setPositiveButton("Delete") { dialog, _ ->
+            SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Delete locally?")
+                .setContentText("Delete failed, do you want to delete GROUP from the app?")
+                .setConfirmText("Delete")
+                .showCancelButton(false)
+                .setConfirmClickListener {
                     editGroupViewModel.removeGroupLocally(group)
                     editGroupCallback.onChanged()
-                    dialog.dismiss()
+                    it.cancel()
                     dismiss()
                 }
-
-                setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                    dismiss()
-                }
-            }
-
-            builder.create().show()
+                .show()
         }
     }
 

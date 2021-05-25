@@ -22,6 +22,10 @@ import com.ceslab.firemesh.presentation.node_list.OTAListRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.ota_config.OTAConfigFragment
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_ota_list.*
+import kotlinx.android.synthetic.main.fragment_ota_list.bg_ripple
+import kotlinx.android.synthetic.main.fragment_ota_list.btn_scanning
+import kotlinx.android.synthetic.main.fragment_ota_list.tv_scanning_message
+import kotlinx.android.synthetic.main.fragment_provision_list.*
 import timber.log.Timber
 
 /**
@@ -64,7 +68,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         super.onResume()
         Timber.d("onResume")
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = "OTA List"
+        setupToolbarTitle("OTA List")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,7 +93,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         for(device in devices) {
             Timber.d("updateWithDevices: ${device.name} ---- ${device.address}")
         }
-        looking_for_devices_background.visibility =View.GONE
+        bg_ripple.visibility =View.GONE
         otaListRecyclerViewAdapter.setDataList(devices)
     }
 
@@ -215,13 +219,18 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         if (scanning || btn_scanning.text == "Stop Scanning") {
             discovery.stopDiscovery(false)
             scanning = false
-            btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
-            tv_scanning_message.text = getString(R.string.fragment_ota_list_press_start_message)
-            btn_scanning.setBackgroundColor(Color.parseColor("#0288D1"))
+            btn_scanning.text = getString(R.string.fragment_ota_list_start_scanning)
+            tv_scanning_message.visibility = View.VISIBLE
+            tv_scanning_message.text =
+                getString(R.string.fragment_ota_list_press_start_message)
+            btn_scanning.setBackgroundColor(Color.parseColor("#007bff"))
+            bg_ripple.stopRippleAnimation()
+
         } else {
-            btn_scanning.text = getString(R.string.fragment_provision_list_stop_scanning)
-            tv_scanning_message.text = getString(R.string.fragment_ota_list_looking_for_nearby_devices)
-            btn_scanning.setBackgroundColor(Color.parseColor("#F44336"))
+            btn_scanning.text = getString(R.string.fragment_ota_list_stop_scanning)
+            btn_scanning.setBackgroundColor(Color.parseColor("#ff5050"))
+            tv_scanning_message.visibility = View.GONE
+            bg_ripple.startRippleAnimation()
             startScanning()
         }
     }

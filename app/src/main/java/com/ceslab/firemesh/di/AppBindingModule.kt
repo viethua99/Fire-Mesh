@@ -14,7 +14,7 @@ import com.ceslab.firemesh.presentation.node.node_config.config_dialog.ModelConf
 import com.ceslab.firemesh.presentation.node.node_config.unbind_dialog.ModelUnbindDialog
 import com.ceslab.firemesh.presentation.node.node_info.NodeInfoFragment
 import com.ceslab.firemesh.presentation.node_list.NodeListFragment
-import com.ceslab.firemesh.presentation.node_list.dialog.DeleteNodeDialog
+import com.ceslab.firemesh.presentation.node_list.dialog.EditNodeDialog
 import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import com.ceslab.firemesh.presentation.provision_list.ProvisionListFragment
@@ -77,7 +77,7 @@ abstract class AppBindingModule {
     abstract fun editSubnetDialog(): EditSubnetDialog
 
     @ContributesAndroidInjector
-    abstract fun deleteNodeDialog(): DeleteNodeDialog
+    abstract fun deleteNodeDialog(): EditNodeDialog
 
     @ContributesAndroidInjector
     abstract fun modelConfigDialog(): ModelConfigDialog

@@ -21,6 +21,7 @@ class MainFragment : BaseFragment() {
     override fun onMyViewCreated(view: View) {
         Timber.d("onMyViewCreated")
         setHasOptionsMenu(true)
+        setupToolbarTitle( getString(R.string.nav_item_subnets))
         setupBottomNavigationView()
         setupViewPager()
     }
@@ -44,11 +45,11 @@ class MainFragment : BaseFragment() {
                 when (position) {
                     MainViewPagerAdapter.SUBNET_LIST_PAGE ->{
                         bottom_nav_main.menu.findItem(R.id.nav_item_networks).isChecked = true
-                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_subnets)
+                        setupToolbarTitle( getString(R.string.nav_item_subnets))
                     }
                     MainViewPagerAdapter.PROVISION_LIST ->  {
                         bottom_nav_main.menu.findItem(R.id.nav_item_provision).isChecked = true
-                        (activity as MainActivity).supportActionBar?.title = getString(R.string.nav_item_provision)
+                        setupToolbarTitle( getString(R.string.nav_item_provision))
                     }
                 }
             }

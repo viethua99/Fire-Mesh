@@ -43,7 +43,7 @@
     <string name="fragment_node_info_node_name">Node Name</string>
     <string name="fragment_node_info_node_details">Node Details</string>
     <string name="fragment_node_info_unicast_address">Unicast Address</string>
-    <string name="fragment_node_info_uuid">UUID</string>
+    <string name="fragment_node_info_uuid">Node UUID</string>
     <string name="fragment_node_info_subnet_name">Subnet Name</string>
     <string name="fragment_node_info_network_key">Network Key</string>
     <string name="fragment_node_info_app_key">App Key</string>
@@ -135,22 +135,24 @@
     <string name="dialog_edit_group_bottom_delete_group_button">Delete Group</string>
     <string name="dialog_edit_group_bottom_save_changes_button">Save Changes</string>
 
-    <string name="dialog_delete_node_bottom_deleting_node">Deleting node</string>
-    <string name="dialog_delete_node_bottom_delete">Delete</string>
+    <string name="dialog_edit_node_bottom_editing_node">Editing Node</string>
+    <string name="dialog_edit_node_bottom_node_name_hint">Node name</string>
+    <string name="dialog_edit_node_bottom_delete_node_button">Delete Node</string>
+    <string name="dialog_edit_node_bottom_save_changes_button">Save Changes</string>
 
     <string name="error_message_timeout">Request timeout</string>
     <string name="error_message_unknown">Unknown error</string>
     <string name="error_message_api_error">Bluetooth mesh error</string>
-    <string name="error_message_could_not_connect_to_device">Connecting to the device failed</string>
-    <string name="error_message_could_not_subscribe_to_characteristic">Subscribing to the device characteristic failed</string>
-    <string name="error_message_could_write_to_characteristic">Writing to the device characteristic failed</string>
-    <string name="error_message_could_not_disconnect_from_device">Disconnecting from the device failed</string>
-    <string name="error_message_could_not_read_service_data">Reading service data failed</string>
+    <string name="error_message_could_not_connect_to_device">Connect to the device failed</string>
+    <string name="error_message_could_not_subscribe_to_characteristic">Subscribe to the device characteristic failed</string>
+    <string name="error_message_could_write_to_characteristic">Write to the device characteristic failed</string>
+    <string name="error_message_could_not_disconnect_from_device">Disconnect from the device failed</string>
+    <string name="error_message_could_not_read_service_data">Read service data failed</string>
     <string name="error_message_disconnected_from_device">Disconnected from the device</string>
     <string name="error_message_provisioning_already_pending">A provisioning session is already pending</string>
     <string name="error_message_max_connections_active">Attempt to exceed the maximum number of connections</string>
     <string name="error_message_could_not_provision">Provisioning failed</string>
-    <string name="error_message_cannot_save_to_database">Saving to local storage failed</string>
+    <string name="error_message_cannot_save_to_database">Save to local storage failed</string>
     <string name="error_message_code">Error %1$d</string>
     <string name="error_message_code_and_content">Error %1$d: %2$s</string>
 

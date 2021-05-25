@@ -13,10 +13,11 @@ import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.ConnectableDeviceDescription
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_provision_list.*
+import kotlinx.android.synthetic.main.fragment_provision_list.btn_scanning
+import kotlinx.android.synthetic.main.fragment_provision_list.tv_scanning_message
 import timber.log.Timber
 
 class ProvisionListFragment : BaseFragment() {
@@ -26,7 +27,7 @@ class ProvisionListFragment : BaseFragment() {
 
     private lateinit var scannerRecyclerViewAdapter: ProvisionRecyclerViewAdapter
     private lateinit var provisionViewModel: ProvisionViewModel
-    private  var isViewCreated = false
+    private var isViewCreated = false
 
     override fun getResLayoutId(): Int {
         return R.layout.fragment_provision_list
@@ -58,7 +59,7 @@ class ProvisionListFragment : BaseFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(!isVisibleToUser && isViewCreated) {
+        if (!isVisibleToUser && isViewCreated) {
             provisionViewModel.stopScan()
         }
     }
@@ -73,13 +74,19 @@ class ProvisionListFragment : BaseFragment() {
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        provisionViewModel = ViewModelProvider(this, viewModelFactory).get(ProvisionViewModel::class.java)
+        provisionViewModel =
+            ViewModelProvider(this, viewModelFactory).get(ProvisionViewModel::class.java)
         provisionViewModel.isLeScanStarted().observe(this, isLeScanStartedObserver)
         provisionViewModel.scannedDeviceResult.observe(this, scanUnprovisionedDeviceObserver)
     }
 
     private fun setupViews() {
         Timber.d("setupViews")
+        pull_to_refresh.setOnRefreshListener {
+            scannerRecyclerViewAdapter.clear()
+            pull_to_refresh.isRefreshing = false
+
+        }
         btn_scanning.setOnClickListener(onScanButtonClickListener)
         setupRecyclerView()
     }
@@ -97,7 +104,8 @@ class ProvisionListFragment : BaseFragment() {
     }
 
     private fun isLocationEnabled(): Boolean {
-        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        val locationManager =
+            activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         return locationManager?.let {
             it.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || it.isProviderEnabled(
                 LocationManager.GPS_PROVIDER
@@ -117,20 +125,29 @@ class ProvisionListFragment : BaseFragment() {
     private val isLeScanStartedObserver = Observer<Boolean> {
         activity?.runOnUiThread {
             if (it) {
-                btn_scanning.text = getString(R.string.fragment_provision_list_stop_scanning)
-                tv_scanning_message.text = getString(R.string.fragment_provision_list_looking_for_nearby_devices)
-                btn_scanning.setBackgroundColor(Color.parseColor("#F44336"))
+                btn_scanning.text = getString(R.string.fragment_ota_list_stop_scanning)
+                btn_scanning.setBackgroundColor(Color.parseColor("#ff5050"))
+                if(scannerRecyclerViewAdapter.dataList.isEmpty()){
+                    tv_scanning_message.visibility = View.GONE
+                    bg_ripple.visibility = View.VISIBLE
+                    bg_ripple.startRippleAnimation()
+                }
             } else {
-                btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
-                tv_scanning_message.text = getString(R.string.fragment_provision_list_press_start_message)
-                btn_scanning.setBackgroundColor(Color.parseColor("#0288D1"))
+                btn_scanning.text = getString(R.string.fragment_provision_list_start_scanning)
+                tv_scanning_message.visibility = View.VISIBLE
+                tv_scanning_message.text =
+                    getString(R.string.fragment_provision_list_press_start_message)
+                btn_scanning.setBackgroundColor(Color.parseColor("#007bff"))
+                bg_ripple.stopRippleAnimation()
+
             }
         }
     }
 
     private val scanUnprovisionedDeviceObserver = Observer<ConnectableDeviceDescription> {
         activity?.runOnUiThread {
-            looking_for_devices_background.visibility = View.INVISIBLE
+            bg_ripple.stopRippleAnimation()
+            bg_ripple.visibility = View.GONE
             scannerRecyclerViewAdapter.replaceDeviceByIndex(it)
 
         }
@@ -143,7 +160,7 @@ class ProvisionListFragment : BaseFragment() {
                 val provisionBottomDialog =
                     ProvisionBottomDialog()
                 val bundle = Bundle()
-                bundle.putSerializable(ProvisionBottomDialog.DEVICE_DESCRIPTION_KEY,item)
+                bundle.putSerializable(ProvisionBottomDialog.DEVICE_DESCRIPTION_KEY, item)
                 provisionBottomDialog.arguments = bundle
                 provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
             }

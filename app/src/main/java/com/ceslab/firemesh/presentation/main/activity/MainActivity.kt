@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -68,6 +69,10 @@ class MainActivity : BaseActivity() {
         setupViews()
         checkPermissions()
         getExtraData()
+    }
+
+    fun setToolbarTitle(title:String){
+        tv_toolbar_title.text = title
     }
 
 
@@ -139,9 +144,9 @@ class MainActivity : BaseActivity() {
         val item = menu?.findItem(R.id.item_background_scan)
         item?.let {
             if (isServiceRunning(FireMeshService::class.java)) {
-                item.title = "Stop Background"
+                item.icon = resources.getDrawable(R.drawable.ic_background_scan_off)
             } else {
-                item.title = "Start Background"
+                item.icon = resources.getDrawable(R.drawable.ic_background_scan_on)
             }
         }
         return true
@@ -167,7 +172,6 @@ class MainActivity : BaseActivity() {
                             WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
                         )
                     } else {
-                       // OTAListActivity.startOTAListActivity(this)
                         replaceFragment(OTAListFragment(),OTAListFragment.TAG,R.id.container_main)
                     }
                 }
@@ -177,13 +181,15 @@ class MainActivity : BaseActivity() {
                         if (fireMeshService != null) {
 
                             if (isServiceRunning(fireMeshService!!::class.java)) {
+                                item.icon = resources.getDrawable(R.drawable.ic_background_scan_off)
                                 item.title = "Stop Background"
                             } else {
+                                item.icon = resources.getDrawable(R.drawable.ic_background_scan_on)
                                 item.title = "Start Background"
                             }
                         }
                     } else {
-                        showToastMessage("Please enable bluetooth and location")
+                        showToastMessage("Check bluetooth and location")
                     }
                 }
             }
@@ -203,6 +209,8 @@ class MainActivity : BaseActivity() {
 
     private fun setupViews() {
         Timber.d("setupViews")
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
         replaceFragmentWithoutAddToBackStack(MainFragment(), MainFragment.TAG, R.id.container_main)
         showBluetoothEnableView()
         showLocationEnableView()

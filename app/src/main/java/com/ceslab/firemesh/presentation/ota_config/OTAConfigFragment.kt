@@ -494,12 +494,13 @@ class OTAConfigFragment : BaseFragment(){
             tv_node_name?.let {
                 it.text = "Unknown Device"
             }
-            (activity as MainActivity).supportActionBar?.title = "Unknown Device"
+            setupToolbarTitle("Unknown Device")
+
         } else {
             tv_node_name?.let {
                 it.text = deviceName
             }
-            (activity as MainActivity).supportActionBar?.title = deviceName
+            setupToolbarTitle(deviceName)
 
 
         }
