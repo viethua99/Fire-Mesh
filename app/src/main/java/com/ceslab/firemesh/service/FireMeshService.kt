@@ -39,7 +39,7 @@ class FireMeshService : Service() {
 
 
         const val FIRE_MESH_SERVICE_KEY = "FIRE_MESH_SERVICE_KEY"
-        const val RESET_DATA_RECEIVED_DELAY = 15000L
+        const val RESET_DATA_RECEIVED_DELAY = 3000L
     }
 
     @Inject
@@ -267,6 +267,7 @@ class FireMeshService : Service() {
 
     private val repeatableTaskRunnable = Runnable {
         isAlarmTriggered = false //Reset flag every 15 seconds
+        startHandler()
     }
 
 
