@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/white"
-        tools:listitem="@layout/item_node"
         android:id="@+id/rv_node_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_above="@id/scanning_separator"
+        tools:listitem="@layout/item_node" />
 
     <LinearLayout
-        android:layout_marginHorizontal="10dp"
-        android:layout_centerInParent="true"
         android:id="@+id/no_node_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="10dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical">
@@ -28,13 +29,20 @@
             android:src="@drawable/img_empty" />
 
         <TextView
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/fragment_node_list_no_node_message"
+            android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/scanning_separator"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/scanning_bar_shadow" />
 
 </RelativeLayout>

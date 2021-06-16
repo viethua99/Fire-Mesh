@@ -12,9 +12,11 @@ class NodeFunctionality {
 
     enum class VENDOR_FUNCTIONALITY(var isSupportPublication:Boolean,var isSupportSubscription:Boolean,var isBinded: Boolean,vararg val model: VendorModelIdentifier) {
         Unknown(false,false,false,VendorModelIdentifier.Unknown),
-        NodeStatusClient(true,true,false,VendorModelIdentifier.NodeStatusClient),
-        NodeStatusServer(true,true,false,VendorModelIdentifier.NodeStatusServer),
-        GatewayStatusClient(true,true,false,VendorModelIdentifier.GatewayStatusClient),
+
+        NodeStatusClient(false,true,false,VendorModelIdentifier.NodeStatusClient),
+        NodeStatusServer(true,false,false,VendorModelIdentifier.NodeStatusServer),
+
+        GatewayStatusClient(false,true,false,VendorModelIdentifier.GatewayStatusClient),
         GatewayStatusServer(true,false,false,VendorModelIdentifier.GatewayStatusServer);
 
 

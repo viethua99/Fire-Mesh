@@ -8,14 +8,15 @@
         android:id="@+id/rv_group_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/scanning_separator"
         android:background="@color/white" />
 
     <LinearLayout
-        android:layout_marginHorizontal="10dp"
-        android:layout_centerInParent="true"
         android:id="@+id/no_group_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="10dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical">
@@ -29,12 +30,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/black"
-
             android:gravity="center"
+
             android:text="@string/fragment_group_list_no_group_message"
+            android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add_group"
         android:layout_width="wrap_content"
@@ -44,9 +46,16 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/primary_color"
         android:text="@string/fragment_group_list_add_group_fab"
-        android:textSize="12sp"
-        app:iconSize="20sp"
         android:textColor="@color/white"
+        android:textSize="12sp"
         app:icon="@drawable/ic_add"
+        app:iconSize="20sp"
         app:iconTint="@color/white" />
+
+    <View
+        android:id="@+id/scanning_separator"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/scanning_bar_shadow" />
 </RelativeLayout>

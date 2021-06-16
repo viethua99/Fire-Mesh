@@ -61,7 +61,8 @@
         android:id="@+id/scanning_gradient_container"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_above="@id/scanning_separator">
+        android:layout_alignParentBottom="true"
+        >
 
         <Button
             android:id="@+id/btn_scanning"
@@ -79,6 +80,6 @@
         android:id="@+id/scanning_separator"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/scanning_gradient_container"
         android:background="@drawable/scanning_bar_shadow" />
 </RelativeLayout>

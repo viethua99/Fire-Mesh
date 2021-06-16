@@ -5,6 +5,7 @@ import com.ceslab.firemesh.meshmodule.model.MeshConnectableDevice
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.siliconlab.bluetoothmesh.adk.BluetoothMesh
 import com.siliconlab.bluetoothmesh.adk.configuration.BluetoothMeshConfiguration
+import com.siliconlab.bluetoothmesh.adk.configuration.BluetoothMeshConfigurationLimits
 import com.siliconlab.bluetoothmesh.adk.configuration.LocalVendorModel
 import com.siliconlab.bluetoothmesh.adk.data_model.group.Group
 import com.siliconlab.bluetoothmesh.adk.data_model.network.Network
@@ -19,6 +20,20 @@ import timber.log.Timber
  */
 
 class BluetoothMeshManager(context: Context) {
+
+    companion object {
+        private const val NETWORK_MAX = 7
+        private const val GROUP_MAX = 8
+        private const val NODE_CAN_PROVISIONED_MAX = 100
+        private const val NETWORK_KEY_SINGLE_NODE_HOLD_MAX = 7
+        private const val APPLICATION_KEY_SINGLE_NODE_HOLD_MAX = 32
+
+        private const val RPL_SIZE_MAX = 32
+        private const val SEGMENT_MESSAGE_RECEIVED_MAX = 4
+        private const val SEGMENT_MESSAGE_SENT_MAX = 4
+        private const val PROVISION_SESSION_MAX = 1
+
+    }
     val bluetoothMesh: BluetoothMesh
     var provisionedMeshConnectableDevice: MeshConnectableDevice? = null
     var meshNodeToConfigure: MeshNode? = null
@@ -29,19 +44,39 @@ class BluetoothMeshManager(context: Context) {
     var currentGroup: Group? = null
 
     //Vendor models
-    private val myVendorModelServer = LocalVendorModel(4369, 4369)
-    private val myVendorModelClient = LocalVendorModel(4369, 8738)
-    private val gatewayStatusModelServer = LocalVendorModel(4369, 13107)
-    private val gatewayStatusModelClient = LocalVendorModel(4369, 17476)
+    private val nodeStatusServer = LocalVendorModel(4369, 4369)
+    private val nodeStatusClient = LocalVendorModel(4369, 8738)
+    private val gatewayStatusServer = LocalVendorModel(4369, 13107)
+    private val gatewayStatusClient = LocalVendorModel(4369, 17476)
 
-    val bluetoothMeshConfiguration = BluetoothMeshConfiguration(
+    private fun initBluetoothMeshLimits() : BluetoothMeshConfigurationLimits {
+        val bluetoothMeshLimits = BluetoothMeshConfigurationLimits()
+        bluetoothMeshLimits.networks = NETWORK_MAX
+        bluetoothMeshLimits.groups = GROUP_MAX
+        bluetoothMeshLimits.nodes = NODE_CAN_PROVISIONED_MAX
+        bluetoothMeshLimits.nodeNetworks = NETWORK_KEY_SINGLE_NODE_HOLD_MAX
+        bluetoothMeshLimits.nodeGroups = APPLICATION_KEY_SINGLE_NODE_HOLD_MAX
+        bluetoothMeshLimits.rplSize = RPL_SIZE_MAX
+        bluetoothMeshLimits.segmentedMessagesReceived = SEGMENT_MESSAGE_RECEIVED_MAX
+        bluetoothMeshLimits.segmentedMessagesSent = SEGMENT_MESSAGE_SENT_MAX
+        bluetoothMeshLimits.provisionSessions = PROVISION_SESSION_MAX
+
+        return bluetoothMeshLimits
+    }
+
+
+
+    private val bluetoothMeshConfiguration = BluetoothMeshConfiguration(
         listOf(
-            myVendorModelServer,
-            myVendorModelClient,
-            gatewayStatusModelServer,
-            gatewayStatusModelClient
-        )
+            nodeStatusServer,
+            nodeStatusClient,
+            gatewayStatusServer,
+            gatewayStatusClient
+        ),
+        initBluetoothMeshLimits()
     )
+
+
 
 
     init {
@@ -54,7 +89,7 @@ class BluetoothMeshManager(context: Context) {
                 Timber.d("Vendor Setting Handler: $p5")
             }
         val localVendorSettings = LocalVendorSettings(opCodes, localVendorSettingsMessageHandler)
-        val localVendorRegistrator = LocalVendorRegistrator(myVendorModelClient)
+        val localVendorRegistrator = LocalVendorRegistrator(nodeStatusClient)
         localVendorRegistrator.registerSettings(localVendorSettings)
     }
 }

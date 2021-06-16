@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_above="@id/scanning_separator"
         android:id="@+id/rv_subnet_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,4 +50,11 @@
         android:textSize="12sp"
         android:text="@string/fragment_subnet_list_add_subnet_fab"
         app:icon="@drawable/ic_add" />
+
+    <View
+        android:id="@+id/scanning_separator"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/scanning_bar_shadow" />
 </RelativeLayout>

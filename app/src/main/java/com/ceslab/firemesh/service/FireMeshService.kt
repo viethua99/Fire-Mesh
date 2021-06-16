@@ -137,7 +137,7 @@ class FireMeshService : Service() {
                         }
                     }
                 }
-                isAlarmTriggered = true //Flag to make sure data is alarm only trigger one time for every 15 seconds
+                isAlarmTriggered = true //Flag to make sure data is alarm only trigger one time for every 3 seconds
             }
         }
 
