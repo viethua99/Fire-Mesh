@@ -69,6 +69,7 @@
     <!-- LIST ITEMS -->
     <string name="item_group_group_name">Group Name</string>
     <string name="item_group_app_key">App Key</string>
+    <string name="item_group_address">Group Address</string>
 
     <string name="item_subnet_subnet_name">Subnet Name</string>
     <string name="item_network_sub_key">Subnet Key</string>
