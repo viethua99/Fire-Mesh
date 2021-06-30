@@ -3,6 +3,7 @@ package com.ceslab.firemesh.meshmodule.bluetoothmesh
 import android.content.Context
 import com.ceslab.firemesh.meshmodule.model.MeshConnectableDevice
 import com.ceslab.firemesh.meshmodule.model.MeshNode
+import com.ceslab.firemesh.myapp.*
 import com.siliconlab.bluetoothmesh.adk.BluetoothMesh
 import com.siliconlab.bluetoothmesh.adk.configuration.BluetoothMeshConfiguration
 import com.siliconlab.bluetoothmesh.adk.configuration.BluetoothMeshConfigurationLimits
@@ -32,8 +33,9 @@ class BluetoothMeshManager(context: Context) {
         private const val SEGMENT_MESSAGE_RECEIVED_MAX = 4
         private const val SEGMENT_MESSAGE_SENT_MAX = 4
         private const val PROVISION_SESSION_MAX = 1
-
     }
+
+
     val bluetoothMesh: BluetoothMesh
     var provisionedMeshConnectableDevice: MeshConnectableDevice? = null
     var meshNodeToConfigure: MeshNode? = null
@@ -44,10 +46,10 @@ class BluetoothMeshManager(context: Context) {
     var currentGroup: Group? = null
 
     //Vendor models
-    private val nodeStatusServer = LocalVendorModel(4369, 4369)
-    private val nodeStatusClient = LocalVendorModel(4369, 8738)
-    private val gatewayStatusServer = LocalVendorModel(4369, 13107)
-    private val gatewayStatusClient = LocalVendorModel(4369, 17476)
+    private val nodeStatusServer = LocalVendorModel(COMPANY_IDENTIFIER, NODE_STATUS_SERVER_ID)
+    private val nodeStatusClient = LocalVendorModel(COMPANY_IDENTIFIER, NODE_STATUS_CLIENT_ID)
+    private val gatewayStatusServer = LocalVendorModel(COMPANY_IDENTIFIER, GATEWAY_STATUS_SERVER_ID)
+    private val gatewayStatusClient = LocalVendorModel(COMPANY_IDENTIFIER, GATEWAY_STATUS_CLIENT_ID)
 
     private fun initBluetoothMeshLimits() : BluetoothMeshConfigurationLimits {
         val bluetoothMeshLimits = BluetoothMeshConfigurationLimits()

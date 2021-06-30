@@ -40,7 +40,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
     }
 
     private lateinit var otaListViewModel: OTAListViewModel
-    private lateinit var otaListRecyclerViewAdapter : OTAListRecyclerViewAdapter
+    private lateinit var otaListRecyclerViewAdapter: OTAListRecyclerViewAdapter
 
     private var service: OTAService? = null
     private var binding: OTAService.Binding? = null
@@ -90,10 +90,10 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
     }
 
     override fun updateWithDevices(devices: List<BluetoothDeviceInfo>) {
-        for(device in devices) {
+        for (device in devices) {
             Timber.d("updateWithDevices: ${device.name} ---- ${device.address}")
         }
-        bg_ripple.visibility =View.GONE
+        bg_ripple.visibility = View.GONE
         otaListRecyclerViewAdapter.setDataList(devices)
     }
 
@@ -107,7 +107,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         }
     }
 
-    private fun setupViews(){
+    private fun setupViews() {
         btn_scanning.setOnClickListener(onScanButtonClickListener)
         setupRecyclerView()
     }
@@ -146,10 +146,11 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         Timber.d("reDiscover: $clearCachedDiscoveries")
         discovery.addFilter(GattService.MeshProxyService)
         discovery.addFilter(GattService.MeshProvisioningService)
+        discovery.addFilter(GattService.OtaService)
         discovery.startDiscovery(clearCachedDiscoveries)
     }
 
-    private fun connectToDevice(device:BluetoothDeviceInfo?) {
+    private fun connectToDevice(device: BluetoothDeviceInfo?) {
         Timber.d("connectToDevice: ${device!!.address}")
         showProgressDialog("Connecting to device")
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
@@ -160,7 +161,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         if (scanning) {
             discovery.stopDiscovery(false)
             scanning = false
-            btn_scanning.text =getString(R.string.fragment_provision_list_start_scanning)
+            btn_scanning.text = getString(R.string.fragment_provision_list_start_scanning)
             btn_scanning.setBackgroundColor(Color.parseColor("#0288D1"))
         }
 
@@ -171,7 +172,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
 
         val bluetoothDeviceInfo: BluetoothDeviceInfo = device
 
-        service?.connectGatt(bluetoothDeviceInfo.device,false,object : TimeoutGattCallback() {
+        service?.connectGatt(bluetoothDeviceInfo.device, false, object : TimeoutGattCallback() {
             override fun onTimeout() {
                 Timber.d("onTimeout")
                 hideDialog()
@@ -180,9 +181,9 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
 
             override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
                 Timber.d("onConnectionStateChange: $status")
-                if(newState == BluetoothGatt.STATE_DISCONNECTED && status != BluetoothGatt.GATT_SUCCESS) {
+                if (newState == BluetoothGatt.STATE_DISCONNECTED && status != BluetoothGatt.GATT_SUCCESS) {
                     hideDialog()
-                    if(status == 133) {
+                    if (status == 133) {
                         Timber.e("onConnectionStateChange: Reconnect due to 0x85 (133) error")
                         handler.postDelayed({
                             gatt.close()
@@ -191,17 +192,21 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
                         return
 
                     }
-                } else if(newState == BluetoothGatt.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
+                } else if (newState == BluetoothGatt.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
                     Timber.d("onConnectionStateChange: GAT_SUCCESS")
                     hideDialog()
 
                     service?.let {
-                        if(it.isGattConnected) {
+                        if (it.isGattConnected) {
                             val mainActivity = activity as MainActivity
-                            mainActivity.addFragment(OTAConfigFragment(), OTAConfigFragment.TAG,R.id.container_main)
+                            mainActivity.addFragment(
+                                OTAConfigFragment(),
+                                OTAConfigFragment.TAG,
+                                R.id.container_main
+                            )
                         }
                     }
-                } else if(newState == BluetoothGatt.STATE_DISCONNECTED) {
+                } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                     Timber.d("onConnectionStateChange: STATE_DISCONNECTED")
                     hideDialog()
 
