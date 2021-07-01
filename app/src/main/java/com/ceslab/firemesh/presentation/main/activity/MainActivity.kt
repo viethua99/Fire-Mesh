@@ -211,6 +211,7 @@ class MainActivity : BaseActivity() {
         Timber.d("setupViews")
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         replaceFragmentWithoutAddToBackStack(MainFragment(), MainFragment.TAG, R.id.container_main)
         showBluetoothEnableView()
         showLocationEnableView()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_color">#007bff</color>
+    <color name="primary_color">#5884fc</color>
     <color name="button_clicked_color">#1565C0</color>
 
     <color name="gray_background_color">#ECECEC</color>

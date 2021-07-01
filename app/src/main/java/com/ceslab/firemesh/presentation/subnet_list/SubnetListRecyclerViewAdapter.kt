@@ -1,4 +1,4 @@
-package com.ceslab.firemesh.presentation.provision_list
+package com.ceslab.firemesh.presentation.subnet_list
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
-import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 
 class SubnetListRecyclerViewAdapter(context: Context) :
@@ -29,7 +28,6 @@ class SubnetListRecyclerViewAdapter(context: Context) :
         var tvNetworkName: TextView = view.findViewById(R.id.tv_subnet_name)
         var tvNetworkNodeCount: TextView = view.findViewById(R.id.tv_subnet_nodes_count)
         var tvNetworkGroupsCount: TextView = view.findViewById(R.id.tv_subnet_groups_count)
-        var tvNetworkKeyIndex: TextView = view.findViewById(R.id.tv_subnet_key_index)
 
         init {
             view.setOnClickListener(this)
@@ -49,8 +47,6 @@ class SubnetListRecyclerViewAdapter(context: Context) :
             tvNetworkName.text = subnet.name
             tvNetworkNodeCount.text = String.format("%d Nodes", subnet.nodes.size)
             tvNetworkGroupsCount.text = String.format("%d Groups", subnet.groups.size)
-            tvNetworkKeyIndex.text = String.format("... %s", ConverterUtil.getHexValue(subnet.netKey.key).takeLast(12))
-
         }
     }
 }

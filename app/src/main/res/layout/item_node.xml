@@ -18,7 +18,7 @@
         card_view:cardUseCompatPadding="true">
 
         <LinearLayout
-            android:background="@drawable/background_gradient_blue"
+            android:background="@drawable/background_gradient_gray"
             android:foreground="@drawable/item_ripple_effect"
             android:padding="10dp"
             android:layout_width="match_parent"

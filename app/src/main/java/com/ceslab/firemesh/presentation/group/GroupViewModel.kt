@@ -60,6 +60,12 @@ class GroupViewModel @Inject constructor(
         }
     }
 
+
+    fun getNodeListSize(): Int{
+        return currentSubnet.nodes.size
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun startScan() {
         fireMeshScanner.startScanBle()

@@ -29,7 +29,6 @@ class GroupListRecyclerViewAdapter(context: Context) :
         View.OnLongClickListener {
         var tvGroupName: TextView = view.findViewById(R.id.tv_group_name)
         var tvNodeCount: TextView = view.findViewById(R.id.tv_group_nodes_count)
-        var tvAppKey: TextView = view.findViewById(R.id.tv_group_app_key)
         var tvGroupAddress: TextView = view.findViewById(R.id.tv_group_address)
 
         init {
@@ -50,8 +49,6 @@ class GroupListRecyclerViewAdapter(context: Context) :
         fun renderUI(group: Group) {
             tvGroupName.text = group.name
             tvNodeCount.text = String.format("%d Nodes", group.nodes.size)
-            tvAppKey.text =
-                String.format("... %s", ConverterUtil.getHexValue(group.appKey.key).takeLast(12))
             tvGroupAddress.text = "0x" + Integer.toHexString(group.address).toUpperCase()
         }
     }

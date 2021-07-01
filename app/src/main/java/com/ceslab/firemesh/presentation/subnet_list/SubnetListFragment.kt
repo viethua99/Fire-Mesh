@@ -9,15 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
-import com.ceslab.firemesh.meshmodule.model.MeshStatus
-import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.presentation.base.BaseFragment
 import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet.AddSubnetClickListener
 import com.ceslab.firemesh.presentation.subnet_list.dialog.add_subnet.AddSubnetDialog
-import com.ceslab.firemesh.presentation.provision_list.SubnetListRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetCallback
 import com.ceslab.firemesh.presentation.subnet_list.dialog.edit_subnet.EditSubnetDialog
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet

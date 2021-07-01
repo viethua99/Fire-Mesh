@@ -9,8 +9,6 @@
         android:id="@+id/rv_node_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_above="@id/scanning_separator"
         tools:listitem="@layout/item_node" />
 
     <LinearLayout
@@ -19,7 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginHorizontal="10dp"
-        android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -37,12 +34,5 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
-
-    <View
-        android:id="@+id/scanning_separator"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/scanning_bar_shadow" />
 
 </RelativeLayout>

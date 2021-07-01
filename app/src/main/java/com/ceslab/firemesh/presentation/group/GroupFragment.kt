@@ -23,6 +23,7 @@ import com.ceslab.firemesh.util.AppUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group.*
+import kotlinx.android.synthetic.main.fragment_group.progress_bar_connection
 import kotlinx.android.synthetic.main.fragment_group.rv_node_list
 
 import timber.log.Timber
@@ -49,6 +50,8 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
         setHasOptionsMenu(true)
         setupViewModel()
         setupRecyclerView()
+        updateNodeListSize()
+
     }
 
     override fun onDestroy() {
@@ -82,6 +85,10 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
             }
         }
         return true
+    }
+
+    fun updateNodeListSize() {
+        tv_count.text = "${groupViewModel.getNodeListSize()} Nodes"
     }
 
 
@@ -120,24 +127,6 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
 
 
 
-
-    private fun showConnectingAnimation() {
-        Timber.d("showConnectingAnimation")
-        activity?.runOnUiThread {
-            val connectingGradientAnimation = AnimationUtils.loadAnimation(activity, R.anim.connection_translate_right)
-            connecting_anim_gradient_right_container.visibility = View.VISIBLE
-            connecting_anim_gradient_right_container.startAnimation(connectingGradientAnimation)
-        }
-    }
-
-    private fun hideConnectingAnimation() {
-        Timber.d("hideConnectingAnimation")
-        activity?.runOnUiThread {
-            connecting_anim_gradient_right_container.clearAnimation()
-            connecting_anim_gradient_right_container.visibility = View.GONE
-        }
-    }
-
     private val meshNodeListObserver = Observer<Set<MeshNode>> {
         if(it.isNotEmpty()){
             no_node_background.visibility = View.GONE
@@ -155,27 +144,28 @@ class GroupFragment(private val groupName: String) : BaseFragment() {
                 when (meshStatus) {
                     MeshStatus.MESH_CONNECTING -> {
                         text = "Connecting"
-                        background = resources.getDrawable(R.drawable.background_gradient_orange)
-                        showConnectingAnimation()
+                        setTextColor(Color.parseColor("#ffad33"))
+                        btn_group_connect.text = "Disconnect"
+                        progress_bar_connection.visibility = View.VISIBLE
                     }
                     MeshStatus.MESH_CONNECTED -> {
                         text = "Connected"
-                        background = resources.getDrawable(R.drawable.background_gradient_green)
-                        hideConnectingAnimation()
+                        setTextColor(Color.parseColor("#70bf73"))
+                        btn_group_connect.text = "Disconnect"
+                        progress_bar_connection.visibility = View.GONE
                     }
                     MeshStatus.MESH_DISCONNECTED -> {
                         text = "Disconnected"
-                        background = resources.getDrawable(R.drawable.background_gradient_red)
-                        hideConnectingAnimation()
+                        setTextColor(Color.parseColor("#ff7373"))
+                        btn_group_connect.text = "Connect"
+                        progress_bar_connection.visibility = View.GONE
                     }
                 }
 
-
-                setOnClickListener {
-                    groupViewModel.changeMeshStatus(meshStatus)
-                }
             }
-
+            btn_group_connect.setOnClickListener {
+                groupViewModel.changeMeshStatus(meshStatus)
+            }
         }
     }
 
