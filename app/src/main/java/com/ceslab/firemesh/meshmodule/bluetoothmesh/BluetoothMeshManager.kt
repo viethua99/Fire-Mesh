@@ -87,9 +87,7 @@ class BluetoothMeshManager(context: Context) {
         val opCodes = byteArrayOf(0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA)
 
         val localVendorSettingsMessageHandler =
-            LocalVendorSettingsMessageHandler { p0, p1, p2, p3, p4, p5, p6 ->
-                Timber.d("Vendor Setting Handler: $p5")
-            }
+            LocalVendorSettingsMessageHandler { _, _, _, _, _, _, _ -> }
         val localVendorSettings = LocalVendorSettings(opCodes, localVendorSettingsMessageHandler)
         val localVendorRegistrator = LocalVendorRegistrator(nodeStatusClient)
         localVendorRegistrator.registerSettings(localVendorSettings)

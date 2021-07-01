@@ -1,6 +1,7 @@
 package com.ceslab.firemesh.presentation.node_list
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
         var tvNodeProxy: TextView = view.findViewById(R.id.tv_node_proxy)
         var imgFireSignal: ImageView = view.findViewById(R.id.img_flame_signal)
         var imgNodeFeature: ImageView = view.findViewById(R.id.img_node_feature)
+        var cvNodeFeature: ImageView = view.findViewById(R.id.cv_node_feature)
 
         init {
             view.setOnClickListener(this)
@@ -90,28 +92,34 @@ class NodeListRecyclerViewAdapter(context: Context) :
                 //Node feature render
                 if (it.gatewayType == MeshNode.GatewayType.MAIN_GATEWAY) {
                     imgFireSignal.visibility = View.GONE
-                    imgNodeFeature.setImageResource(R.drawable.img_proxy)
+                    imgNodeFeature.setImageResource(R.drawable.ic_proxy)
+                    cvNodeFeature.backgroundTintList =
+                        ColorStateList.valueOf(context.resources.getColor(R.color.main_gateway_color))
                     tvNodeBattery.text = "Plugging"
                 } else if (it.gatewayType == MeshNode.GatewayType.BACKUP_GATEWAY) {
                     imgFireSignal.visibility = View.GONE
-                    imgNodeFeature.setImageResource(R.drawable.img_proxy)
+                    imgNodeFeature.setImageResource(R.drawable.ic_proxy)
+                    cvNodeFeature.backgroundTintList =
+                        ColorStateList.valueOf(context.resources.getColor(R.color.backup_gateway_color))
                     tvNodeBattery.text = "Plugging"
                     val nodeName = node.name + " (BU)"
                     tvNodeName.text = nodeName
 
                 } else if (it.gatewayType == MeshNode.GatewayType.NOT_GATEWAY) {
-
                     if (it.node.deviceCompositionData.supportsLowPower()) {  //lPN node feature render
                         if (it.batteryPercent == 0xFF) { //dead node
                             tvNodeBattery.text = "???"
                         } else {
-                            if(it.batteryPercent >= 100){
+                            if (it.batteryPercent >= 100) {
                                 tvNodeBattery.text = "100%"
                             } else {
                                 tvNodeBattery.text = "${it.batteryPercent}%"
                             }
                         }
-                        imgNodeFeature.setImageResource(R.drawable.img_lpn)
+                        imgNodeFeature.setImageResource(R.drawable.ic_lpn)
+                        cvNodeFeature.backgroundTintList =
+                            ColorStateList.valueOf(context.resources.getColor(R.color.lpn_color))
+
                         imgFireSignal.visibility = View.VISIBLE
                         if (it.fireSignal == 1) {
                             imgFireSignal.setImageResource(R.drawable.img_flame)
@@ -123,7 +131,10 @@ class NodeListRecyclerViewAdapter(context: Context) :
                         }
                     } else if (it.node.deviceCompositionData.supportsFriend()) {  //Friend node feature render
                         tvNodeBattery.text = "Plugging"
-                        imgNodeFeature.setImageResource(R.drawable.img_friend)
+                        imgNodeFeature.setImageResource(R.drawable.ic_friend)
+                        cvNodeFeature.backgroundTintList =
+                            ColorStateList.valueOf(context.resources.getColor(R.color.lpn_color))
+
                         imgFireSignal.visibility = View.VISIBLE
                         if (it.fireSignal == 1) {
                             imgFireSignal.setImageResource(R.drawable.img_flame)

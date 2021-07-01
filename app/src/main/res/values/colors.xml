@@ -6,6 +6,12 @@
     <color name="gray_background_color">#ECECEC</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="main_gateway_color">#ff808d</color>
+    <color name="backup_gateway_color">#ffcf4c</color>
+
+    <color name="lpn_color">#77d977</color>
+    <color name="friend_color">#00B0FF</color>
+
     <color name="price_blue">#1090d1</color>
     <color name="price_purple">#8f42ac</color>
 
