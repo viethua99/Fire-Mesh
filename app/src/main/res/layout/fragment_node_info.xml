@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_node_details"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:text="@string/fragment_node_info_node_details"
-            android:textColor="@color/primary_color"
+            android:textColor="#3D3F4F"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
+            android:layout_marginTop="5dp"
+            android:id="@+id/ll_node_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_node_details">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/img_info" />
+                android:src="@drawable/ic_node_name" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -37,11 +47,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_node_name"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -51,21 +61,34 @@
                     android:layout_marginTop="3dp"
                     android:text="Unknown Device"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/node_name_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_node_name" />
+
+
         <LinearLayout
+            android:id="@+id/ll_node_unicast_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/node_name_separator">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/img_unicast" />
+                android:src="@drawable/ic_unicast_address" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -76,11 +99,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_unicast_address"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -90,22 +113,34 @@
                     android:layout_marginTop="3dp"
                     android:text="0002"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/node_unicast_address_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_node_unicast_address" />
+
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/ll_node_uuid"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/node_unicast_address_separator">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/img_uuid" />
+                android:src="@drawable/ic_uuid" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -116,11 +151,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_uuid"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -130,21 +165,33 @@
                     android:layout_marginTop="3dp"
                     android:text="11"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/node_unicast_uuid_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_node_uuid" />
+
         <LinearLayout
+            android:id="@+id/ll_subnet_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/node_unicast_uuid_separator">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/ic_launcher_background" />
+                android:src="@drawable/ic_subnet_name" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -155,11 +202,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_subnet_name"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -169,21 +216,33 @@
                     android:layout_marginTop="3dp"
                     android:text="Demo network"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/node_subnet_name_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_subnet_name" />
+
         <LinearLayout
+            android:id="@+id/ll_network_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/node_subnet_name_separator">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/img_key" />
+                android:src="@drawable/ic_key" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -194,11 +253,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_network_key"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -208,21 +267,33 @@
                     android:layout_marginTop="3dp"
                     android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/network_key_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_network_key" />
+
         <LinearLayout
+            android:id="@+id/ll_app_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/network_key_separator">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/img_key" />
+                android:src="@drawable/ic_key" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -233,11 +304,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_app_key"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -247,21 +318,33 @@
                     android:layout_marginTop="3dp"
                     android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/app_key_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_app_key" />
+
         <LinearLayout
+            android:id="@+id/ll_dev_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_key_separator">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/img_key" />
+                android:src="@drawable/ic_key" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -271,11 +354,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:textColor="#3D3F4F"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_node_info_dev_key"
-                    android:textColor="@color/primary_color"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -285,25 +368,40 @@
                     android:layout_marginTop="3dp"
                     android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:id="@+id/dev_key_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray"
+            app:layout_constraintTop_toBottomOf="@id/ll_dev_key" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_model_table"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:text="@string/fragment_node_info_model_table"
-            android:textColor="@color/primary_color"
+            android:textColor="#3D3F4F"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dev_key_separator" />
 
         <TableLayout
             android:id="@+id/table_models"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:stretchColumns="3">
+            android:stretchColumns="3"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_model_table">
 
             <TableRow
                 android:background="@color/primary_color"
@@ -345,5 +443,5 @@
 
         </TableLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
