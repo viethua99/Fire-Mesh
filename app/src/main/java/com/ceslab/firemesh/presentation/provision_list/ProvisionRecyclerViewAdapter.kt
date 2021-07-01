@@ -12,7 +12,9 @@ import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import timber.log.Timber
 
 class ProvisionRecyclerViewAdapter(context: Context) :
-    BaseRecyclerViewAdapter<ConnectableDeviceDescription, ProvisionRecyclerViewAdapter.ViewHolder>(context) {
+    BaseRecyclerViewAdapter<ConnectableDeviceDescription, ProvisionRecyclerViewAdapter.ViewHolder>(
+        context
+    ) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,27 +46,29 @@ class ProvisionRecyclerViewAdapter(context: Context) :
         return dataList.indexOfFirst { deviceInfo -> deviceInfo.deviceAddress.equals(deviceAddress) }
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         var tvDeviceName: TextView = view.findViewById(R.id.tv_device_name)
-        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_node_address)
+        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_device_address)
         var tvRssi: TextView = view.findViewById(R.id.tv_device_rssi)
-        var btnProvision: Button = view.findViewById(R.id.btn_provision)
 
+        init {
+            view.setOnClickListener(this)
+        }
 
+        override fun onClick(p0: View?) {
+            itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
+        }
 
         fun renderUI(connectableDeviceDescription: ConnectableDeviceDescription) {
-            if(connectableDeviceDescription.deviceName == null){
+            if (connectableDeviceDescription.deviceName == null) {
                 tvDeviceName.text = "Unknown Device"
             } else {
                 tvDeviceName.text = connectableDeviceDescription.deviceName
             }
 
             tvDeviceAddress.text = connectableDeviceDescription.deviceAddress
-            tvRssi.text = connectableDeviceDescription.rssi.toString()  + " dBm"
-            btnProvision.setOnClickListener {
-                itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
-            }
+            tvRssi.text = connectableDeviceDescription.rssi.toString() + " dBm"
         }
     }
 }

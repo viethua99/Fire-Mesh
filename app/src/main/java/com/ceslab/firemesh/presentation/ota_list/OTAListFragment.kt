@@ -3,10 +3,12 @@ package com.ceslab.firemesh.presentation.ota_list
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
 import android.graphics.Color
+import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ceslab.firemesh.R
@@ -20,12 +22,12 @@ import com.ceslab.firemesh.presentation.base.BaseRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node_list.OTAListRecyclerViewAdapter
 import com.ceslab.firemesh.presentation.ota_config.OTAConfigFragment
+import com.ceslab.firemesh.presentation.provision_list.dialog.ProvisionBottomDialog
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_ota_list.*
 import kotlinx.android.synthetic.main.fragment_ota_list.bg_ripple
 import kotlinx.android.synthetic.main.fragment_ota_list.btn_scanning
 import kotlinx.android.synthetic.main.fragment_ota_list.tv_scanning_message
-import kotlinx.android.synthetic.main.fragment_provision_list.*
 import timber.log.Timber
 
 /**
@@ -116,7 +118,7 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(context)
         otaListRecyclerViewAdapter = OTAListRecyclerViewAdapter(context!!)
-        otaListRecyclerViewAdapter.itemClickListener = onOTAButtonClickedListener
+        otaListRecyclerViewAdapter.itemClickListener = onOTAItemClickedListener
         rv_ota_list.apply {
             layoutManager = linearLayoutManager
             setHasFixedSize(true)
@@ -240,11 +242,16 @@ class OTAListFragment : BaseFragment(), Discovery.BluetoothDiscoveryHost,
         }
     }
 
-    private val onOTAButtonClickedListener =
+    private val onOTAItemClickedListener =
         object : BaseRecyclerViewAdapter.ItemClickListener<BluetoothDeviceInfo> {
             override fun onClick(position: Int, item: BluetoothDeviceInfo) {
-                Timber.d("onOTAButtonClickedListener: clicked")
-                connectToDevice(item)
+                ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
+                    Runnable {
+                        Timber.d("onOTAButtonClickedListener: clicked")
+                        connectToDevice(item)
+                    }
+                    , 50)
+
             }
 
             override fun onLongClick(position: Int, item: BluetoothDeviceInfo) {}

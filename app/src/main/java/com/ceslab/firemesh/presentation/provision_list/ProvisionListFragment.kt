@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -95,7 +96,7 @@ class ProvisionListFragment : BaseFragment() {
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         scannerRecyclerViewAdapter = ProvisionRecyclerViewAdapter(view!!.context)
-        scannerRecyclerViewAdapter.itemClickListener = onProvisionButtonClickedListener
+        scannerRecyclerViewAdapter.itemClickListener = onProvisionItemClickedListener
         rv_provision.apply {
             layoutManager = linearLayoutManager
             setHasFixedSize(true)
@@ -127,7 +128,7 @@ class ProvisionListFragment : BaseFragment() {
             if (it) {
                 btn_scanning.text = getString(R.string.fragment_ota_list_stop_scanning)
                 btn_scanning.setBackgroundColor(Color.parseColor("#ff5050"))
-                if(scannerRecyclerViewAdapter.dataList.isEmpty()){
+                if (scannerRecyclerViewAdapter.dataList.isEmpty()) {
                     tv_scanning_message.visibility = View.GONE
                     bg_ripple.visibility = View.VISIBLE
                     bg_ripple.startRippleAnimation()
@@ -153,16 +154,20 @@ class ProvisionListFragment : BaseFragment() {
         }
     }
 
-    private val onProvisionButtonClickedListener =
+    private val onProvisionItemClickedListener =
         object : BaseRecyclerViewAdapter.ItemClickListener<ConnectableDeviceDescription> {
             override fun onClick(position: Int, item: ConnectableDeviceDescription) {
-                Timber.d("onProvisionButtonClickedListener: clicked")
-                val provisionBottomDialog =
-                    ProvisionBottomDialog()
-                val bundle = Bundle()
-                bundle.putSerializable(ProvisionBottomDialog.DEVICE_DESCRIPTION_KEY, item)
-                provisionBottomDialog.arguments = bundle
-                provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
+                ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
+                    Runnable {
+                        Timber.d("onProvisionButtonClickedListener: clicked")
+                        val provisionBottomDialog =
+                            ProvisionBottomDialog()
+                        val bundle = Bundle()
+                        bundle.putSerializable(ProvisionBottomDialog.DEVICE_DESCRIPTION_KEY, item)
+                        provisionBottomDialog.arguments = bundle
+                        provisionBottomDialog.show(fragmentManager!!, "ProvisionBottomDialog")
+                    }
+                    , 50)
             }
 
             override fun onLongClick(position: Int, item: ConnectableDeviceDescription) {}

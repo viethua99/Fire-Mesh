@@ -14,7 +14,6 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -28,7 +27,6 @@ import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.service.FireMeshService
 import com.ceslab.firemesh.service.ScanRestartReceiver
 import com.ceslab.firemesh.ota.utils.Converters
-import com.ceslab.firemesh.presentation.ota_list.OTAListFragment
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -37,7 +35,6 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val PERMISSIONS_REQUEST_CODE: Int = 12
-        private const val WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION = 300
 
         fun startMainActivity(activity: AppCompatActivity) {
             Timber.d("startMainActivity")
@@ -71,7 +68,7 @@ class MainActivity : BaseActivity() {
         getExtraData()
     }
 
-    fun setToolbarTitle(title:String){
+    fun setToolbarTitle(title: String) {
         tv_toolbar_title.text = title
     }
 
@@ -79,7 +76,7 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         Timber.d("onDestroy")
         if (isServiceRunning(fireMeshService!!::class.java)) {
-            stopService(serviceIntent)
+            stopFireMeshService()
             val broadcastIntent = Intent()
             broadcastIntent.action = "restartService"
             broadcastIntent.setClass(this, ScanRestartReceiver::class.java)
@@ -94,19 +91,15 @@ class MainActivity : BaseActivity() {
         serviceIntent = Intent(this, fireMeshService!!::class.java)
     }
 
-    private fun triggerFireMeshService() {
-        Timber.d("triggerFireMeshService")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (!isServiceRunning(fireMeshService!!::class.java)) {
-                startService(serviceIntent)
-            } else {
-                stopService(serviceIntent)
-            }
-        } else {
-            showToastMessage("Only Android 8.0 (Oreo) or higher can use this feature")
-        }
+    fun startFireMeshService() {
+        startService(serviceIntent)
+    }
+
+    fun stopFireMeshService() {
+        stopService(serviceIntent)
 
     }
+
 
     fun isServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -139,59 +132,12 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        val item = menu?.findItem(R.id.item_background_scan)
-        item?.let {
-            if (isServiceRunning(FireMeshService::class.java)) {
-                item.icon = resources.getDrawable(R.drawable.ic_background_scan_off)
-            } else {
-                item.icon = resources.getDrawable(R.drawable.ic_background_scan_on)
-            }
-        }
-        return true
-    }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (supportFragmentManager.backStackEntryCount > 0) {
             if (item.itemId == android.R.id.home) {
                 onBackPressed()
                 return true
-            }
-        } else {
-            when (item.itemId) {
-                R.id.item_ota -> {
-                    if (ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        requestPermissions(
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            WRITE_EXTERNAL_STORAGE_REQUEST_PERMISSION
-                        )
-                    } else {
-                        replaceFragment(OTAListFragment(),OTAListFragment.TAG,R.id.container_main)
-                    }
-                }
-                R.id.item_background_scan -> {
-                    if (isLocationEnabled() && BluetoothAdapter.getDefaultAdapter().isEnabled) {
-                        triggerFireMeshService()
-                        if (fireMeshService != null) {
-
-                            if (isServiceRunning(fireMeshService!!::class.java)) {
-                                item.icon = resources.getDrawable(R.drawable.ic_background_scan_off)
-                                item.title = "Stop Background"
-                            } else {
-                                item.icon = resources.getDrawable(R.drawable.ic_background_scan_on)
-                                item.title = "Start Background"
-                            }
-                        }
-                    } else {
-                        showToastMessage("Check bluetooth and location")
-                    }
-                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -248,7 +194,7 @@ class MainActivity : BaseActivity() {
         val extras = intent.extras
         extras?.let {
             if (extras.containsKey(FireMeshService.FIRE_MESH_SERVICE_KEY)) {
-                stopService(serviceIntent) // User turned on app by clicked notification, so we can stop background scan from now
+                stopFireMeshService() // User turned on app by clicked notification, so we can stop background scan from now
                 val netKey = extras.getByteArray(FireMeshService.FIRE_MESH_SERVICE_KEY)
                 netKey?.let {
                     Timber.d("netKey=${Converters.bytesToHex(netKey)}")
@@ -315,7 +261,7 @@ class MainActivity : BaseActivity() {
                     showBluetoothEnableView()
                     if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
                         if (isServiceRunning(fireMeshService!!::class.java)) {
-                            stopService(serviceIntent)
+                            stopFireMeshService()
                         }
                     }
                 }
@@ -323,7 +269,7 @@ class MainActivity : BaseActivity() {
                     showLocationEnableView()
                     if (!isLocationEnabled()) {
                         if (isServiceRunning(fireMeshService!!::class.java)) {
-                            stopService(serviceIntent)
+                            stopFireMeshService()
                         }
                     }
                 }
