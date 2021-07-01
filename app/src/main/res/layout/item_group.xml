@@ -39,7 +39,7 @@
         android:layout_marginStart="10dp"
         android:text="@string/item_group_group_name"
         android:textColor="#0d1333"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/cv_group_image"
         app:layout_constraintTop_toTopOf="@+id/cv_group_image" />
 

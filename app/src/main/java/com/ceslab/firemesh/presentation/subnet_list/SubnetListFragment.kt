@@ -128,13 +128,10 @@ class SubnetListFragment : BaseFragment() {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     showToastMessage("Only Android 8.0 (Oreo) or higher can use this feature")
                     sw_background_scan.isChecked = false
-                } else {
-                    sw_background_scan.isChecked = true
                 }
             } else {
                 showToastMessage("Check bluetooth and location")
                 sw_background_scan.isChecked = false
-
             }
 
         }

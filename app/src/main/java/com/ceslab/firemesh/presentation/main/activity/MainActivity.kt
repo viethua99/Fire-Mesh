@@ -97,7 +97,6 @@ class MainActivity : BaseActivity() {
 
     fun stopFireMeshService() {
         stopService(serviceIntent)
-
     }
 
 
