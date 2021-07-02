@@ -31,10 +31,10 @@
 
     <string name="fragment_node_config_lpn">Low power energy</string>
     <string name="fragment_node_config_lpn_supported">Supported</string>
-    <string name="fragment_node_config_lpn_no_supported">No Supported</string>
-    <string name="fragment_node_config_proxy">Proxy Feature</string>
-    <string name="fragment_node_config_relay">Relay Feature</string>
-    <string name="fragment_node_config_friend">Friend Feature</string>
+    <string name="fragment_node_config_lpn_no_supported">No supported</string>
+    <string name="fragment_node_config_proxy">Proxy feature</string>
+    <string name="fragment_node_config_relay">Relay feature</string>
+    <string name="fragment_node_config_friend">Friend feature</string>
 
     <string name="fragment_node_config_retransmission">Retransmission</string>
     <string name="fragment_node_config_group">Group</string>

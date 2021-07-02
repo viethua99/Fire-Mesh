@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#FFF"
+    android:background="@drawable/background_gradient_blue"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -24,8 +24,8 @@
                 android:paddingTop="20dp"
                 android:paddingEnd="0dp"
                 android:text="@string/dialog_ota_config_header"
-                android:textColor="@color/primary_color"
-                android:textSize="18sp"
+                android:textColor="#3D3F4F"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -37,8 +37,8 @@
                 android:paddingEnd="0dp"
                 android:paddingBottom="15dp"
                 android:text="@string/dialog_ota_node_name"
-                android:textColor="@color/primary_color"
-                android:textSize="14sp" />
+                android:textColor="#3D3F4F"
+                android:textSize="16sp" />
         </LinearLayout>
 
 
@@ -106,7 +106,7 @@
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
                             android:text="@string/dialog_ota_mode_colon"
-                            android:textColor="@color/primary_color" />
+                            android:textColor="#3D3F4F" />
 
                         <RadioGroup
                             android:layout_width="0dp"
@@ -116,6 +116,7 @@
                             android:orientation="horizontal">
 
                             <RadioButton
+                                android:buttonTint="@color/primary_color"
                                 android:id="@+id/rdb_reliability"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -125,6 +126,7 @@
                                 android:text="@string/dialog_ota_reliability" />
 
                             <RadioButton
+                                android:buttonTint="@color/primary_color"
                                 android:id="@+id/rdb_speed"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -150,8 +152,8 @@
                             android:layout_margin="5dp"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
-                            android:text="@string/dialog_ota_application_colon"
-                            android:textColor="@color/primary_color" />
+                            android:textColor="#3D3F4F"
+                            android:text="@string/dialog_ota_application_colon" />
 
                         <Button
                             android:id="@+id/btn_select_application_gbl_file"
@@ -162,7 +164,7 @@
                             android:layout_weight="1"
                             android:text="@string/dialog_ota_select_application_gbl_file"
                             android:textAllCaps="false"
-                            android:textColor="@color/gray_7" />
+                            android:textColor="#61688b" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -218,7 +220,7 @@
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
                             android:text="@string/dialog_ota_mtu_colon"
-                            android:textColor="@color/primary_color" />
+                            android:textColor="#3D3F4F" />
 
                         <SeekBar
                             android:id="@+id/seekbar_mtu"
@@ -226,6 +228,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="0.6"
+                            android:progressTint="@color/primary_color"
+                            android:thumbTint="@color/primary_color"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp" />
 
@@ -236,6 +240,7 @@
                             android:layout_gravity="bottom"
                             android:layout_margin="5dp"
                             android:layout_weight="0.1"
+                            android:textColor="@color/primary_color"
                             android:background="@color/white"
                             android:clickable="false"
                             android:gravity="end"
@@ -263,7 +268,7 @@
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp"
                             android:text="@string/dialog_ota_priority"
-                            android:textColor="@color/primary_color" />
+                            android:textColor="#3D3F4F" />
 
                         <TextView
                             android:id="@+id/tv_min_priority"
@@ -272,6 +277,7 @@
                             android:layout_gravity="bottom"
                             android:layout_margin="5dp"
                             android:layout_weight="0.1"
+                            android:textColor="@color/primary_color"
                             android:text="@string/dialog_ota_priority_low"
                             android:textSize="12sp" />
 
@@ -281,6 +287,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="0.4"
+                            android:progressTint="@color/primary_color"
+                            android:thumbTint="@color/primary_color"
                             android:paddingTop="10dp"
                             android:paddingBottom="10dp" />
 
@@ -291,6 +299,7 @@
                             android:layout_gravity="bottom"
                             android:layout_margin="5dp"
                             android:layout_weight="0.1"
+                            android:textColor="@color/primary_color"
                             android:text="@string/dialog_ota_priority_high"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -314,7 +323,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
                         android:text="OTA Progress"
-                        android:textColor="@color/primary_color"
+                        android:textColor="#3D3F4F"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -330,7 +339,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/dialog_ota_process_file_name_colon"
-                            android:textColor="@color/primary_color"
+                            android:textColor="#3D3F4F"
                             android:textSize="14sp" />
 
                         <TextView
@@ -340,7 +349,7 @@
                             android:layout_marginEnd="10dp"
                             android:gravity="center"
                             android:text="----"
-                            android:textColor="@color/black"
+                            android:textColor="@color/primary_color"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -356,7 +365,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/dialog_ota_process_file_size_colon"
-                            android:textColor="@color/primary_color"
+                            android:textColor="#3D3F4F"
                             android:textSize="14sp" />
 
                         <TextView
@@ -365,7 +374,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="----"
-                            android:textColor="@color/black"
+                            android:textColor="@color/primary_color"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -381,7 +390,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/dialog_ota_process_packet_size_colon"
-                            android:textColor="@color/primary_color"
+                            android:textColor="#3D3F4F"
                             android:textSize="14sp" />
 
                         <TextView
@@ -390,7 +399,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="----"
-                            android:textColor="@color/black"
+
+                            android:textColor="@color/primary_color"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -404,6 +414,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="15dp"
                             android:layout_marginEnd="10dp"
+                            android:textColor="@color/primary_color"
                             android:elegantTextHeight="true"
                             android:fontFamily="sans-serif"
                             android:paddingTop="5dp"
@@ -469,6 +480,7 @@
                             android:layout_gravity="center"
                             android:layout_marginEnd="10dp"
                             android:elegantTextHeight="true"
+                            android:textColor="@color/primary_color"
                             android:fontFamily="sans-serif-medium"
                             android:gravity="center"
                             android:paddingStart="10dp"
@@ -483,6 +495,7 @@
                         android:elegantTextHeight="true"
                         android:gravity="center_horizontal"
                         android:textSize="16sp"
+                        android:textColor="@color/primary_color"
                         android:textStyle="bold" />
 
                 </LinearLayout>
