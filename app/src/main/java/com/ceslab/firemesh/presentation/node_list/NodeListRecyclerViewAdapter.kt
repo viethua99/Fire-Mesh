@@ -133,7 +133,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
                         tvNodeBattery.text = "Plugging"
                         imgNodeFeature.setImageResource(R.drawable.ic_friend)
                         cvNodeFeature.backgroundTintList =
-                            ColorStateList.valueOf(context.resources.getColor(R.color.lpn_color))
+                            ColorStateList.valueOf(context.resources.getColor(R.color.friend_color))
 
                         imgFireSignal.visibility = View.VISIBLE
                         if (it.fireSignal == 1) {
