@@ -2,7 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="10dp"
+    android:paddingHorizontal="10dp"
     android:background="@drawable/background_gradient_blue"
     android:layout_height="match_parent">
 
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Feature Configuration"
-            android:textColor="#3D3F4F"
+            android:textColor="@color/primary_color"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -23,7 +23,7 @@
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
+            android:paddingVertical="15dp"
             android:paddingHorizontal="5dp">
 
             <TextView
@@ -193,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Model Configuration"
-                android:textColor="#3D3F4F"
+                android:textColor="@color/primary_color"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -213,6 +213,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:id="@+id/ll_functionality"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

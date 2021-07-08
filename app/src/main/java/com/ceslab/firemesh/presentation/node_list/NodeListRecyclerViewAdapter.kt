@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.model.MeshNode
@@ -40,7 +41,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
         var tvNodeProxy: TextView = view.findViewById(R.id.tv_node_proxy)
         var imgFireSignal: ImageView = view.findViewById(R.id.img_flame_signal)
         var imgNodeFeature: ImageView = view.findViewById(R.id.img_node_feature)
-        var cvNodeFeature: ImageView = view.findViewById(R.id.cv_node_feature)
+        var cvNodeFeature: CardView = view.findViewById(R.id.cv_node_feature)
 
         init {
             view.setOnClickListener(this)
@@ -102,7 +103,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
                     cvNodeFeature.backgroundTintList =
                         ColorStateList.valueOf(context.resources.getColor(R.color.backup_gateway_color))
                     tvNodeBattery.text = "Plugging"
-                    val nodeName = node.name + " (BU)"
+                    val nodeName = node.name
                     tvNodeName.text = nodeName
 
                 } else if (it.gatewayType == MeshNode.GatewayType.NOT_GATEWAY) {
@@ -135,14 +136,7 @@ class NodeListRecyclerViewAdapter(context: Context) :
                         cvNodeFeature.backgroundTintList =
                             ColorStateList.valueOf(context.resources.getColor(R.color.friend_color))
 
-                        imgFireSignal.visibility = View.VISIBLE
-                        if (it.fireSignal == 1) {
-                            imgFireSignal.setImageResource(R.drawable.img_flame)
-                            imgFireSignal.startAnimation(shakeAnimation)
-                        } else {
-                            imgFireSignal.setImageResource(R.drawable.img_flame_background)
-                            imgFireSignal.clearAnimation()
-                        }
+                        imgFireSignal.visibility = View.GONE
                     } else {
                         tvNodeStatus.text = "???"
                         tvNodeBattery.text = "???"

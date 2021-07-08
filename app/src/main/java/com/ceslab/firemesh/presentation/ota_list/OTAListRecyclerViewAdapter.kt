@@ -48,7 +48,7 @@ class OTAListRecyclerViewAdapter(context: Context) :
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnClickListener {
         var tvDeviceName: TextView = view.findViewById(R.id.tv_device_name)
-        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_node_address)
+        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_device_address)
 
         init {
             view.setOnClickListener(this)

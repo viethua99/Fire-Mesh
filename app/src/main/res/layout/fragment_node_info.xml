@@ -15,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/fragment_node_info_node_details"
-            android:textColor="#3D3F4F"
+            android:textColor="@color/primary_color"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
