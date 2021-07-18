@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_item_networks"
-        android:icon="@drawable/img_subnet"
+        android:icon="@drawable/ic_subnet"
         android:title="@string/nav_item_subnets" />
     <item
         android:id="@+id/nav_item_provision"

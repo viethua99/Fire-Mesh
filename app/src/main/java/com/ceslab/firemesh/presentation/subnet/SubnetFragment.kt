@@ -1,5 +1,6 @@
 package com.ceslab.firemesh.presentation.subnet
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.Menu
 import android.view.MenuInflater
@@ -34,8 +35,7 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
         Timber.d("onMyViewCreated")
         setHasOptionsMenu(true)
         setupViewModel()
-        setupBottomNavigationView()
-        setupViewPager()
+        setupViews()
         connectToSubnet()
     }
 
@@ -57,6 +57,14 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    fun updateGroupListSize() {
+        tv_count.text = "${subnetViewModel.getGroupListSize()} Groups"
+    }
+
+    fun updateNodeListSize() {
+        tv_count.text = "${subnetViewModel.getNodeListSize()} Nodes"
+    }
+
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
@@ -67,6 +75,12 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
             getErrorMessage().observe(this@SubnetFragment, errorMessageObserver)
         }
 
+    }
+
+    private fun setupViews() {
+        setupBottomNavigationView()
+        setupViewPager()
+        updateGroupListSize()
     }
 
 
@@ -87,9 +101,11 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
                 override fun onPageSelected(position: Int) {
                     when (position) {
                         SubnetViewPagerAdapter.GROUP_LIST_PAGE -> {
+                            updateGroupListSize()
                             bottom_nav_subnet.menu.findItem(R.id.nav_item_groups).isChecked = true
                         }
                         SubnetViewPagerAdapter.NODE_LIST_PAGE -> {
+                            updateNodeListSize()
                             bottom_nav_subnet.menu.findItem(R.id.nav_item_nodes).isChecked = true
                         }
                     }
@@ -125,22 +141,7 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
         subnetViewModel.disconnectFromSubnet()
     }
 
-    private fun showConnectingAnimation() {
-        Timber.d("showConnectingAnimation")
-        activity?.runOnUiThread {
-            val connectingGradientAnimation = AnimationUtils.loadAnimation(activity, R.anim.connection_translate_right)
-            connecting_anim_gradient_right_container.visibility = View.VISIBLE
-            connecting_anim_gradient_right_container.startAnimation(connectingGradientAnimation)
-        }
-    }
 
-    private fun hideConnectingAnimation() {
-        Timber.d("hideConnectingAnimation")
-        activity?.runOnUiThread {
-            connecting_anim_gradient_right_container.clearAnimation()
-            connecting_anim_gradient_right_container.visibility = View.GONE
-        }
-    }
 
     private val meshStatusObserver = Observer<MeshStatus> { meshStatus ->
         Timber.d("meshStatusObserver = $meshStatus")
@@ -149,44 +150,52 @@ class SubnetFragment(private val subnetName: String) : BaseFragment() {
                 when (meshStatus) {
                     MeshStatus.MESH_CONNECTING -> {
                         text = "Connecting"
-                        background = resources.getDrawable(R.drawable.background_gradient_orange)
-                        showConnectingAnimation()
+                        setTextColor(Color.parseColor("#ffad33"))
+                        btn_subnet_connect.text = "Disconnect"
+                        progress_bar_connection.visibility = View.VISIBLE
                     }
                     MeshStatus.MESH_CONNECTED -> {
                         text = "Connected"
-                        background = resources.getDrawable(R.drawable.background_gradient_green)
-                        hideConnectingAnimation()
+                        setTextColor(Color.parseColor("#70bf73"))
+                        btn_subnet_connect.text = "Disconnect"
+                        progress_bar_connection.visibility = View.GONE
                     }
                     MeshStatus.MESH_DISCONNECTED -> {
                         text = "Disconnected"
-                        background = resources.getDrawable(R.drawable.background_gradient_red)
-                        hideConnectingAnimation()
+                        setTextColor(Color.parseColor("#ff7373"))
+                        btn_subnet_connect.text = "Connect"
+                        progress_bar_connection.visibility = View.GONE
                     }
-                }
-
-                setOnClickListener {
-                    subnetViewModel.changeMeshStatus(meshStatus)
                 }
             }
 
+          btn_subnet_connect.setOnClickListener {
+                subnetViewModel.changeMeshStatus(meshStatus)
+            }
         }
     }
     private val connectionMessageObserver = Observer<ConnectionMessageListener.MessageType> {
         activity?.runOnUiThread {
-            when(it){
+            when (it) {
                 ConnectionMessageListener.MessageType.NO_NODE_IN_SUBNET -> showWarningDialog("No node in this subnet")
                 ConnectionMessageListener.MessageType.GATT_NOT_CONNECTED -> showWarningDialog("Bluetooth Gatt is not connected")
                 ConnectionMessageListener.MessageType.GATT_PROXY_DISCONNECTED -> showWarningDialog("Remote proxy disconnected")
-                ConnectionMessageListener.MessageType.GATT_ERROR_DISCOVERING_SERVICES -> showWarningDialog("Error discovering services")
+                ConnectionMessageListener.MessageType.GATT_ERROR_DISCOVERING_SERVICES -> showWarningDialog(
+                    "Error discovering services"
+                )
                 ConnectionMessageListener.MessageType.PROXY_SERVICE_NOT_FOUND -> showWarningDialog("Mesh GATT Service is not found")
-                ConnectionMessageListener.MessageType.PROXY_CHARACTERISTIC_NOT_FOUND -> showWarningDialog("Mesh GATT Characteristic is not found")
-                ConnectionMessageListener.MessageType.PROXY_DESCRIPTOR_NOT_FOUND -> showWarningDialog("Mesh GATT Descriptor is not found")
+                ConnectionMessageListener.MessageType.PROXY_CHARACTERISTIC_NOT_FOUND -> showWarningDialog(
+                    "Mesh GATT Characteristic is not found"
+                )
+                ConnectionMessageListener.MessageType.PROXY_DESCRIPTOR_NOT_FOUND -> showWarningDialog(
+                    "Mesh GATT Descriptor is not found"
+                )
             }
         }
     }
     private val errorMessageObserver = Observer<ErrorType> {
         activity?.runOnUiThread {
-            showFailedDialog(AppUtil.convertErrorMessage(activity!!,it))
+            showFailedDialog(AppUtil.convertErrorMessage(activity!!, it))
         }
     }
 

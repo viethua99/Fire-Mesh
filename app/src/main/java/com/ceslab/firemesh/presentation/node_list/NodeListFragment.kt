@@ -17,6 +17,7 @@ import com.ceslab.firemesh.presentation.main.activity.MainActivity
 import com.ceslab.firemesh.presentation.node.NodeFragment
 import com.ceslab.firemesh.presentation.node_list.dialog.EditNodeCallback
 import com.ceslab.firemesh.presentation.node_list.dialog.EditNodeDialog
+import com.ceslab.firemesh.presentation.subnet.SubnetFragment
 import com.ceslab.firemesh.service.FireMeshService
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_node_list.*
@@ -131,6 +132,8 @@ class NodeListFragment : BaseFragment(){
         override fun onChanged() {
             Timber.d("onChanged")
             nodeListViewModel.getMeshNodeList()
+            val subnetFragment = parentFragment as SubnetFragment
+            subnetFragment.updateNodeListSize()
         }
     }
 }

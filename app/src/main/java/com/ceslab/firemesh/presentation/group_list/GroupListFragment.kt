@@ -20,7 +20,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_group_list.*
 import timber.log.Timber
 
-class GroupListFragment : BaseFragment(){
+class GroupListFragment : BaseFragment() {
     companion object {
         const val TAG = "GroupListFragment"
     }
@@ -29,11 +29,11 @@ class GroupListFragment : BaseFragment(){
     private lateinit var groupListViewModel: GroupListViewModel
 
     override fun getResLayoutId(): Int {
-       return R.layout.fragment_group_list
+        return R.layout.fragment_group_list
     }
 
     override fun onMyViewCreated(view: View) {
-       Timber.d("onMyViewCreated")
+        Timber.d("onMyViewCreated")
         setupViewModel()
         setupRecyclerView()
         setupAddGroupFab()
@@ -47,13 +47,14 @@ class GroupListFragment : BaseFragment(){
     private fun setupViewModel() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
-        groupListViewModel = ViewModelProvider(this, viewModelFactory).get(GroupListViewModel::class.java)
+        groupListViewModel =
+            ViewModelProvider(this, viewModelFactory).get(GroupListViewModel::class.java)
         groupListViewModel.apply {
-            getGroupList().observe(this@GroupListFragment,groupListObserver)
+            getGroupList().observe(this@GroupListFragment, groupListObserver)
         }
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         Timber.d("setupRecyclerView")
         val linearLayoutManager = LinearLayoutManager(view!!.context)
         groupListRecyclerViewAdapter = GroupListRecyclerViewAdapter(view!!.context)
@@ -76,29 +77,33 @@ class GroupListFragment : BaseFragment(){
     }
 
 
+    private val onGroupItemClickedListener =
+        object : BaseRecyclerViewAdapter.ItemClickListener<Group> {
+            override fun onClick(position: Int, item: Group) {
+                ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
+                    Runnable {
+                        groupListViewModel.setCurrentGroup(item)
+                        val mainActivity = activity as MainActivity
+                        mainActivity.addFragment(
+                            GroupFragment(item.name),
+                            GroupFragment.TAG,
+                            R.id.container_main
+                        )
+                    }
+                    , 50)
+            }
 
-    private val onGroupItemClickedListener = object : BaseRecyclerViewAdapter.ItemClickListener<Group> {
-        override fun onClick(position: Int, item: Group) {
-            ViewCompat.postOnAnimationDelayed(view!!, // Delay to show ripple effect
-                Runnable {
-                    groupListViewModel.setCurrentGroup(item)
-                    val mainActivity = activity as MainActivity
-                    mainActivity.addFragment(GroupFragment(item.name), GroupFragment.TAG,R.id.container_main)
-                }
-                ,50)
+            override fun onLongClick(position: Int, item: Group) {
+                Timber.d("onGroupItemClickedListener: longClicked")
+                val editGroupDialog = EditGroupDialog(item)
+                editGroupDialog.show(fragmentManager!!, "EditGroupDialog")
+                editGroupDialog.setEditGroupCallback(onEditGroupCallback)
+            }
         }
-
-        override fun onLongClick(position: Int, item: Group) {
-            Timber.d("onGroupItemClickedListener: longClicked")
-            val editGroupDialog = EditGroupDialog(item)
-            editGroupDialog.show(fragmentManager!!, "EditGroupDialog")
-            editGroupDialog.setEditGroupCallback(onEditGroupCallback)
-        }
-    }
 
     private val groupListObserver = Observer<Set<Group>> {
         activity?.runOnUiThread {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 no_group_background.visibility = View.GONE
                 groupListRecyclerViewAdapter.setDataList(it.toMutableList())
             } else {
@@ -112,13 +117,17 @@ class GroupListFragment : BaseFragment(){
     private val onAddGroupClickListener = object :
         AddGroupClickListener {
         override fun onClicked() {
-           groupListViewModel.getGroupList()
+            groupListViewModel.getGroupList()
+            val subnetFragment = parentFragment as SubnetFragment
+            subnetFragment.updateGroupListSize()
         }
     }
 
     private val onEditGroupCallback = object : EditGroupCallback {
         override fun onChanged() {
             groupListViewModel.getGroupList()
+            val subnetFragment = parentFragment as SubnetFragment
+            subnetFragment.updateGroupListSize()
         }
     }
 

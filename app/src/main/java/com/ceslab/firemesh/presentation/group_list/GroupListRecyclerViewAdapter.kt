@@ -25,10 +25,11 @@ class GroupListRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnClickListener,View.OnLongClickListener {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,
+        View.OnLongClickListener {
         var tvGroupName: TextView = view.findViewById(R.id.tv_group_name)
         var tvNodeCount: TextView = view.findViewById(R.id.tv_group_nodes_count)
-        var tvAppKeyIndex: TextView = view.findViewById(R.id.tv_group_app_key_index)
+        var tvGroupAddress: TextView = view.findViewById(R.id.tv_group_address)
 
         init {
             view.setOnLongClickListener(this)
@@ -36,19 +37,19 @@ class GroupListRecyclerViewAdapter(context: Context) :
         }
 
         override fun onClick(p0: View?) {
-            itemClickListener.onClick(adapterPosition,dataList[adapterPosition])
+            itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
 
         }
 
         override fun onLongClick(p0: View?): Boolean {
-            itemClickListener.onLongClick(adapterPosition,dataList[adapterPosition])
+            itemClickListener.onLongClick(adapterPosition, dataList[adapterPosition])
             return true
         }
 
         fun renderUI(group: Group) {
             tvGroupName.text = group.name
             tvNodeCount.text = String.format("%d Nodes", group.nodes.size)
-            tvAppKeyIndex.text = String.format("... %s", ConverterUtil.getHexValue(group.appKey.key).takeLast(12))
+            tvGroupAddress.text = "0x" + Integer.toHexString(group.address).toUpperCase()
         }
     }
 }

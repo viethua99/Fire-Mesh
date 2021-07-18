@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.factory.ViewModelFactory
@@ -15,6 +16,8 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_add_subnet_bottom_sheet.view.*
 import timber.log.Timber
 import javax.inject.Inject
+import android.widget.Toast
+
 
 class AddSubnetDialog : BottomSheetDialogFragment() {
 
@@ -60,6 +63,9 @@ class AddSubnetDialog : BottomSheetDialogFragment() {
         Timber.d("setupViewModel")
         AndroidSupportInjection.inject(this)
         addSubnetViewModel = ViewModelProvider(this, viewModelFactory).get(AddSubnetViewModel::class.java)
+        addSubnetViewModel.errorMessage.observe(this, Observer { errorMessage ->
+            Toast.makeText(context,errorMessage,Toast.LENGTH_SHORT).show()
+        })
 
     }
 

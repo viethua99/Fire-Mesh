@@ -46,10 +46,17 @@ class OTAListRecyclerViewAdapter(context: Context) :
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnClickListener {
         var tvDeviceName: TextView = view.findViewById(R.id.tv_device_name)
-        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_node_address)
-        var btnOta: Button = view.findViewById(R.id.btn_ota)
+        var tvDeviceAddress: TextView = view.findViewById(R.id.tv_device_address)
+
+        init {
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
+        }
 
         fun renderUI(bluetoothDevice: BluetoothDeviceInfo) {
             if(bluetoothDevice.name == null){
@@ -59,9 +66,6 @@ class OTAListRecyclerViewAdapter(context: Context) :
             }
 
             tvDeviceAddress.text = bluetoothDevice.address
-            btnOta.setOnClickListener {
-                itemClickListener.onClick(adapterPosition, dataList[adapterPosition])
-            }
         }
     }
 }

@@ -56,6 +56,14 @@ class SubnetViewModel @Inject constructor(
         }
     }
 
+    fun getNodeListSize(): Int{
+        return currentSubnet.nodes.size
+    }
+
+    fun getGroupListSize(): Int{
+        return currentSubnet.groups.size
+    }
+
     fun getMeshStatus(): LiveData<MeshStatus> {
         return meshStatus
     }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="10dp"
+    android:background="@drawable/background_gradient_blue"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -11,25 +14,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Node Configuration"
+            android:text="Feature Configuration"
             android:textColor="@color/primary_color"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <RelativeLayout
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp">
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@id/tv_low_power_support"
                 android:text="@string/fragment_node_config_lpn"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textColor="#3D3F4F"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_low_power_support"
@@ -38,11 +41,17 @@
                 android:layout_alignParentEnd="true"
                 android:text="@string/fragment_node_config_lpn_no_supported"
                 android:textColor="@color/red_500"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray" />
         <LinearLayout
             android:id="@+id/ll_proxy"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -53,11 +62,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="15dp"
                 android:text="@string/fragment_node_config_proxy"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textColor="#3D3F4F"
+                android:textSize="18sp"
                 android:theme="@style/ColorSwitchStyle" />
 
 
@@ -69,11 +76,17 @@
                 android:padding="15dp"
                 android:src="@drawable/ic_refresh" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray" />
 
         <LinearLayout
             android:id="@+id/ll_relay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -82,11 +95,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="15dp"
                 android:text="@string/fragment_node_config_relay"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textColor="#3D3F4F"
+                android:textSize="18sp"
                 android:theme="@style/ColorSwitchStyle" />
 
 
@@ -98,25 +109,28 @@
                 android:padding="15dp"
                 android:src="@drawable/ic_refresh" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray" />
 
         <LinearLayout
             android:id="@+id/ll_friend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sw_friend"
-
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="15dp"
                 android:text="@string/fragment_node_config_friend"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#3D3F4F"
                 android:theme="@style/ColorSwitchStyle" />
 
 
@@ -128,12 +142,18 @@
                 android:padding="15dp"
                 android:src="@drawable/ic_refresh" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray" />
 
         <LinearLayout
             android:id="@+id/ll_retransmission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:padding="5dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.SwitchCompat
@@ -141,11 +161,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="15dp"
                 android:text="@string/fragment_node_config_retransmission"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#3D3F4F"
                 android:theme="@style/ColorSwitchStyle" />
 
 
@@ -158,58 +176,64 @@
                 android:src="@drawable/ic_refresh" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_gradient_gray" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Model Configuration"
+                android:textColor="@color/primary_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_node_config_group"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:padding="5dp"
+                android:textColor="#3D3F4F"
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/spinner_group"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp" />
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:id="@+id/ll_functionality"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_node_config_functionality"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textColor="#3D3F4F"
+                android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:nestedScrollingEnabled="false"
                 android:id="@+id/rv_functionality"
                 android:layout_width="match_parent"
+                tools:listitem="@layout/item_functionality"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp" />
-
-            <Spinner
-                android:id="@+id/spinner_functionality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

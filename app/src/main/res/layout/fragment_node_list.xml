@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@drawable/background_gradient_blue"
+    android:layout_height="match_parent">
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/white"
-        tools:listitem="@layout/item_node"
         android:id="@+id/rv_node_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_node" />
 
     <LinearLayout
-        android:layout_marginHorizontal="10dp"
-        android:layout_centerInParent="true"
         android:id="@+id/no_node_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="10dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="180dp"
             android:layout_height="180dp"
-            android:src="@drawable/img_empty" />
+            android:src="@drawable/ic_empty" />
 
         <TextView
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:textColor="#61688b"
             android:gravity="center"
             android:text="@string/fragment_node_list_no_node_message"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </RelativeLayout>
