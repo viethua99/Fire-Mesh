@@ -15,9 +15,9 @@ import androidx.core.app.NotificationCompat
 import com.ceslab.firemesh.R
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNetworkManager
 import com.ceslab.firemesh.meshmodule.bluetoothmesh.MeshNodeManager
-import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.presentation.main.activity.MainActivity
+import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.data_model.subnet.Subnet
 import com.siliconlabs.bluetoothmesh.App.AESUtils
 import dagger.android.AndroidInjection
@@ -114,19 +114,49 @@ class FireMeshService : Service() {
         startForeground(2, notification)
     }
 
+    private fun getAppKeyIndex(): Int? {
+        val network = meshNetworkManager.network
+
+        for (subnet in network!!.subnets) {
+            for (group in subnet.groups) {
+                if (meshNodeManager.getMeshNodeList(group).isNotEmpty()) {
+                    return group.appKey.keyIndex
+                }
+            }
+        }
+        return null
+    }
+
+    private fun generateDecryptKey(): ByteArray? {
+        val appKeyIndex = getAppKeyIndex()
+        appKeyIndex?.let { key ->
+            val data = ConverterUtil.inv_atou16(key)
+            return data
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+        }
+        return null
+    }
+
 
     private fun checkFireAlarmSignalFromUnicastAddress(dataFlag: Byte, userData: ByteArray) {
         val network = meshNetworkManager.network
         val rightFlag = (dataFlag.toInt() and 0x0F)
         if (rightFlag == 0) { //Fire alarm signal
 
-            if(!isHandlerStarted){ //Start handler only one time
+            if (!isHandlerStarted) { //Start handler only one time
                 startHandler()
                 isHandlerStarted = true
             }
 
-            if(!isAlarmTriggered){
-                val receivedUnicastAddress = Converters.bytesToHex(byteArrayOf(userData[1], userData[0]))
+            if (!isAlarmTriggered) {
+                val receivedUnicastAddress =
+                    Converters.bytesToHex(byteArrayOf(userData[1], userData[0]))
                 for (subnet in network!!.subnets) {
                     val nodeList = meshNodeManager.getMeshNodeList(subnet)
                     for (node in nodeList) {
@@ -137,7 +167,8 @@ class FireMeshService : Service() {
                         }
                     }
                 }
-                isAlarmTriggered = true //Flag to make sure data is alarm only trigger one time for every 3 seconds
+                isAlarmTriggered =
+                    true //Flag to make sure data is alarm only trigger one time for every 3 seconds
             }
         }
 
@@ -266,7 +297,7 @@ class FireMeshService : Service() {
 
 
     private val repeatableTaskRunnable = Runnable {
-        isAlarmTriggered = false //Reset flag every 15 seconds
+        isAlarmTriggered = false //Reset flag every 3 seconds
         startHandler()
     }
 
@@ -276,16 +307,23 @@ class FireMeshService : Service() {
             rawData?.let {
                 Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(it)}")
                 try {
+                    val decryptKey = generateDecryptKey()
+                    decryptKey?.let { key ->
                         val dataFlag = getDataFlag(it)
                         val encryptedUserData = getUserData(it)
 
                         val decryptedData = AESUtils.decrypt(
                             AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
-                            AES_KEY,
+                            key,
                             encryptedUserData
                         )
-                        Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
+                        Timber.d(
+                            "decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(
+                                decryptedData
+                            )} --size={${decryptedData.size}}"
+                        )
                         checkFireAlarmSignalFromUnicastAddress(dataFlag, decryptedData)
+                    }
                 } catch (exception: Exception) {
                     exception.printStackTrace()
                 }

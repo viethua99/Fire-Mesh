@@ -12,10 +12,10 @@ import com.ceslab.firemesh.meshmodule.listener.ConnectionMessageListener
 import com.ceslab.firemesh.meshmodule.listener.ConnectionStatusListener
 import com.ceslab.firemesh.meshmodule.model.MeshNode
 import com.ceslab.firemesh.meshmodule.model.MeshStatus
-import com.ceslab.firemesh.myapp.AES_KEY
 import com.ceslab.firemesh.ota.utils.Converters
 import com.ceslab.firemesh.service.FireMeshScanner
 import com.ceslab.firemesh.service.FireNodeStatus
+import com.ceslab.firemesh.util.ConverterUtil
 import com.siliconlab.bluetoothmesh.adk.ErrorType
 import com.siliconlabs.bluetoothmesh.App.AESUtils
 import timber.log.Timber
@@ -31,7 +31,7 @@ class GroupViewModel @Inject constructor(
     private val meshConnectionManager: MeshConnectionManager,
     private val meshNodeManager: MeshNodeManager
 
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val meshStatus = MutableLiveData<MeshStatus>()
     private val connectionMessage = MutableLiveData<ConnectionMessageListener.MessageType>()
@@ -40,7 +40,7 @@ class GroupViewModel @Inject constructor(
     private val meshNodeList = MutableLiveData<Set<MeshNode>>()
     private val fireMeshScanner = FireMeshScanner.instance
 
-    fun setListeners(){
+    fun setListeners() {
         Timber.d("setListeners")
         meshConnectionManager.apply {
             addMeshConnectionListener(connectionStatusListener)
@@ -50,7 +50,7 @@ class GroupViewModel @Inject constructor(
         }
     }
 
-    fun removeListeners(){
+    fun removeListeners() {
         Timber.d("removeListeners")
         meshConnectionManager.apply {
             removeMeshConnectionListener(connectionStatusListener)
@@ -61,7 +61,7 @@ class GroupViewModel @Inject constructor(
     }
 
 
-    fun getNodeListSize(): Int{
+    fun getNodeListSize(): Int {
         return currentSubnet.nodes.size
     }
 
@@ -89,7 +89,7 @@ class GroupViewModel @Inject constructor(
         getMeshNodeList()
     }
 
-    fun changeMeshStatus(meshStatus: MeshStatus){
+    fun changeMeshStatus(meshStatus: MeshStatus) {
         Timber.d("changeMeshStatus: $meshStatus")
         when (meshStatus) {
             MeshStatus.MESH_CONNECTING -> {
@@ -116,6 +116,30 @@ class GroupViewModel @Inject constructor(
         return errorMessage
     }
 
+    private fun getAppKeyIndex(): Int? {
+        val group = bluetoothMeshManager.currentGroup!!
+        if (meshNodeManager.getMeshNodeList(group).isNotEmpty()) {
+            return group.appKey.keyIndex
+        }
+        return null
+    }
+
+    private fun generateDecryptKey(): ByteArray? {
+        val appKeyIndex = getAppKeyIndex()
+        appKeyIndex?.let { key ->
+            val data = ConverterUtil.inv_atou16(key)
+            return data
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+                .plus(data)
+        }
+        return null
+    }
+
     private fun getDataFlag(rawData: ByteArray): Byte {
         return rawData[0]
     }
@@ -128,16 +152,16 @@ class GroupViewModel @Inject constructor(
         return userData
     }
 
-    private fun parsePeriodDataPacket(leftFlag:Int,dataArray: ByteArray): List<FireNodeStatus> {
+    private fun parsePeriodDataPacket(leftFlag: Int, dataArray: ByteArray): List<FireNodeStatus> {
         Timber.d("parsePeriodDataPacket: ${Converters.bytesToHex(dataArray)}")
         val nodeStatusList = mutableSetOf<FireNodeStatus>()
         val redundantValue = dataArray.size % 3
         for (i in 0 until (dataArray.size - redundantValue) step 3) {
             var gatewayType = MeshNode.GatewayType.NOT_GATEWAY
-            if(i == 0){
-                if(leftFlag == 0) { // Main gateway
+            if (i == 0) {
+                if (leftFlag == 0) { // Main gateway
                     gatewayType = MeshNode.GatewayType.MAIN_GATEWAY
-                } else if(leftFlag == 1) { //Backup gateway
+                } else if (leftFlag == 1) { //Backup gateway
                     gatewayType = MeshNode.GatewayType.BACKUP_GATEWAY
                 }
             }
@@ -166,7 +190,7 @@ class GroupViewModel @Inject constructor(
                 }
             }
         } else if (rightFlag == 1) { //Heartbeat period signal
-            val nodeStatusList = parsePeriodDataPacket(leftFlag,userData)
+            val nodeStatusList = parsePeriodDataPacket(leftFlag, userData)
             for (node in nodeStatusList) {
                 Timber.d(node.toString())
             }
@@ -225,22 +249,28 @@ class GroupViewModel @Inject constructor(
             rawData?.let {
                 Timber.d("onScanResult: ${Converters.bytesToHexWhitespaceDelimited(it)}")
                 try {
-                    val dataFlag = getDataFlag(it)
-                    val encryptedUserData = getUserData(it)
-                    Timber.d(
-                        "dataFlag = ${Converters.bytesToHex(byteArrayOf(dataFlag))} --encryptedUserData=${Converters.bytesToHexWhitespaceDelimited(
+                    val decryptKey = generateDecryptKey()
+                    decryptKey?.let {key ->
+                        val dataFlag = getDataFlag(it)
+                        val encryptedUserData = getUserData(it)
+                        Timber.d(
+                            "dataFlag = ${Converters.bytesToHex(byteArrayOf(dataFlag))} --encryptedUserData=${Converters.bytesToHexWhitespaceDelimited(
+                                encryptedUserData
+                            )} --size={${encryptedUserData.size}}"
+                        )
+
+                        val decryptedData = AESUtils.decrypt(
+                            AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
+                            key,
                             encryptedUserData
-                        )} --size={${encryptedUserData.size}}"
-                    )
-
-                    val decryptedData = AESUtils.decrypt(
-                        AESUtils.ECB_ZERO_BYTE_NO_PADDING_ALGORITHM,
-                        AES_KEY,
-                        encryptedUserData
-                    )
-                    Timber.d("decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(decryptedData)} --size={${decryptedData.size}}")
-                    bindDataToMeshNode(dataFlag, decryptedData)
-
+                        )
+                        Timber.d(
+                            "decryptedData=  ${Converters.bytesToHexWhitespaceDelimited(
+                                decryptedData
+                            )} --size={${decryptedData.size}}"
+                        )
+                        bindDataToMeshNode(dataFlag, decryptedData)
+                    }
                 } catch (exception: Exception) {
                     exception.printStackTrace()
                 }
