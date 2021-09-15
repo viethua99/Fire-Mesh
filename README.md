@@ -10,9 +10,9 @@
 
   </tr>
   <tr>
-      <td>  <img src="pictures/subnet_list.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/add_subnet.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/delete_subnet.jpg" width="320" height="700"/> </td>
+      <td>  <img src="pictures/subnet_list.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/add_subnet.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/delete_subnet.jpg" width="250" height="500"/> </td>
   </tr>
  </table>
 </p>
@@ -27,9 +27,9 @@
 
   </tr>
   <tr>
-    <td>  <img src="pictures/groups.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/add_group.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/edit_group.jpg" width="320" height="700"/> </td>
+    <td>  <img src="pictures/groups.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/add_group.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/edit_group.jpg" width="250" height="500"/> </td>
   </tr>
  </table>
 </p>
@@ -44,8 +44,8 @@
 
   </tr>
   <tr>
-    <td>  <img src="pictures/provision_list.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/provisioning_dialog.jpg" width="320" height="700"/> </td>
+    <td>  <img src="pictures/provision_list.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/provisioning_dialog.jpg" width="250" height="500"/> </td>
   </tr>
  </table>
 </p>
@@ -59,7 +59,7 @@
 
   </tr>
   <tr>
-    <td>  <img src="pictures/node_config.jpg" width="320" height="700"/> </td>
+    <td>  <img src="pictures/node_config.jpg" width="250" height="500"/> </td>
   </tr>
  </table>
 </p>
@@ -76,8 +76,8 @@
 
   </tr>
   <tr>
-    <td>  <img src="pictures/node_list.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/fire_notification.jpg" width="320" height="700"/> </td>
+    <td>  <img src="pictures/node_list.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/fire_notification.jpg" width="250" height="500"/> </td>
   </tr>
  </table>
 </p>
@@ -93,8 +93,8 @@
 
   </tr>
   <tr>
-    <td>  <img src="pictures/ota_list.jpg" width="320" height="700"/> </td>
-    <td>  <img src="pictures/ota_config.jpg" width="320" height="700"/> </td>
+    <td>  <img src="pictures/ota_list.jpg" width="250" height="500"/> </td>
+    <td>  <img src="pictures/ota_config.jpg" width="250" height="500"/> </td>
   </tr>
  </table>
 </p>
